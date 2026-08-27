@@ -14,8 +14,24 @@ $adminName = $_SESSION['user_name'] ?? 'Admin';
 $offerId = isset($_GET['id']) ? (int)$_GET['id'] : 0;
 
 if (!$offerId) {
-    header('Location: offers.php?error=Invalid campaign ID');
+    header('Location: campaigns.php?error=Invalid campaign ID');
     exit;
+}
+
+/* ===============================
+   HANDLE ACTION REQUESTS (Activate, Pause, Approve)
+================================ */
+if (!empty($_GET['action'])) {
+    $act = $_GET['action'];
+    if ($act === 'activate' || $act === 'approve') {
+        $pdo->exec("UPDATE offers SET status='active', updated_at=NOW() WHERE offer_id=$offerId");
+        header("Location: offer_details.php?id=$offerId&success=Campaign activated successfully");
+        exit;
+    } elseif ($act === 'pause') {
+        $pdo->exec("UPDATE offers SET status='paused', updated_at=NOW() WHERE offer_id=$offerId");
+        header("Location: offer_details.php?id=$offerId&success=Campaign paused successfully");
+        exit;
+    }
 }
 
 /* ===============================
@@ -236,6 +252,17 @@ $notes = [
             background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 320"><path fill="rgba(255,255,255,0.1)" d="M0,96L48,112C96,128,192,160,288,186.7C384,213,480,235,576,213.3C672,192,768,128,864,128C960,128,1056,192,1152,213.3C1248,235,1344,213,1392,202.7L1440,192L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z"></path></svg>');
             background-size: cover;
             opacity: 0.1;
+            pointer-events: none;
+        }
+
+        .offer-header > * {
+            position: relative;
+            z-index: 2;
+        }
+
+        .action-buttons {
+            position: relative;
+            z-index: 10;
         }
         
         .offer-title {
@@ -816,11 +843,11 @@ $notes = [
                                 <i class="fas fa-edit mr-1"></i> Edit Campaign
                             </a>
                             <?php if ($offer['status'] === 'active'): ?>
-                                <a href="campaigns.php?action=pause&id=<?php echo $offer['offer_id']; ?>" class="btn btn-danger font-weight-bold">
+                                <a href="offer_details.php?id=<?php echo $offer['offer_id']; ?>&action=pause" class="btn btn-danger font-weight-bold">
                                     <i class="fas fa-pause mr-1"></i> Pause
                                 </a>
                             <?php else: ?>
-                                <a href="campaigns.php?action=activate&id=<?php echo $offer['offer_id']; ?>" class="btn btn-success font-weight-bold">
+                                <a href="offer_details.php?id=<?php echo $offer['offer_id']; ?>&action=activate" class="btn btn-success font-weight-bold">
                                     <i class="fas fa-play mr-1"></i> Activate
                                 </a>
                             <?php endif; ?>
