@@ -716,12 +716,6 @@ $recentActivity = $activityStmt->fetchAll(PDO::FETCH_ASSOC);
                             <p>Affiliate Reports</p>
                         </a>
                     </li>
-                    <li class="nav-item">
-                        <a href="analytics.php" class="nav-link">
-                            <i class="nav-icon fas fa-chart-pie"></i>
-                            <p>Advanced Analytics</p>
-                        </a>
-                    </li>
                     
                     <li class="nav-header">TOOLS</li>
                     <li class="nav-item">
@@ -754,6 +748,12 @@ $recentActivity = $activityStmt->fetchAll(PDO::FETCH_ASSOC);
                         <a href="profile.php" class="nav-link">
                             <i class="nav-icon fas fa-user"></i>
                             <p>Profile</p>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="billing.php" class="nav-link">
+                            <i class="nav-icon fas fa-wallet"></i>
+                            <p>Billing & Payments</p>
                         </a>
                     </li>
                 </ul>
