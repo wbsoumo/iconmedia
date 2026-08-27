@@ -381,7 +381,9 @@ $categories = $catStmt->fetchAll(PDO::FETCH_COLUMN);
                                     <tr>
                                         <td><input type="checkbox" name="selected_campaigns[]" value="<?php echo $camp['offer_id']; ?>" class="camp-select-cb"></td>
                                         <td>
-                                            <strong class="d-block text-dark font-weight-bold">#<?php echo $camp['offer_id']; ?> - <?php echo htmlspecialchars($camp['offer_name']); ?></strong>
+                                            <a href="offer_details.php?id=<?php echo $camp['offer_id']; ?>" class="text-primary font-weight-bold d-block text-decoration-none">
+                                                #<?php echo $camp['offer_id']; ?> - <?php echo htmlspecialchars($camp['offer_name']); ?>
+                                            </a>
                                             <small class="text-muted">Target: <?php echo htmlspecialchars(substr($camp['campaign_url'], 0, 45)); ?>...</small>
                                         </td>
                                         <td>
