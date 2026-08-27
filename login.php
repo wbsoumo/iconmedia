@@ -726,7 +726,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     <!-- Role Selection - Premium Card Style -->
                     <div class="form-group">
                         <label class="form-label">I am a...</label>
-                        <div class="role-container" style="grid-template-columns: repeat(3, 1fr); gap: 10px;">
+                        <div class="role-container">
                             <div class="role-card">
                                 <input type="radio" id="role_affiliate" name="role" value="affiliate" <?= (isset($_POST['role']) && $_POST['role'] === 'affiliate') ? 'checked' : '' ?>>
                                 <label for="role_affiliate">
@@ -745,16 +745,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                                     </div>
                                     <span class="role-title">Advertiser</span>
                                     <span class="role-desc">Brand / Merchant</span>
-                                </label>
-                            </div>
-                            <div class="role-card">
-                                <input type="radio" id="role_manager" name="role" value="manager" <?= (isset($_POST['role']) && $_POST['role'] === 'manager') ? 'checked' : '' ?>>
-                                <label for="role_manager">
-                                    <div class="role-icon">
-                                        <i class="fas fa-user-tie"></i>
-                                    </div>
-                                    <span class="role-title">Manager</span>
-                                    <span class="role-desc">Account Manager</span>
                                 </label>
                             </div>
                         </div>
