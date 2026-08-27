@@ -14,17 +14,26 @@ $advertiserName = $_SESSION['user_name'] ?? 'Advertiser';
 /* ===============================
    FILTER INPUTS
 ================================ */
-$offerId   = isset($_GET['offer_id']) && $_GET['offer_id'] !== 'all' ? (int)$_GET['offer_id'] : null;
+$offerId   = isset($_GET['offer_id']) && $_GET['offer_id'] !== 'all' && $_GET['offer_id'] !== '' ? (int)$_GET['offer_id'] : null;
 $status    = isset($_GET['status']) && in_array($_GET['status'], ['approved', 'pending', 'rejected']) ? $_GET['status'] : null;
-$fromDate  = $_GET['from'] ?? date('Y-m-01');
-$toDate    = $_GET['to'] ?? date('Y-m-d');
-$export    = isset($_GET['export']);
 
-if (!strtotime($fromDate)) $fromDate = date('Y-m-01');
-if (!strtotime($toDate)) $toDate = date('Y-m-d');
+// Allow empty 'from' / 'to' or default to 30 days window
+if (isset($_GET['from']) && !empty($_GET['from']) && strtotime($_GET['from'])) {
+    $fromDate = $_GET['from'];
+} else {
+    $fromDate = date('Y-m-d', strtotime('-30 days'));
+}
+
+if (isset($_GET['to']) && !empty($_GET['to']) && strtotime($_GET['to'])) {
+    $toDate = $_GET['to'];
+} else {
+    $toDate = date('Y-m-d');
+}
+
 if (strtotime($fromDate) > strtotime($toDate)) {
     $fromDate = $toDate;
 }
+$export    = isset($_GET['export']);
 
 /* ===============================
    FETCH OFFERS FOR FILTER DROPDOWN
@@ -296,39 +305,54 @@ $overallCR = $summary['clicks'] > 0 ? round(($summary['conversions'] / $summary[
 
                 <!-- Filter Controls Card -->
                 <div class="card card-custom p-4">
-                    <form method="get" action="" class="row align-items-end">
-                        <div class="col-md-3">
-                            <div class="form-group mb-0">
-                                <label class="font-weight-bold">Select Campaign Offer</label>
-                                <select name="offer_id" class="form-control">
-                                    <option value="all">All Campaigns</option>
-                                    <?php foreach ($offersList as $of): ?>
-                                    <option value="<?php echo $of['offer_id']; ?>" <?php echo $offerId == $of['offer_id'] ? 'selected' : ''; ?>>
-                                        #<?php echo $of['offer_id']; ?> - <?php echo htmlspecialchars($of['offer_name']); ?>
-                                    </option>
-                                    <?php endforeach; ?>
-                                </select>
+                    <form method="get" action="reports_campaigns.php" id="reportsFilterForm">
+                        <div class="row align-items-end">
+                            <div class="col-md-3 mb-3 mb-md-0">
+                                <div class="form-group mb-0">
+                                    <label class="font-weight-bold"><i class="fas fa-bullhorn mr-1"></i>Select Campaign Offer</label>
+                                    <select name="offer_id" class="form-control">
+                                        <option value="all">All Campaigns</option>
+                                        <?php foreach ($offersList as $of): ?>
+                                        <option value="<?php echo $of['offer_id']; ?>" <?php echo $offerId == $of['offer_id'] ? 'selected' : ''; ?>>
+                                            #<?php echo $of['offer_id']; ?> - <?php echo htmlspecialchars($of['offer_name']); ?>
+                                        </option>
+                                        <?php endforeach; ?>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-md-3 mb-3 mb-md-0">
+                                <div class="form-group mb-0">
+                                    <label class="font-weight-bold"><i class="fas fa-calendar-alt mr-1"></i>From Date</label>
+                                    <input type="text" name="from" id="from_date" class="form-control flatpickr" value="<?php echo htmlspecialchars($fromDate); ?>">
+                                </div>
+                            </div>
+                            <div class="col-md-3 mb-3 mb-md-0">
+                                <div class="form-group mb-0">
+                                    <label class="font-weight-bold"><i class="fas fa-calendar-alt mr-1"></i>To Date</label>
+                                    <input type="text" name="to" id="to_date" class="form-control flatpickr" value="<?php echo htmlspecialchars($toDate); ?>">
+                                </div>
+                            </div>
+                            <div class="col-md-3 text-md-right">
+                                <button type="submit" class="btn btn-primary font-weight-bold shadow-sm mr-1">
+                                    <i class="fas fa-filter mr-1"></i> Apply Filter
+                                </button>
+                                <a href="reports_campaigns.php" class="btn btn-outline-secondary font-weight-bold mr-1" title="Reset Filters">
+                                    <i class="fas fa-redo"></i>
+                                </a>
+                                <a href="?export=1&from=<?php echo urlencode($fromDate); ?>&to=<?php echo urlencode($toDate); ?>&offer_id=<?php echo urlencode($offerId ?: 'all'); ?>" class="btn btn-success font-weight-bold shadow-sm">
+                                    <i class="fas fa-download mr-1"></i> CSV
+                                </a>
                             </div>
                         </div>
-                        <div class="col-md-3">
-                            <div class="form-group mb-0">
-                                <label class="font-weight-bold">From Date</label>
-                                <input type="text" name="from" class="form-control flatpickr" value="<?php echo htmlspecialchars($fromDate); ?>">
-                            </div>
-                        </div>
-                        <div class="col-md-3">
-                            <div class="form-group mb-0">
-                                <label class="font-weight-bold">To Date</label>
-                                <input type="text" name="to" class="form-control flatpickr" value="<?php echo htmlspecialchars($toDate); ?>">
-                            </div>
-                        </div>
-                        <div class="col-md-3 text-right">
-                            <button type="submit" class="btn btn-primary font-weight-bold shadow-sm mr-2">
-                                <i class="fas fa-filter mr-1"></i> Apply Filter
-                            </button>
-                            <a href="?export=1&from=<?php echo urlencode($fromDate); ?>&to=<?php echo urlencode($toDate); ?>&offer_id=<?php echo urlencode($offerId ?: 'all'); ?>" class="btn btn-success font-weight-bold shadow-sm">
-                                <i class="fas fa-download mr-1"></i> CSV
-                            </a>
+
+                        <!-- Quick Date Presets -->
+                        <div class="mt-3 pt-3 border-top d-flex flex-wrap align-items-center gap-2">
+                            <span class="font-weight-bold text-muted mr-2 small"><i class="fas fa-clock mr-1"></i>Quick Ranges:</span>
+                            <button type="button" class="btn btn-sm btn-light border font-weight-bold mr-1" onclick="setQuickRange('today')">Today</button>
+                            <button type="button" class="btn btn-sm btn-light border font-weight-bold mr-1" onclick="setQuickRange('yesterday')">Yesterday</button>
+                            <button type="button" class="btn btn-sm btn-light border font-weight-bold mr-1" onclick="setQuickRange('last7')">Last 7 Days</button>
+                            <button type="button" class="btn btn-sm btn-light border font-weight-bold mr-1" onclick="setQuickRange('last30')">Last 30 Days</button>
+                            <button type="button" class="btn btn-sm btn-light border font-weight-bold" onclick="setQuickRange('thisMonth')">This Month</button>
                         </div>
                     </form>
                 </div>
@@ -427,8 +451,11 @@ $overallCR = $summary['clicks'] > 0 ? round(($summary['conversions'] / $summary[
 <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
 
 <script>
+let flatpickrFrom, flatpickrTo;
+
 $(document).ready(function() {
-    $('.flatpickr').flatpickr({ dateFormat: "Y-m-d" });
+    flatpickrFrom = $('#from_date').flatpickr({ dateFormat: "Y-m-d" });
+    flatpickrTo = $('#to_date').flatpickr({ dateFormat: "Y-m-d" });
     
     $('#reportsDataTable').DataTable({
         pageLength: 10,
@@ -436,6 +463,46 @@ $(document).ready(function() {
         order: [[7, 'desc']]
     });
 });
+
+function formatDate(date) {
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const day = String(date.getDate()).padStart(2, '0');
+    return `${year}-${month}-${day}`;
+}
+
+function setQuickRange(type) {
+    const now = new Date();
+    let from = new Date();
+    let to = new Date();
+
+    if (type === 'today') {
+        from = now;
+        to = now;
+    } else if (type === 'yesterday') {
+        from.setDate(now.getDate() - 1);
+        to.setDate(now.getDate() - 1);
+    } else if (type === 'last7') {
+        from.setDate(now.getDate() - 6);
+        to = now;
+    } else if (type === 'last30') {
+        from.setDate(now.getDate() - 29);
+        to = now;
+    } else if (type === 'thisMonth') {
+        from = new Date(now.getFullYear(), now.getMonth(), 1);
+        to = now;
+    }
+
+    const fromStr = formatDate(from);
+    const toStr = formatDate(to);
+
+    flatpickrFrom.setDate(fromStr);
+    flatpickrTo.setDate(toStr);
+    $('#from_date').val(fromStr);
+    $('#to_date').val(toStr);
+
+    $('#reportsFilterForm').submit();
+}
 </script>
 </body>
 </html>
