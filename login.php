@@ -651,39 +651,39 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 </div>
 
                 <h1 class="brand-tagline">
-                    Performance intelligence for the digital age
+                    Scale Your Performance Marketing With Real Intelligence
                 </h1>
                 
                 <p class="brand-description">
-                    Join the leading global affiliate network. Access real-time analytics, 
-                    premium offers, and AI-powered optimization tools trusted by 100,000+ partners.
+                    Empowering top-tier publishers and performance advertisers worldwide. 
+                    Unlock direct advertiser budgets, ultra-fast S2S postback tracking, and guaranteed bi-weekly payouts.
                 </p>
 
                 <div class="floating-stats">
                     <div class="stat">
-                        <span class="stat-number">100K+</span>
-                        <span class="stat-label">Active partners</span>
+                        <span class="stat-number">10K+</span>
+                        <span class="stat-label">Active Offers</span>
                     </div>
                     <div class="stat">
-                        <span class="stat-number">$450M+</span>
-                        <span class="stat-label">Annual payouts</span>
+                        <span class="stat-number">99.9%</span>
+                        <span class="stat-label">Tracking Uptime</span>
                     </div>
                     <div class="stat">
-                        <span class="stat-number">40+</span>
-                        <span class="stat-label">Countries</span>
+                        <span class="stat-number">Real-Time</span>
+                        <span class="stat-label">S2S Postback</span>
                     </div>
                 </div>
 
                 <div class="testimonial">
                     <div class="testimonial-quote">
-                        "IconMedia Network has transformed our acquisition strategy. 
-                        The platform's AI-driven matching increased our ROAS by 230%."
+                        "IconMedia is hands down the most reliable network we work with. 
+                        Instant postback delivery, transparent reporting, and zero payout delays."
                     </div>
                     <div class="testimonial-author">
-                        <div class="author-avatar">JD</div>
+                        <div class="author-avatar">IM</div>
                         <div class="author-info">
-                            <h4>James Davidson</h4>
-                            <p>Performance Director, Elevate Brands</p>
+                            <h4>Verified Global Publisher</h4>
+                            <p>Premium Performance Media Partner</p>
                         </div>
                     </div>
                 </div>
