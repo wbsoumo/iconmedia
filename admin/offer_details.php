@@ -317,6 +317,29 @@ $notes = [
             transition: all 0.3s ease;
             height: 100%;
         }
+
+        .stat-card-custom {
+            border-radius: 12px;
+            background: #ffffff;
+            padding: 20px;
+            border: 1px solid #e2e8f0;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.03);
+            text-align: center;
+            margin-bottom: 15px;
+        }
+
+        .stat-card-custom .stat-number {
+            font-size: 24px;
+            font-weight: 800;
+            color: #1e293b;
+        }
+
+        .stat-card-custom .stat-label {
+            font-size: 11px;
+            font-weight: 600;
+            color: #64748b;
+            text-transform: uppercase;
+        }
         
         .metric-card:hover {
             transform: translateY(-3px);
