@@ -740,9 +740,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             
             <div class="brand-content">
                 <div class="brand-logo">
-                    <div class="brand-icon">
-                        <i class="fas fa-chart-network"></i>
-                    </div>
+                    <img src="favicon.png" alt="IconMedia Logo" style="width: 48px; height: 48px; object-fit: contain; border-radius: 12px; background: rgba(255,255,255,0.1); padding: 4px;">
                     <span class="brand-name">IconMedia</span>
                 </div>
 
@@ -816,7 +814,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             <div class="form-container">
                 <!-- Mobile Logo -->
                 <div class="mobile-logo">
-                    <i class="fas fa-chart-network"></i>
+                    <img src="favicon.png" alt="IconMedia Logo" style="width: 36px; height: 36px; object-fit: contain; border-radius: 8px;">
                     <span>IconMedia</span>
                 </div>
 

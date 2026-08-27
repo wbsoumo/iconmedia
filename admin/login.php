@@ -570,8 +570,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     <span>SECURE ADMIN ACCESS</span>
                 </div>
                 
-                <div class="lock-icon">
-                    <i class="fas fa-lock"></i>
+                <div class="lock-icon" style="border-radius: 20px;">
+                    <img src="../favicon.png" alt="IconMedia Logo" style="width: 48px; height: 48px; object-fit: contain;">
                 </div>
                 
                 <h1>Administrator Login</h1>
