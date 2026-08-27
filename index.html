@@ -1058,6 +1058,34 @@ html, body {
    CONTRAST CORRECTION LAYER
 ===================================== */
 
+/* High-contrast nav links for top bar */
+.nav-links a {
+    color: #ffffff !important;
+    font-weight: 600 !important;
+}
+
+.nav-links a:hover {
+    color: #818cf8 !important;
+}
+
+/* High-contrast solid text for headers and gradient text */
+.hero-gradient-text {
+    background: linear-gradient(135deg, #4f46e5 0%, #2563eb 100%) !important;
+    -webkit-background-clip: text !important;
+    -webkit-text-fill-color: transparent !important;
+    background-clip: text !important;
+}
+
+.logo span {
+    color: #ffffff !important;
+    background: none !important;
+    -webkit-text-fill-color: #ffffff !important;
+}
+
+.logo-domain {
+    color: #818cf8 !important;
+}
+
 /* Stronger body contrast */
 body {
     color: #0f172a !important;
@@ -1068,7 +1096,8 @@ body {
 .stat-item-mini p,
 .kpi-card span,
 .trusted-title {
-    color: #334155 !important;
+    color: #1e293b !important;
+    font-weight: 500 !important;
 }
 
 /* Fix dashboard small labels */
