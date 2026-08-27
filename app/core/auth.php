@@ -96,12 +96,13 @@ function auth_login($email, $password)
     // Update last login
     $upd = $pdo->prepare("
         UPDATE users
-        SET last_login_ip = INET6_ATON(:ip),
+        SET last_login_ip = :ip,
             last_login_at = NOW()
         WHERE user_id = :uid
     ");
+    $clientIp = $_SERVER['HTTP_CF_CONNECTING_IP'] ?? $_SERVER['HTTP_X_FORWARDED_FOR'] ?? $_SERVER['REMOTE_ADDR'] ?? '127.0.0.1';
     $upd->execute([
-        'ip'  => $_SERVER['REMOTE_ADDR'] ?? null,
+        'ip'  => $clientIp,
         'uid' => $user['user_id']
     ]);
 

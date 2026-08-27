@@ -25,6 +25,7 @@ $userStmt = $pdo->prepare("
         u.teams_id,
         u.status,
         u.balance,
+        u.last_login_ip,
         u.created_at,
         u.updated_at,
         am.name  AS manager_name,
@@ -420,9 +421,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
                                     <small class="text-muted d-block">Account Manager</small>
                                     <strong class="text-dark"><i class="fas fa-user-shield mr-1 text-info"></i><?php echo htmlspecialchars($user['manager_name'] ?: 'Network AM'); ?></strong>
                                 </div>
-                                <div>
+                                <div class="mb-2">
                                     <small class="text-muted d-block">Joined Date</small>
                                     <strong class="text-dark"><i class="fas fa-calendar-alt mr-1 text-warning"></i><?php echo date('M d, Y', strtotime($user['created_at'])); ?></strong>
+                                </div>
+                                <div>
+                                    <small class="text-muted d-block">Last Login IP</small>
+                                    <code class="p-1 bg-light rounded text-dark font-weight-bold"><?php echo htmlspecialchars($user['last_login_ip'] ?: '127.0.0.1'); ?></code>
                                 </div>
                             </div>
                         </div>
