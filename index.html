@@ -1058,14 +1058,24 @@ html, body {
    CONTRAST CORRECTION LAYER
 ===================================== */
 
-/* High-contrast nav links for top bar */
+/* High-contrast nav links for top bar & mobile menu drawer */
 .nav-links a {
-    color: #ffffff !important;
+    color: #0f172a !important;
     font-weight: 600 !important;
 }
 
 .nav-links a:hover {
-    color: #818cf8 !important;
+    color: #2563eb !important;
+}
+
+@media (min-width: 1025px) {
+    .nav-links a {
+        color: #ffffff !important;
+    }
+
+    .nav-links a:hover {
+        color: #818cf8 !important;
+    }
 }
 
 /* High-contrast solid text for headers and gradient text */
