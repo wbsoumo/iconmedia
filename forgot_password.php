@@ -337,12 +337,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
         <div class="back-link">
             <a href="/login.php">← Back to Login</a>
         </div>
-
-        <div class="db-link-box">
-            <strong>Database Migration Link:</strong><br>
-            If you need to initialize the <code>password_resets</code> database table, run:<br>
-            <a href="/setup_password_reset_db.php" target="_blank" style="color: #2563eb; font-weight: bold;">https://iconmedianetwork.in/setup_password_reset_db.php</a>
-        </div>
     </div>
 </body>
 </html>
