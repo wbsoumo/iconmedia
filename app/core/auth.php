@@ -53,7 +53,7 @@ require_once __DIR__ . '/../config/database.php';
 /**
  * Perform login (email + password)
  */
-function auth_login($email, $password)
+function auth_login($email, $password, $remember = false, $requiredRole = null)
 {
     global $pdo;
 
@@ -79,6 +79,10 @@ function auth_login($email, $password)
 
     if ($user['status'] !== 'active') {
         return ['success' => false, 'error' => 'Account not active'];
+    }
+
+    if ($requiredRole && strtolower($user['role_name']) !== strtolower($requiredRole)) {
+        return ['success' => false, 'error' => 'Invalid account type selected for this user. Please select ' . ucfirst($user['role_name']) . '.'];
     }
 
     // Prevent session fixation

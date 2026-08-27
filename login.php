@@ -28,7 +28,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     } elseif (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
         $error = 'Please enter a valid email address';
     } else {
-        $result = auth_login($email, $pass, $remember);
+        $result = auth_login($email, $pass, $remember, $role);
         
         if (!$result['success']) {
             $error = $result['error'] ?? 'Invalid credentials. Please try again.';
@@ -769,7 +769,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     <div class="form-group">
                         <div style="display: flex; justify-content: space-between; align-items: center;">
                             <label class="form-label" for="password">Password</label>
-                            <a href="#" class="forgot-link">Forgot?</a>
+                            <a href="/forgot_password.php" class="forgot-link">Forgot?</a>
                         </div>
                         <div class="input-wrapper">
                             <i class="fas fa-lock input-icon"></i>
