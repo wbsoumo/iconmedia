@@ -967,7 +967,7 @@ $topAffiliates = $affiliatesStmt->fetchAll(PDO::FETCH_ASSOC);
                                                         <span class="cr-badge"><?php echo number_format($cr, 2); ?>%</span>
                                                     </td>
                                                     <td>
-                                                        <button class="btn btn-sm btn-outline-primary" onclick="window.location.href='edit_offer.php?id=<?php echo $o['offer_id']; ?>'">
+                                                        <button class="btn btn-sm btn-outline-primary" onclick="window.location.href='offer_edit.php?id=<?php echo $o['offer_id']; ?>'">
                                                             <i class="fas fa-edit"></i>
                                                         </button>
                                                     </td>

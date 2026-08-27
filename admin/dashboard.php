@@ -567,6 +567,43 @@ $systemStats = $pdo->query("
             color: #e3e6f0;
             margin-bottom: 15px;
         }
+
+        /* 2x2 Grid strictly for the 4 main stat boxes on Mobile */
+        @media (max-width: 767.98px) {
+            .stat-boxes-row > [class*="col-"] {
+                flex: 0 0 50% !important;
+                max-width: 50% !important;
+                padding-left: 6px !important;
+                padding-right: 6px !important;
+            }
+
+            .stat-boxes-row .small-box {
+                margin-bottom: 12px !important;
+            }
+
+            .stat-boxes-row .small-box .inner {
+                padding: 12px 10px !important;
+            }
+
+            .stat-boxes-row .small-box h3 {
+                font-size: 18px !important;
+                margin-bottom: 2px !important;
+            }
+
+            .stat-boxes-row .small-box p {
+                font-size: 11px !important;
+                margin-bottom: 0 !important;
+            }
+
+            .stat-boxes-row .small-box .icon {
+                display: none !important;
+            }
+
+            .stat-boxes-row .small-box-footer {
+                padding: 4px 0 !important;
+                font-size: 11px !important;
+            }
+        }
         
         .dashboard-header {
             display: flex;
@@ -1027,7 +1064,7 @@ $systemStats = $pdo->query("
                 <?php endif; ?>
 
                 <!-- Main Stats Cards -->
-                <div class="row">
+                <div class="row stat-boxes-row">
                     <!-- Revenue & Profit -->
                     <div class="col-lg-3 col-md-6">
                         <div class="small-box bg-gradient-success">
