@@ -1278,16 +1278,17 @@ body {
 }
 
 /* Brand items */
-.trusted-track span {
-    font-size: 1.25rem;
-    font-weight: 600;
-    color: var(--neutral-700);
-    white-space: nowrap;
-    transition: color 0.3s ease;
+.trusted-track img {
+    height: 38px;
+    max-width: 140px;
+    object-fit: contain;
+    filter: grayscale(100%) opacity(0.85);
+    transition: all 0.3s ease;
 }
 
-.trusted-track span:hover {
-    color: var(--primary-600);
+.trusted-track img:hover {
+    filter: grayscale(0%) opacity(1);
+    transform: scale(1.06);
 }
 
 /* Infinite animation */
@@ -1430,24 +1431,24 @@ body {
 
         <div class="trusted-slider">
             <div class="trusted-track">
-                <span>Flipkart</span>
-                <span>Myntra</span>
-                <span>MakeMyTrip</span>
-                <span>Reliance</span>
-                <span>Tata Sky</span>
-                <span>Paytm</span>
-                <span>Amazon</span>
-                <span>Zomato</span>
+                <img src="https://upload.wikimedia.org/wikipedia/commons/7/7a/Flipkart_logo.svg" alt="Flipkart">
+                <img src="https://upload.wikimedia.org/wikipedia/commons/b/bc/Myntra_Logo.png" alt="Myntra">
+                <img src="https://upload.wikimedia.org/wikipedia/commons/f/fa/MakeMyTrip_Logo.svg" alt="MakeMyTrip">
+                <img src="https://upload.wikimedia.org/wikipedia/commons/c/cd/Paytm_logo.svg" alt="Paytm">
+                <img src="https://upload.wikimedia.org/wikipedia/commons/a/a9/Amazon_logo.svg" alt="Amazon">
+                <img src="https://upload.wikimedia.org/wikipedia/commons/b/bd/Zomato_Logo.svg" alt="Zomato">
+                <img src="https://upload.wikimedia.org/wikipedia/commons/1/13/Swiggy_logo.svg" alt="Swiggy">
+                <img src="https://upload.wikimedia.org/wikipedia/commons/5/50/Reliance_Jio_Logo.svg" alt="Jio">
 
                 <!-- Duplicate for seamless loop -->
-                <span>Flipkart</span>
-                <span>Myntra</span>
-                <span>MakeMyTrip</span>
-                <span>Reliance</span>
-                <span>Tata Sky</span>
-                <span>Paytm</span>
-                <span>Amazon</span>
-                <span>Zomato</span>
+                <img src="https://upload.wikimedia.org/wikipedia/commons/7/7a/Flipkart_logo.svg" alt="Flipkart">
+                <img src="https://upload.wikimedia.org/wikipedia/commons/b/bc/Myntra_Logo.png" alt="Myntra">
+                <img src="https://upload.wikimedia.org/wikipedia/commons/f/fa/MakeMyTrip_Logo.svg" alt="MakeMyTrip">
+                <img src="https://upload.wikimedia.org/wikipedia/commons/c/cd/Paytm_logo.svg" alt="Paytm">
+                <img src="https://upload.wikimedia.org/wikipedia/commons/a/a9/Amazon_logo.svg" alt="Amazon">
+                <img src="https://upload.wikimedia.org/wikipedia/commons/b/bd/Zomato_Logo.svg" alt="Zomato">
+                <img src="https://upload.wikimedia.org/wikipedia/commons/1/13/Swiggy_logo.svg" alt="Swiggy">
+                <img src="https://upload.wikimedia.org/wikipedia/commons/5/50/Reliance_Jio_Logo.svg" alt="Jio">
             </div>
         </div>
     </div>
