@@ -390,17 +390,86 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             <nav class="mt-2">
                 <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu">
                     <li class="nav-item">
-                        <a href="dashboard.php" class="nav-link"><i class="nav-icon fas fa-tachometer-alt"></i><p>Dashboard</p></a>
+                        <a href="dashboard.php" class="nav-link">
+                            <i class="nav-icon fas fa-chart-line"></i>
+                            <p>Dashboard</p>
+                        </a>
                     </li>
+
                     <li class="nav-header">CAMPAIGNS</li>
                     <li class="nav-item">
-                        <a href="campaigns.php" class="nav-link"><i class="nav-icon fas fa-bullhorn"></i><p>Manage Campaigns</p></a>
+                        <a href="campaigns.php" class="nav-link">
+                            <i class="nav-icon fas fa-bullhorn"></i>
+                            <p>Manage Campaigns</p>
+                        </a>
                     </li>
                     <li class="nav-item">
-                        <a href="create_campaign.php" class="nav-link active"><i class="nav-icon fas fa-plus-circle"></i><p>Create Campaign</p></a>
+                        <a href="create_campaign.php" class="nav-link active">
+                            <i class="nav-icon fas fa-plus"></i>
+                            <p>Create Campaign</p>
+                        </a>
                     </li>
                     <li class="nav-item">
-                        <a href="offers.php" class="nav-link"><i class="nav-icon fas fa-gift"></i><p>All Offers</p></a>
+                        <a href="campaign_access.php" class="nav-link">
+                            <i class="nav-icon fas fa-key"></i>
+                            <p>Campaign Access</p>
+                        </a>
+                    </li>
+
+                    <li class="nav-header">REPORTS</li>
+                    <li class="nav-item">
+                        <a href="reports_campaigns.php" class="nav-link">
+                            <i class="nav-icon fas fa-chart-bar"></i>
+                            <p>Campaign Report</p>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="reports_affiliates.php" class="nav-link">
+                            <i class="nav-icon fas fa-users"></i>
+                            <p>Affiliate Report</p>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="reports_advertisers.php" class="nav-link">
+                            <i class="nav-icon fas fa-building"></i>
+                            <p>Advertiser Report</p>
+                        </a>
+                    </li>
+
+                    <li class="nav-header">PUBLISHERS</li>
+                    <li class="nav-item">
+                        <a href="publishers.php" class="nav-link">
+                            <i class="nav-icon fas fa-user-friends"></i>
+                            <p>Manage Publishers</p>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="publisher_postbacks.php" class="nav-link">
+                            <i class="nav-icon fas fa-link"></i>
+                            <p>Publisher Postbacks</p>
+                        </a>
+                    </li>
+
+                    <li class="nav-header">ADVERTISERS</li>
+                    <li class="nav-item">
+                        <a href="advertisers.php" class="nav-link">
+                            <i class="nav-icon fas fa-briefcase"></i>
+                            <p>Manage Advertisers</p>
+                        </a>
+                    </li>
+
+                    <li class="nav-header">ACCOUNT</li>
+                    <li class="nav-item">
+                        <a href="account_managers.php" class="nav-link">
+                            <i class="nav-icon fas fa-user-tie"></i>
+                            <p>Account Managers</p>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="settings.php" class="nav-link">
+                            <i class="nav-icon fas fa-cog"></i>
+                            <p>Settings</p>
+                        </a>
                     </li>
                 </ul>
             </nav>
