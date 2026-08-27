@@ -321,9 +321,7 @@ $topAffiliates = $affStmt->fetchAll(PDO::FETCH_ASSOC);
                                 </tr>
                             </thead>
                             <tbody>
-                                <?php if (empty($dailyStats)): ?>
-                                <tr><td colspan="7" class="text-center py-4 text-muted">No daily click or conversion activity recorded yet.</td></tr>
-                                <?php else: ?>
+                                <?php if (!empty($dailyStats)): ?>
                                 <?php foreach ($dailyStats as $ds): 
                                     $dClicks = (int)$ds['daily_clicks'];
                                     $dConvs = (int)$ds['daily_conversions'];
