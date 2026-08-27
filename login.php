@@ -21,7 +21,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $pass   = $_POST['password'] ?? '';
     $remember = isset($_POST['remember']);
 
-    if (!in_array($role, ['affiliate', 'advertiser'], true)) {
+    if (!in_array($role, ['affiliate', 'advertiser', 'manager'], true)) {
         $error = 'Please select your account type';
     } elseif ($email === '' || $pass === '') {
         $error = 'Email and password are required';
@@ -37,6 +37,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             session_regenerate_id(true);
             if ($result['role'] === 'affiliate') {
                 header('Location: /affiliate/dashboard.php');
+            } elseif ($result['role'] === 'manager') {
+                header('Location: /manager/dashboard.php');
             } else {
                 header('Location: /advertiser/dashboard.php');
             }
@@ -724,7 +726,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     <!-- Role Selection - Premium Card Style -->
                     <div class="form-group">
                         <label class="form-label">I am a...</label>
-                        <div class="role-container">
+                        <div class="role-container" style="grid-template-columns: repeat(3, 1fr); gap: 10px;">
                             <div class="role-card">
                                 <input type="radio" id="role_affiliate" name="role" value="affiliate" <?= (isset($_POST['role']) && $_POST['role'] === 'affiliate') ? 'checked' : '' ?>>
                                 <label for="role_affiliate">
@@ -743,6 +745,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                                     </div>
                                     <span class="role-title">Advertiser</span>
                                     <span class="role-desc">Brand / Merchant</span>
+                                </label>
+                            </div>
+                            <div class="role-card">
+                                <input type="radio" id="role_manager" name="role" value="manager" <?= (isset($_POST['role']) && $_POST['role'] === 'manager') ? 'checked' : '' ?>>
+                                <label for="role_manager">
+                                    <div class="role-icon">
+                                        <i class="fas fa-user-tie"></i>
+                                    </div>
+                                    <span class="role-title">Manager</span>
+                                    <span class="role-desc">Account Manager</span>
                                 </label>
                             </div>
                         </div>
