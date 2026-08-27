@@ -26,23 +26,23 @@
     --primary-800: #3730a3;
     --primary-900: #312e81;
     
-    /* Neutral palette — sophisticated */
+    /* Neutral palette — high contrast */
     --neutral-50: #fafafa;
     --neutral-100: #f5f5f5;
     --neutral-200: #e5e5e5;
     --neutral-300: #d4d4d4;
-    --neutral-400: #a3a3a3;
-    --neutral-500: #737373;
-    --neutral-600: #525252;
-    --neutral-700: #404040;
-    --neutral-800: #262626;
-    --neutral-900: #171717;
+    --neutral-400: #737373;
+    --neutral-500: #525252;
+    --neutral-600: #404040;
+    --neutral-700: #262626;
+    --neutral-800: #171717;
+    --neutral-900: #0a0a0a;
     
     /* Semantic */
     --background: #ffffff;
-    --foreground: var(--neutral-900);
-    --muted: var(--neutral-500);
-    --border: var(--neutral-200);
+    --foreground: #0f172a;
+    --muted: #475569;
+    --border: #cbd5e1;
     --card-bg: #ffffff;
     
     /* Gradients — subtle & elegant */
@@ -1060,22 +1060,21 @@ html, body {
 
 /* Stronger body contrast */
 body {
-    color: var(--neutral-900) !important;
+    color: #0f172a !important;
 }
 
 /* Fix light muted text */
 .hero-desc,
 .stat-item-mini p,
-.footer p,
 .kpi-card span,
 .trusted-title {
-    color: var(--neutral-700) !important;
+    color: #334155 !important;
 }
 
 /* Fix dashboard small labels */
 .kpi-card span:first-child,
 .chart-bar::after {
-    color: var(--neutral-700) !important;
+    color: #1e293b !important;
 }
 
 /* Improve neutral card backgrounds */
@@ -1084,16 +1083,52 @@ body {
 .static-chart,
 .top-offers-card {
     background: #ffffff !important;
+    border: 1px solid #cbd5e1 !important;
+}
+
+/* Product cards contrast fix */
+.product-card {
+    background: #ffffff !important;
+    border: 1px solid #cbd5e1 !important;
+    box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05) !important;
+}
+.product-card h3 {
+    color: #0f172a !important;
+    font-weight: 700 !important;
+}
+.product-card p {
+    color: #334155 !important;
+}
+
+/* Leader card contrast fix */
+.leader-card {
+    background: #ffffff !important;
+    border: 1px solid #cbd5e1 !important;
+}
+.leader-card h4 {
+    color: #0f172a !important;
+}
+.leader-card p {
+    color: #475569 !important;
+}
+
+/* Hero card contrast fix */
+.hero-card {
+    background: #ffffff !important;
+    border: 1px solid #cbd5e1 !important;
+}
+.hero-card .flex-row span:first-child {
+    color: #0f172a !important;
 }
 
 /* Improve trusted brands visibility */
 .trusted-track span {
-    color: var(--neutral-700) !important;
+    color: #1e293b !important;
 }
 
 /* Improve referral muted text */
 .referral-box span {
-    color: var(--neutral-800) !important;
+    color: #0f172a !important;
 }
 /* Fix dashboard header alignment */
 .card > .flex-row {
@@ -1249,11 +1284,11 @@ body {
         
         <!-- Desktop Navigation -->
         <div class="nav-links" id="navLinks">
-            <a href="#">Advertisers</a>
-            <a href="#">Publishers</a>
-            <a href="#">Solutions</a>
-            <a href="#">Resources</a>
-            <a href="#">Careers</a>
+            <a href="register.php?role=advertiser">Advertisers</a>
+            <a href="register.php?role=affiliate">Publishers</a>
+            <a href="#solutions">Solutions</a>
+            <a href="#leadership">Leadership</a>
+            <a href="login.php">Partner Portal</a>
             <!-- Mobile CTAs -->
             <div class="nav-cta mobile">
                 <button class="btn btn-outline" onclick="openLogin()">Sign In</button>
@@ -1381,10 +1416,10 @@ body {
 
 
 <!-- Products / Solutions -->
-<div class="container">
+<div class="container" id="solutions">
     <div class="text-center" style="margin: var(--space-16) 0 var(--space-8);">
         <div class="badge" style="margin: 0 auto var(--space-4); width: fit-content;">INTELLIGENT AD TECH</div>
-        <h2 style="font-size: clamp(2rem, 4vw, 3rem); max-width: 700px; margin: 0 auto; color:white;">
+        <h2 style="font-size: clamp(2rem, 4vw, 3rem); max-width: 700px; margin: 0 auto; color: #0f172a;">
             The full-stack affiliate<br>
             <span class="hero-gradient-text">performance engine</span>
         </h2>
@@ -1393,21 +1428,21 @@ body {
     <div class="product-grid">
         <div class="product-card">
             <div class="card-icon"><i class="fas fa-chart-pie"></i></div>
-            <h3 style="font-size: 1.5rem; margin-bottom: var(--space-3); color:white;">Data Management</h3>
-            <p style="color: var(--neutral-600);">AI/ML audience discovery, lookalike modeling, connected TV cohorts, and predictive budget planner.</p>
-            <a href="#" class="link-arrow">Discover audiences <i class="fas fa-arrow-right"></i></a>
+            <h3 style="font-size: 1.5rem; margin-bottom: var(--space-3); color: #0f172a;">Data Management</h3>
+            <p style="color: #334155;">AI/ML audience discovery, lookalike modeling, connected TV cohorts, and predictive budget planner.</p>
+            <a href="register.php?role=advertiser" class="link-arrow">Discover audiences <i class="fas fa-arrow-right"></i></a>
         </div>
         <div class="product-card">
             <div class="card-icon"><i class="fas fa-bolt"></i></div>
-            <h3 style="font-size: 1.5rem; margin-bottom: var(--space-3); color:white;">Demand Side</h3>
-            <p style="color: var(--neutral-600);">Real-time ad serving, anti-fraud, predictive bidding, full-funnel reporting, CTV targeting.</p>
-            <a href="#" class="link-arrow">Launch campaigns <i class="fas fa-arrow-right"></i></a>
+            <h3 style="font-size: 1.5rem; margin-bottom: var(--space-3); color: #0f172a;">Demand Side</h3>
+            <p style="color: #334155;">Real-time ad serving, anti-fraud, predictive bidding, full-funnel reporting, CTV targeting.</p>
+            <a href="register.php?role=advertiser" class="link-arrow">Launch campaigns <i class="fas fa-arrow-right"></i></a>
         </div>
         <div class="product-card">
             <div class="card-icon"><i class="fas fa-star"></i></div>
-            <h3 style="font-size: 1.5rem; margin-bottom: var(--space-3); color:white;">Influencer Suite</h3>
-            <p style="color: var(--neutral-600);">End-to-end creator collaboration, media kit builder, automated invoicing, real-time trend insights.</p>
-            <a href="#" class="link-arrow">For brands & creators <i class="fas fa-arrow-right"></i></a>
+            <h3 style="font-size: 1.5rem; margin-bottom: var(--space-3); color: #0f172a;">Influencer Suite</h3>
+            <p style="color: #334155;">End-to-end creator collaboration, media kit builder, automated invoicing, real-time trend insights.</p>
+            <a href="register.php?role=affiliate" class="link-arrow">For brands & creators <i class="fas fa-arrow-right"></i></a>
         </div>
     </div>
 </div>
@@ -1452,9 +1487,9 @@ body {
                 <div class="badge" style="background: var(--primary-50); color: var(--primary-700);">
                     <i class="fas fa-chart-line"></i> PUBLISHER DASHBOARD
                 </div>
-                <h2 style="font-size: 2rem; margin-top: var(--space-3); color:white;">Your performance,<br>in real time</h2>
+                <h2 style="font-size: 2rem; margin-top: var(--space-3); color: #0f172a;">Your performance,<br>in real time</h2>
             </div>
-            <div style="background: var(--neutral-100); padding: 0.5rem 1.5rem; border-radius: var(--radius-full); font-size: 0.875rem; border: 1px solid var(--border);">
+            <div style="background: var(--neutral-100); padding: 0.5rem 1.5rem; border-radius: var(--radius-full); font-size: 0.875rem; border: 1px solid var(--border); color: #0f172a;">
                 <i class="far fa-calendar-alt"></i> March 1 – 15, 2026
             </div>
         </div>
@@ -1463,35 +1498,34 @@ body {
         <div class="kpi-grid">
             <div class="kpi-card">
                 <div class="flex-row">
-                    <span style="color: var(--neutral-500);">Clicks</span>
+                    <span style="color: #475569;">Clicks</span>
                     <span style="background: var(--primary-100); padding: 0.25rem 0.75rem; border-radius: var(--radius-full); font-size: 0.75rem; color: var(--primary-700);">+12.4%</span>
                 </div>
                 <div class="kpi-value">1,28,435</div>
                 <span class="trend-up"><i class="fas fa-arrow-up"></i> 8.2% vs last period</span>
             </div>
             <div class="kpi-card">
-                <span style="color: var(--neutral-500);">Conversions</span>
+                <span style="color: #475569;">Conversions</span>
                 <div class="kpi-value">8,435</div>
                 <span class="trend-up">↑ 1,213 (6.8%)</span>
             </div>
             <div class="kpi-card">
-                <span style="color: var(--neutral-500);">Revenue (INR)</span>
+                <span style="color: #475569;">Revenue (INR)</span>
                 <div class="kpi-value"><span class="rupee">₹</span>42.58L</div>
                 <span class="trend-up">↑ 12.3%</span>
             </div>
             <div class="kpi-card">
-                <span style="color: var(--neutral-500);">EPC (INR)</span>
+                <span style="color: #475569;">EPC (INR)</span>
                 <div class="kpi-value"><span class="rupee">₹</span>33.17</div>
-                <span style="color: #f59e0b;">↗︎ +₹4.20</span>
+                <span style="color: #d97706; font-weight: 600;">↗︎ +₹4.20</span>
             </div>
         </div>
 
         <!-- Chart + Offers -->
-<div class="dashboard-split">
-
+        <div class="dashboard-split">
             <div class="top-offers-card" style="border-radius: var(--radius-xl); padding: var(--space-6);">
                 <div class="flex-row">
-                    <span style="font-weight: 700;">Daily Revenue (7 days)</span>
+                    <span style="font-weight: 700; color: #0f172a;">Daily Revenue (7 days)</span>
                     <span style="color: var(--primary-600); font-size: 0.875rem;"><i class="fas fa-calendar-week"></i> This week</span>
                 </div>
                 <!-- Static Chart Bars -->
@@ -1504,13 +1538,13 @@ body {
                     <div class="chart-bar" style="height: 54px;" data-value="68.9K"></div>
                     <div class="chart-bar" style="height: 57px;" data-value="72.4K"></div>
                 </div>
-                <div class="flex-row" style="justify-content: space-between; margin-top: var(--space-2); color: var(--neutral-500); font-size: 0.75rem;">
+                <div class="flex-row" style="justify-content: space-between; margin-top: var(--space-2); color: #475569; font-size: 0.75rem;">
                     <span>Mon</span><span>Tue</span><span>Wed</span><span>Thu</span><span>Fri</span><span>Sat</span><span>Sun</span>
                 </div>
             </div>
             
             <div class="top-offers-card" style="border-radius: var(--radius-xl); padding: var(--space-6);">
-                <span style="font-weight: 700;">Top Converting Offers</span>
+                <span style="font-weight: 700; color: #0f172a;">Top Converting Offers</span>
                 <div style="margin-top: var(--space-4);">
                     <div class="offer-row highlight">
                         <span><i class="fas fa-crown" style="color: #f59e0b;"></i> Flipkart Big Billion</span>
@@ -1533,7 +1567,7 @@ body {
                         <span style="font-weight: 700;"><span class="rupee">₹</span>520 CPA</span>
                     </div>
                 </div>
-                <button class="btn btn-outline" style="width:100%; margin-top: var(--space-6);">Explore all offers →</button>
+                <button class="btn btn-outline" onclick="openRegister()" style="width:100%; margin-top: var(--space-6);">Explore all offers →</button>
             </div>
         </div>
 
@@ -1541,12 +1575,12 @@ body {
         <div class="referral-box">
             <div class="flex-row" style="justify-content: space-between; flex-wrap: wrap; gap: var(--space-4);">
                 <div class="flex" style="gap: var(--space-4);">
-                    <span style="font-weight: 600;">Your Referral Link</span>
-                    <span class="referral-link">https://iconmedianetwork.in/register.php?ref=admin</span>
+                    <span style="font-weight: 600; color: #0f172a;">Your Referral Link</span>
+                    <span class="referral-link">https://iconmedianetwork.in/register.php?ref=partner</span>
                 </div>
                 <div class="flex" style="gap: var(--space-4);">
                     <span><i class="fas fa-check-circle" style="color: #10b981;"></i> Pending: <span class="rupee">₹</span>12,400</span>
-                    <span><i class="fas fa-clock" style="color: var(--neutral-500);"></i> Approx. 3h</span>
+                    <span><i class="fas fa-clock" style="color: #475569;"></i> Approx. 3h</span>
                 </div>
             </div>
         </div>
@@ -1554,40 +1588,39 @@ body {
 </div>
 
 <!-- Leadership -->
-<div class="container">
+<div class="container" id="leadership">
     <div class="text-center" style="margin: var(--space-20) 0 var(--space-8);">
         <div class="badge" style="margin: 0 auto var(--space-4); width: fit-content;">LEADERSHIP</div>
-        <h2 style="font-size: clamp(2rem, 4vw, 3rem); max-width: 600px; margin: 0 auto; color: #ffffff;">
-    Driven by industry pioneers
-</h2>
-
+        <h2 style="font-size: clamp(2rem, 4vw, 3rem); max-width: 600px; margin: 0 auto; color: #0f172a;">
+            Driven by industry pioneers
+        </h2>
     </div>
     
     <div class="leadership-grid">
         <div class="leader-card">
             <div class="leader-avatar">RA</div>
-            <h4 style="font-weight: 700;">Rajesh Agarwal</h4>
-            <p style="color: var(--neutral-500);">Co-Founder & CEO</p>
+            <h4 style="font-weight: 700; color: #0f172a;">Rajesh Agarwal</h4>
+            <p style="color: #475569;">Co-Founder & CEO</p>
         </div>
         <div class="leader-card">
             <div class="leader-avatar">PM</div>
-            <h4 style="font-weight: 700;">Priya Mehra</h4>
-            <p style="color: var(--neutral-500);">Founder & CTO</p>
+            <h4 style="font-weight: 700; color: #0f172a;">Priya Mehra</h4>
+            <p style="color: #475569;">Founder & CTO</p>
         </div>
         <div class="leader-card">
             <div class="leader-avatar">VK</div>
-            <h4 style="font-weight: 700;">Vikram Kapoor</h4>
-            <p style="color: var(--neutral-500);">Director, Growth</p>
+            <h4 style="font-weight: 700; color: #0f172a;">Vikram Kapoor</h4>
+            <p style="color: #475569;">Director, Growth</p>
         </div>
         <div class="leader-card">
             <div class="leader-avatar">AJ</div>
-            <h4 style="font-weight: 700;">Anjali Jain</h4>
-            <p style="color: var(--neutral-500);">Head of Publisher Growth</p>
+            <h4 style="font-weight: 700; color: #0f172a;">Anjali Jain</h4>
+            <p style="color: #475569;">Head of Publisher Growth</p>
         </div>
         <div class="leader-card">
             <div class="leader-avatar">SK</div>
-            <h4 style="font-weight: 700;">Suresh Kumar</h4>
-            <p style="color: var(--neutral-500);">Head of Advertiser Sales</p>
+            <h4 style="font-weight: 700; color: #0f172a;">Suresh Kumar</h4>
+            <p style="color: #475569;">Head of Advertiser Sales</p>
         </div>
     </div>
 </div>
@@ -1611,16 +1644,16 @@ body {
             
             <div class="footer-links">
                 <h4>Platform</h4>
-                <p>Advertisers</p>
-                <p>Publishers</p>
-                <p>Agency Partners</p>
+                <p><a href="register.php?role=advertiser" style="color: var(--neutral-400); text-decoration: none;">Advertisers</a></p>
+                <p><a href="register.php?role=affiliate" style="color: var(--neutral-400); text-decoration: none;">Publishers</a></p>
+                <p><a href="#solutions" style="color: var(--neutral-400); text-decoration: none;">Agency Partners</a></p>
             </div>
             
             <div class="footer-links">
-                <h4>Resources</h4>
-                <p>Case Studies</p>
-                <p>Blog</p>
-                <p>Developer API</p>
+                <h4>Legal & Info</h4>
+                <p><a href="privacy.php" style="color: var(--neutral-400); text-decoration: none;">Privacy Policy</a></p>
+                <p><a href="terms.php" style="color: var(--neutral-400); text-decoration: none;">Terms of Service</a></p>
+                <p><a href="gdpr.php" style="color: var(--neutral-400); text-decoration: none;">GDPR Compliance</a></p>
             </div>
             
             <div class="footer-links">
@@ -1628,7 +1661,7 @@ body {
                 <p><i class="fas fa-envelope"></i> partner@iconmedia.in</p>
                 <p><i class="fas fa-phone-alt"></i> +91 82371 39130</p>
                 <div class="cta-box">
-                    <span style="color: white; font-weight: 600;">100K+ affiliates</span>
+                    <span style="color: white; font-weight: 600;">50K+ affiliates</span>
                     <span style="color: var(--neutral-400); display: block;">are already earning</span>
                     <button onclick="openRegister()">Join the network →</button>
                 </div>
@@ -1637,7 +1670,7 @@ body {
         
         <div class="footer-bottom">
             <span>© 2026 IconMediaNetwork.in. All rights reserved.</span>
-            <span>Privacy · Terms · GDPR</span>
+            <span><a href="privacy.php" style="color: inherit; text-decoration: none;">Privacy</a> · <a href="terms.php" style="color: inherit; text-decoration: none;">Terms</a> · <a href="gdpr.php" style="color: inherit; text-decoration: none;">GDPR</a></span>
         </div>
     </div>
 </footer>
