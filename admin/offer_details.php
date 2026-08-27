@@ -764,7 +764,46 @@ $notes = [
         <div class="content">
             <div class="container-fluid">
 
-                <!-- Summary Stat Cards (2x2 Mobile Responsive Grid) -->
+                <!-- Offer Header Banner -->
+                <div class="offer-header">
+                    <div class="d-flex justify-content-between align-items-start flex-wrap">
+                        <div class="mb-3">
+                            <div class="offer-id-badge mb-2 d-inline-block">
+                                <i class="fas fa-hashtag mr-1"></i> Campaign ID: #<?php echo $offer['offer_id']; ?>
+                            </div>
+                            <h1 class="offer-title text-white mb-2"><?php echo htmlspecialchars($offer['offer_name']); ?></h1>
+                            <div class="d-flex align-items-center mb-2">
+                                <span class="badge badge-<?php echo ($offer['status'] === 'active' || $offer['status'] === 'approved') ? 'success' : 'secondary'; ?> p-2 mr-2">
+                                    <?php echo ucfirst($offer['status']); ?>
+                                </span>
+                                <span class="badge badge-light p-2">
+                                    <i class="fas fa-<?php echo ($offer['visibility'] ?? 'public') == 'public' ? 'globe' : 'lock'; ?> mr-1"></i>
+                                    <?php echo ucfirst($offer['visibility'] ?? 'public'); ?>
+                                </span>
+                            </div>
+                            <p class="mb-0 text-white-50 small">
+                                <i class="fas fa-calendar-alt mr-1"></i> Created: <?php echo date('F d, Y h:i A', strtotime($offer['created_at'])); ?>
+                            </p>
+                        </div>
+                        <div class="action-buttons mb-3">
+                            <a href="campaigns.php" class="btn btn-light font-weight-bold mr-1">
+                                <i class="fas fa-arrow-left mr-1"></i> Back
+                            </a>
+                            <a href="offer_edit.php?id=<?php echo $offer['offer_id']; ?>" class="btn btn-warning font-weight-bold mr-1">
+                                <i class="fas fa-edit mr-1"></i> Edit Campaign
+                            </a>
+                            <?php if ($offer['status'] === 'active'): ?>
+                                <a href="campaigns.php?action=pause&id=<?php echo $offer['offer_id']; ?>" class="btn btn-danger font-weight-bold">
+                                    <i class="fas fa-pause mr-1"></i> Pause
+                                </a>
+                            <?php else: ?>
+                                <a href="campaigns.php?action=activate&id=<?php echo $offer['offer_id']; ?>" class="btn btn-success font-weight-bold">
+                                    <i class="fas fa-play mr-1"></i> Activate
+                                </a>
+                            <?php endif; ?>
+                        </div>
+                    </div>
+                </div>
                 <div class="row mb-4 stat-boxes-row">
                     <div class="col-6 col-md-2">
                         <div class="stat-card-custom">
