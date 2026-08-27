@@ -1,0 +1,14 @@
+# Enable custom error pages
+ErrorDocument 404 /404.php
+ErrorDocument 403 /403.php
+
+
+# Rewrite default favicon request to png
+RewriteEngine On
+RewriteRule ^favicon\.ico$ /favicon.png [L]
+
+# Set correct content type
+<Files "favicon.png">
+    Header set Content-Type "image/png"
+    Header set Cache-Control "public, max-age=31536000"
+</Files>

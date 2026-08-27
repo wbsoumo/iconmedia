@@ -1,0 +1,1709 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
+    <title>IconMedia · India's Premier Performance Network</title>
+    <!-- Google Fonts: Inter & Space Grotesk -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Font Awesome 6 -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+
+/* ==============================
+   DESIGN SYSTEM — PREMIUM EDITION
+================================ */
+:root {
+    /* Color palette — refined */
+    --primary-50: #eef2ff;
+    --primary-100: #e0e7ff;
+    --primary-200: #c7d2fe;
+    --primary-300: #a5b4fc;
+    --primary-400: #818cf8;
+    --primary-500: #6366f1;
+    --primary-600: #4f46e5;
+    --primary-700: #4338ca;
+    --primary-800: #3730a3;
+    --primary-900: #312e81;
+    
+    /* Neutral palette — sophisticated */
+    --neutral-50: #fafafa;
+    --neutral-100: #f5f5f5;
+    --neutral-200: #e5e5e5;
+    --neutral-300: #d4d4d4;
+    --neutral-400: #a3a3a3;
+    --neutral-500: #737373;
+    --neutral-600: #525252;
+    --neutral-700: #404040;
+    --neutral-800: #262626;
+    --neutral-900: #171717;
+    
+    /* Semantic */
+    --background: #ffffff;
+    --foreground: var(--neutral-900);
+    --muted: var(--neutral-500);
+    --border: var(--neutral-200);
+    --card-bg: #ffffff;
+    
+    /* Gradients — subtle & elegant */
+    --gradient-primary: linear-gradient(135deg, var(--primary-500) 0%, var(--primary-700) 100%);
+    --gradient-soft: linear-gradient(135deg, var(--primary-50) 0%, #ffffff 100%);
+    
+    /* Shadows — layered depth */
+    --shadow-xs: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+    --shadow-sm: 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1);
+    --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+    --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+    --shadow-xl: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
+    --shadow-2xl: 0 25px 50px -12px rgb(0 0 0 / 0.25);
+    
+    /* Border radius — consistent */
+    --radius-sm: 0.375rem;
+    --radius-md: 0.5rem;
+    --radius-lg: 1rem;
+    --radius-xl: 1.5rem;
+    --radius-2xl: 2rem;
+    --radius-full: 9999px;
+    
+    /* Spacing — 4px base */
+    --space-1: 0.25rem;
+    --space-2: 0.5rem;
+    --space-3: 0.75rem;
+    --space-4: 1rem;
+    --space-5: 1.25rem;
+    --space-6: 1.5rem;
+    --space-8: 2rem;
+    --space-10: 2.5rem;
+    --space-12: 3rem;
+    --space-16: 4rem;
+    --space-20: 5rem;
+    --space-24: 6rem;
+    
+    /* Typography */
+    --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
+    --font-display: 'Space Grotesk', var(--font-sans);
+    
+    /* Transitions */
+    --transition-fast: 150ms cubic-bezier(0.4, 0, 0.2, 1);
+    --transition-base: 250ms cubic-bezier(0.4, 0, 0.2, 1);
+    --transition-slow: 350ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Dark mode considerations — optional refinement */
+@media (prefers-color-scheme: dark) {
+    :root {
+        --background: var(--neutral-900);
+        --foreground: var(--neutral-50);
+        --muted: var(--neutral-400);
+        --border: var(--neutral-700);
+        --card-bg: var(--neutral-800);
+    }
+}
+
+/* ==============================
+   RESET — modern, clean
+================================ */
+*,
+*::before,
+*::after {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html {
+    scroll-behavior: smooth;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+}
+
+body {
+    font-family: var(--font-sans);
+    background: var(--background);
+    color: var(--foreground);
+    line-height: 1.5;
+    overflow-x: hidden;
+}
+
+/* ==============================
+   TYPOGRAPHY — premium scale
+================================ */
+h1, h2, h3, h4, h5, h6 {
+    font-family: var(--font-display);
+    font-weight: 600;
+    line-height: 1.2;
+    letter-spacing: -0.02em;
+}
+
+/* ==============================
+   CONTAINER — elegant constraints
+================================ */
+.container {
+    width: 100%;
+    max-width: 1280px;
+    margin: 0 auto;
+    padding-inline: var(--space-6);
+}
+
+@media (min-width: 640px) {
+    .container {
+        padding-inline: var(--space-8);
+    }
+}
+
+/* ==============================
+   NAVIGATION — refined
+================================ */
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-block: var(--space-5);
+    position: relative;
+}
+
+.logo {
+    font-size: 1.5rem;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    z-index: 100;
+    display: flex;
+    align-items: center;
+    gap: var(--space-1);
+}
+
+.logo-mark {
+    background: var(--gradient-primary);
+    color: white;
+    width: 2rem;
+    height: 2rem;
+    border-radius: var(--radius-md);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1rem;
+    margin-right: var(--space-2);
+}
+
+.logo span {
+    background: var(--gradient-primary);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.logo-domain {
+    font-size: 0.75rem;
+    font-weight: 500;
+    color: var(--primary-500);
+    margin-left: var(--space-1);
+}
+
+/* Desktop nav */
+.nav-links {
+    display: flex;
+    gap: var(--space-8);
+    font-weight: 500;
+}
+
+.nav-links a {
+    text-decoration: none;
+    color: var(--neutral-600);
+    font-size: 0.9375rem;
+    position: relative;
+    transition: color var(--transition-fast);
+    padding-block: var(--space-2);
+}
+
+.nav-links a:hover {
+    color: var(--primary-600);
+}
+
+.nav-links a::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 0;
+    height: 2px;
+    background: var(--gradient-primary);
+    transition: width var(--transition-base);
+}
+
+.nav-links a:hover::after {
+    width: 100%;
+}
+
+.nav-cta {
+    display: flex;
+    gap: var(--space-3);
+    z-index: 100;
+}
+
+/* ==============================
+   MOBILE NAV — elevated experience
+================================ */
+.hamburger {
+    display: none;
+    flex-direction: column;
+    cursor: pointer;
+    gap: 6px;
+    z-index: 100;
+    padding: var(--space-2);
+}
+
+.hamburger span {
+    width: 24px;
+    height: 2px;
+    background: var(--primary-600);
+    border-radius: var(--radius-full);
+    transition: var(--transition-base);
+}
+
+.hamburger.active span:nth-child(1) {
+    transform: rotate(45deg) translate(6px, 6px);
+}
+
+.hamburger.active span:nth-child(2) {
+    opacity: 0;
+    transform: translateX(-10px);
+}
+
+.hamburger.active span:nth-child(3) {
+    transform: rotate(-45deg) translate(6px, -6px);
+}
+
+@media (max-width: 1024px) {
+    .nav-links {
+        position: fixed;
+        inset: 0 0 0 auto;
+        width: min(400px, 100%);
+        height: 100vh;
+        background: var(--background);
+        backdrop-filter: blur(20px);
+        background: rgba(255, 255, 255, 0.98);
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        gap: var(--space-8);
+        transform: translateX(100%);
+        transition: transform var(--transition-base);
+        box-shadow: var(--shadow-2xl);
+        padding: var(--space-8);
+        z-index: 90;
+    }
+    
+    .dark .nav-links {
+        background: rgba(23, 23, 23, 0.98);
+    }
+
+    .nav-links.active {
+        transform: translateX(0);
+    }
+
+    .nav-cta.desktop {
+        display: none;
+    }
+
+    .nav-cta.mobile {
+        display: flex;
+        flex-direction: column;
+        width: 100%;
+        gap: var(--space-3);
+        margin-top: var(--space-8);
+    }
+
+    .hamburger {
+        display: flex;
+    }
+}
+
+.nav-cta.mobile {
+    display: none;
+}
+
+/* ==============================
+   BUTTONS — sophisticated & intentional
+================================ */
+.btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--space-2);
+    border-radius: var(--radius-full);
+    font-weight: 600;
+    font-size: 0.9375rem;
+    padding: 0.625rem 1.5rem;
+    text-decoration: none;
+    transition: all var(--transition-base);
+    cursor: pointer;
+    border: 1.5px solid transparent;
+    white-space: nowrap;
+}
+
+.btn-outline {
+    background: transparent;
+    border-color: var(--primary-500);
+    color: var(--primary-600);
+}
+
+.btn-outline:hover {
+    background: var(--primary-50);
+    border-color: var(--primary-600);
+    transform: translateY(-1px);
+    box-shadow: var(--shadow-md);
+}
+
+.btn-primary {
+    background: var(--gradient-primary);
+    color: white;
+    border: none;
+    box-shadow: var(--shadow-md);
+}
+
+.btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-lg), 0 0 0 2px var(--primary-200);
+}
+
+.btn-lg {
+    padding: 0.875rem 2.5rem;
+    font-size: 1rem;
+}
+
+/* ==============================
+   BADGES — subtle indicators
+================================ */
+.badge {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-2);
+    background: var(--primary-50);
+    color: var(--primary-700);
+    padding: 0.375rem 1rem;
+    border-radius: var(--radius-full);
+    font-weight: 500;
+    font-size: 0.875rem;
+    margin-bottom: var(--space-4);
+    border: 1px solid var(--primary-100);
+}
+
+.badge i {
+    font-size: 0.875rem;
+}
+
+/* ==============================
+   HERO SECTION — bold & premium
+================================ */
+.hero {
+    padding-block: clamp(3rem, 8vw, 6rem);
+    background: var(--gradient-soft);
+}
+
+.hero-grid {
+    display: grid;
+    gap: var(--space-16);
+}
+
+@media (min-width: 1024px) {
+    .hero-grid {
+        grid-template-columns: 1fr 1fr;
+        align-items: center;
+    }
+}
+
+.hero-title {
+    font-size: clamp(2.5rem, 5vw, 4rem);
+    font-weight: 700;
+    line-height: 1.1;
+    margin-bottom: var(--space-6);
+    letter-spacing: -0.03em;
+}
+
+.hero-gradient-text {
+    background: var(--gradient-primary);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.hero-desc {
+    font-size: 1.125rem;
+    color: var(--neutral-600);
+    margin-bottom: var(--space-8);
+    max-width: 36rem;
+}
+
+/* Stats mini */
+.stats-mini {
+    display: flex;
+    gap: var(--space-8);
+    margin-top: var(--space-10);
+    flex-wrap: wrap;
+}
+
+.stat-item-mini h3 {
+    font-size: 1.75rem;
+    font-weight: 700;
+    color: var(--foreground);
+    line-height: 1;
+}
+
+.stat-item-mini p {
+    color: var(--neutral-500);
+    font-size: 0.875rem;
+    margin-top: var(--space-1);
+}
+
+/* Hero card */
+.hero-card {
+    background: var(--card-bg);
+    border-radius: var(--radius-2xl);
+    padding: var(--space-8);
+    border: 1px solid var(--border);
+    box-shadow: var(--shadow-xl);
+    backdrop-filter: blur(10px);
+}
+
+.flex-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-4);
+}
+
+.live-badge {
+    background: #10b98110;
+    color: #10b981;
+    padding: 0.375rem 1rem;
+    border-radius: var(--radius-full);
+    font-weight: 500;
+    font-size: 0.875rem;
+    border: 1px solid #10b98120;
+}
+
+.offer-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--space-4);
+    margin: var(--space-6) 0;
+}
+
+.offer-item {
+    background: var(--neutral-50);
+    padding: var(--space-4);
+    border-radius: var(--radius-lg);
+    border: 1px solid var(--border);
+}
+
+.leaderboard-mini {
+    background: var(--primary-50);
+    border-radius: var(--radius-xl);
+    padding: var(--space-6);
+    border: 1px solid var(--primary-100);
+}
+
+.leaderboard-item {
+    display: flex;
+    align-items: center;
+    gap: var(--space-4);
+    color: var(--neutral-700);
+}
+
+.leaderboard-item i {
+    font-size: 0.5rem;
+    color: var(--primary-500);
+}
+
+/* ==============================
+   TRUSTED SECTION — seamless
+================================ */
+.trusted-section {
+    padding: var(--space-12) 0;
+    border-top: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+    background: white;
+}
+
+.trusted-title {
+    text-align: center;
+    font-size: 1rem;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--neutral-400);
+    margin-bottom: var(--space-6);
+}
+
+.trusted-scroll {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    mask-image: linear-gradient(90deg, transparent, black 10%, black 90%, transparent);
+}
+
+.trusted-scroll::-webkit-scrollbar {
+    display: none;
+}
+
+.trusted-track {
+    display: flex;
+    gap: var(--space-12);
+    min-width: max-content;
+    padding: var(--space-2) 0;
+}
+
+.trusted-track span {
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: var(--neutral-400);
+    transition: color var(--transition-fast);
+    white-space: nowrap;
+}
+
+.trusted-track span:hover {
+    color: var(--primary-500);
+}
+
+/* ==============================
+   GRID UTILITIES — systematic
+================================ */
+.grid {
+    display: grid;
+    gap: var(--space-6);
+}
+
+.grid-cols-1 { grid-template-columns: repeat(1, 1fr); }
+.grid-cols-2 { grid-template-columns: repeat(2, 1fr); }
+.grid-cols-3 { grid-template-columns: repeat(3, 1fr); }
+.grid-cols-4 { grid-template-columns: repeat(4, 1fr); }
+
+@media (max-width: 768px) {
+    .grid-cols-2, .grid-cols-3, .grid-cols-4 {
+        grid-template-columns: repeat(1, 1fr);
+    }
+}
+
+/* ==============================
+   CARDS — elevated surfaces
+================================ */
+.card {
+    background: var(--card-bg);
+    border-radius: var(--radius-xl);
+    padding: var(--space-8);
+    border: 1px solid var(--border);
+    transition: all var(--transition-base);
+    box-shadow: var(--shadow-sm);
+}
+
+.card:hover {
+    transform: translateY(-4px);
+    border-color: var(--primary-200);
+    box-shadow: var(--shadow-xl);
+}
+
+.card-icon {
+    width: 3rem;
+    height: 3rem;
+    background: var(--primary-50);
+    border-radius: var(--radius-lg);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--primary-600);
+    font-size: 1.5rem;
+    margin-bottom: var(--space-4);
+}
+
+/* Product grid */
+.product-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: var(--space-6);
+    margin: var(--space-12) 0;
+}
+
+.product-card {
+    background: var(--card-bg);
+    border-radius: var(--radius-xl);
+    padding: var(--space-8);
+    border: 1px solid var(--border);
+    transition: var(--transition-base);
+    box-shadow: var(--shadow-sm);
+}
+
+.product-card:hover {
+    transform: translateY(-4px);
+    border-color: var(--primary-300);
+    box-shadow: var(--shadow-xl);
+}
+
+.link-arrow {
+    color: var(--primary-600);
+    font-weight: 500;
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-2);
+    margin-top: var(--space-4);
+    text-decoration: none;
+}
+
+.link-arrow i {
+    transition: transform var(--transition-fast);
+}
+
+.link-arrow:hover i {
+    transform: translateX(4px);
+}
+
+/* ==============================
+   GLOBAL PRESENCE — immersive
+================================ */
+.global-presence {
+    background: var(--neutral-900);
+    color: white;
+    border-radius: var(--radius-2xl);
+    padding: var(--space-16);
+    margin: var(--space-16) 0;
+    position: relative;
+    overflow: hidden;
+}
+
+.global-presence::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(circle at 30% 50%, var(--primary-800) 0%, transparent 50%);
+    opacity: 0.3;
+}
+
+.global-content {
+    position: relative;
+    z-index: 2;
+}
+
+.office-tag {
+    background: rgba(255, 255, 255, 0.1);
+    padding: 0.5rem 1rem;
+    border-radius: var(--radius-full);
+    font-size: 0.875rem;
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-2);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.stats-card {
+    background: rgba(255, 255, 255, 0.03);
+    border-radius: var(--radius-xl);
+    padding: var(--space-8);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+/* ==============================
+   KPI GRID — data-rich
+================================ */
+.kpi-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: var(--space-4);
+    margin: var(--space-6) 0 var(--space-8);
+}
+
+.kpi-card {
+    background: var(--neutral-50);
+    padding: var(--space-5);
+    border-radius: var(--radius-lg);
+    border: 1px solid var(--border);
+}
+
+.kpi-value {
+    font-size: 2rem;
+    font-weight: 700;
+    line-height: 1.2;
+    margin: var(--space-1) 0;
+}
+
+.trend-up {
+    color: #10b981;
+    font-size: 0.875rem;
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-1);
+}
+
+/* Chart */
+.static-chart {
+    display: flex;
+    align-items: flex-end;
+    gap: var(--space-2);
+    height: 200px;
+    margin-top: var(--space-6);
+}
+
+.chart-bar {
+    flex: 1;
+    background: linear-gradient(to top, var(--primary-400), var(--primary-600));
+    border-radius: var(--radius-sm) var(--radius-sm) 0 0;
+    position: relative;
+    min-width: 2rem;
+    animation: barRise 0.8s ease-out;
+    transform-origin: bottom;
+}
+
+@keyframes barRise {
+    from { transform: scaleY(0); }
+    to { transform: scaleY(1); }
+}
+
+.chart-bar::after {
+    content: attr(data-value);
+    position: absolute;
+    top: -1.5rem;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: var(--neutral-600);
+}
+
+/* Offers */
+.offer-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: var(--space-3) 0;
+    border-bottom: 1px dashed var(--border);
+}
+
+.offer-row:last-child {
+    border-bottom: none;
+}
+
+.highlight {
+    color: var(--primary-600);
+    font-weight: 600;
+}
+
+/* Referral */
+.referral-box {
+    background: var(--primary-50);
+    border-radius: var(--radius-lg);
+    padding: var(--space-5);
+    margin-top: var(--space-8);
+    border: 1px solid var(--primary-100);
+}
+
+.referral-link {
+    font-family: monospace;
+    background: white;
+    padding: 0.5rem 1rem;
+    border-radius: var(--radius-full);
+    border: 1px solid var(--border);
+    font-size: 0.875rem;
+    width: 100%;
+}
+
+/* ==============================
+   LEADERSHIP — human touch
+================================ */
+.leadership-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: var(--space-6);
+    margin: var(--space-8) 0;
+}
+
+.leader-card {
+    text-align: center;
+    padding: var(--space-6);
+    background: var(--card-bg);
+    border-radius: var(--radius-xl);
+    border: 1px solid var(--border);
+    transition: var(--transition-base);
+}
+
+.leader-card:hover {
+    transform: translateY(-4px);
+    box-shadow: var(--shadow-lg);
+}
+
+.leader-avatar {
+    width: 5rem;
+    height: 5rem;
+    background: var(--gradient-primary);
+    color: white;
+    font-weight: 600;
+    font-size: 1.5rem;
+    border-radius: var(--radius-full);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto var(--space-4);
+    box-shadow: var(--shadow-md);
+}
+
+/* ==============================
+   FOOTER — distinguished
+================================ */
+.footer {
+    background: var(--neutral-900);
+    color: white;
+    padding: var(--space-16) 0 var(--space-8);
+    margin-top: var(--space-20);
+    border-radius: var(--radius-2xl) var(--radius-2xl) 0 0;
+}
+
+.footer-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: var(--space-10);
+    margin-bottom: var(--space-12);
+}
+
+.footer p {
+    color: var(--neutral-400);
+    line-height: 1.6;
+}
+
+.footer h4 {
+    color: white;
+    margin-bottom: var(--space-4);
+    font-weight: 600;
+}
+
+.footer-links p {
+    margin-bottom: var(--space-2);
+    transition: color var(--transition-fast);
+    cursor: default;
+}
+
+.footer-links p:hover {
+    color: white;
+}
+
+.social-links {
+    display: flex;
+    gap: var(--space-4);
+    margin-top: var(--space-6);
+}
+
+.social-links i {
+    width: 2.5rem;
+    height: 2.5rem;
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: var(--radius-full);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    transition: all var(--transition-fast);
+    cursor: pointer;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.social-links i:hover {
+    background: var(--primary-600);
+    transform: translateY(-2px);
+    border-color: transparent;
+}
+
+.cta-box {
+    background: rgba(255, 255, 255, 0.03);
+    border-radius: var(--radius-lg);
+    padding: var(--space-4);
+    margin-top: var(--space-4);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.cta-box button {
+    background: white;
+    color: var(--neutral-900);
+    border: none;
+    padding: 0.5rem 1rem;
+    border-radius: var(--radius-full);
+    font-weight: 600;
+    margin-top: var(--space-3);
+    width: 100%;
+    cursor: pointer;
+    transition: var(--transition-base);
+}
+
+.cta-box button:hover {
+    background: var(--primary-500);
+    color: white;
+}
+
+.footer-bottom {
+    margin-top: var(--space-8);
+    padding-top: var(--space-8);
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-4);
+    justify-content: space-between;
+    color: var(--neutral-500);
+    font-size: 0.875rem;
+}
+
+/* ==============================
+   UTILITIES — precise
+================================ */
+.text-center { text-align: center; }
+.text-gradient { background: var(--gradient-primary); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+.mt-4 { margin-top: var(--space-4); }
+.mt-8 { margin-top: var(--space-8); }
+.mt-12 { margin-top: var(--space-12); }
+.mb-4 { margin-bottom: var(--space-4); }
+.gap-4 { gap: var(--space-4); }
+.flex { display: flex; align-items: center; flex-wrap: wrap; }
+
+/* ==============================
+   RESPONSIVE — meticulous
+================================ */
+@media (max-width: 640px) {
+    .hero-title {
+        font-size: 2.25rem;
+    }
+    
+    .stats-mini {
+        gap: var(--space-4);
+    }
+    
+    .stat-item-mini h3 {
+        font-size: 1.5rem;
+    }
+    
+    .global-presence {
+        padding: var(--space-8);
+    }
+    
+    .footer-bottom {
+        flex-direction: column;
+        text-align: center;
+    }
+    
+    .btn {
+        width: 100%;
+        text-align: center;
+    }
+    
+    .static-chart {
+        height: 150px;
+    }
+}
+
+/* Indian Rupee symbol */
+.rupee {
+    font-family: inherit;
+}
+
+/* Prevent horizontal overflow globally */
+html, body {
+    max-width: 100%;
+    overflow-x: hidden !important;
+}
+
+/* Fix dashboard grid responsiveness */
+.dashboard-split {
+    display: grid;
+    grid-template-columns: 1.4fr 0.6fr;
+    gap: var(--space-6);
+}
+
+@media (max-width: 1024px) {
+    .dashboard-split {
+        grid-template-columns: 1fr !important;
+    }
+}
+
+
+/* Improve offer card background contrast */
+.top-offers-card {
+    background: #ffffff !important;
+    border: 1px solid var(--neutral-200) !important;
+    box-shadow: var(--shadow-sm) !important;
+}
+
+/* Improve heading contrast */
+.top-offers-card > span {
+    color: var(--neutral-900) !important;
+    font-weight: 700 !important;
+    font-size: 1rem !important;
+}
+
+/* Improve offer rows */
+.offer-row {
+    color: var(--neutral-800) !important;
+}
+
+.offer-row span:last-child {
+    color: var(--primary-700) !important;
+    font-weight: 700 !important;
+}
+
+/* Strong highlight for top offer */
+.offer-row.highlight {
+    background: var(--primary-50) !important;
+    padding: var(--space-3) var(--space-4) !important;
+    border-radius: var(--radius-md) !important;
+    border: 1px solid var(--primary-200) !important;
+}
+
+/* =====================================
+   CONTRAST CORRECTION LAYER
+===================================== */
+
+/* Stronger body contrast */
+body {
+    color: var(--neutral-900) !important;
+}
+
+/* Fix light muted text */
+.hero-desc,
+.stat-item-mini p,
+.footer p,
+.kpi-card span,
+.trusted-title {
+    color: var(--neutral-700) !important;
+}
+
+/* Fix dashboard small labels */
+.kpi-card span:first-child,
+.chart-bar::after {
+    color: var(--neutral-700) !important;
+}
+
+/* Improve neutral card backgrounds */
+.kpi-card,
+.offer-item,
+.static-chart,
+.top-offers-card {
+    background: #ffffff !important;
+}
+
+/* Improve trusted brands visibility */
+.trusted-track span {
+    color: var(--neutral-700) !important;
+}
+
+/* Improve referral muted text */
+.referral-box span {
+    color: var(--neutral-800) !important;
+}
+/* Fix dashboard header alignment */
+.card > .flex-row {
+    align-items: center !important;
+}
+
+.card > .flex-row > div:first-child {
+    text-align: left;
+}
+
+@media (max-width: 768px) {
+    .card > .flex-row {
+        flex-direction: column;
+        align-items: flex-start !important;
+        gap: var(--space-4);
+    }
+}
+/* Referral proper center alignment */
+.referral-box .flex-row {
+    align-items: center !important;
+}
+
+@media (max-width: 768px) {
+    .referral-box .flex-row {
+        flex-direction: column;
+        align-items: flex-start !important;
+    }
+}
+/* Global presence alignment fix */
+.global-content > div {
+    align-items: center !important;
+}
+
+@media (max-width: 900px) {
+    .global-content > div {
+        flex-direction: column;
+        align-items: flex-start !important;
+    }
+
+    .stats-card {
+        width: 100%;
+        max-width: 320px;
+    }
+}
+.kpi-card {
+    text-align: left;
+}
+
+.kpi-value {
+    color: var(--neutral-900) !important;
+}
+
+.trend-up {
+    font-weight: 500;
+}
+.text-center h2 {
+    margin-left: auto !important;
+    margin-right: auto !important;
+}
+
+.footer .logo {
+    color: #ffffff !important;
+}
+
+.footer .logo span {
+    background: none !important;
+    -webkit-text-fill-color: #ffffff !important;
+    color: #ffffff !important;
+}
+
+.navbar .logo {
+    color: #ffffff;
+}
+
+/* ===============================
+   AUTO SCROLLING TRUSTED SECTION
+================================ */
+
+.trusted-section {
+    padding: var(--space-12) 0;
+    border-top: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+    background: #ffffff;
+    overflow: hidden;
+}
+
+.trusted-title {
+    text-align: center;
+    font-size: 1rem;
+    font-weight: 600;
+    letter-spacing: 0.05em;
+    color: var(--neutral-700);
+    margin-bottom: var(--space-6);
+}
+
+/* Slider container */
+.trusted-slider {
+    overflow: hidden;
+    position: relative;
+}
+
+/* Track */
+.trusted-track {
+    display: flex;
+    gap: 80px;
+    width: max-content;
+    animation: scrollLoop 25s linear infinite;
+}
+
+/* Brand items */
+.trusted-track span {
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: var(--neutral-700);
+    white-space: nowrap;
+    transition: color 0.3s ease;
+}
+
+.trusted-track span:hover {
+    color: var(--primary-600);
+}
+
+/* Infinite animation */
+@keyframes scrollLoop {
+    0% {
+        transform: translateX(0);
+    }
+    100% {
+        transform: translateX(-50%);
+    }
+}
+.referral-link {
+    display: block;
+    max-width: 100%;
+    overflow-wrap: anywhere;
+    word-break: break-word;
+    white-space: normal;
+}
+
+
+    </style>
+</head>
+<body>
+
+<!-- Navigation -->
+<div class="container">
+    <nav class="navbar">
+        <div class="logo">
+            <span class="logo-mark">IM</span>
+            <span>Icon</span>Media<span style="color: var(--neutral-900);">Network</span>
+            <span class="logo-domain">.in</span>
+        </div>
+        
+        <!-- Desktop Navigation -->
+        <div class="nav-links" id="navLinks">
+            <a href="#">Advertisers</a>
+            <a href="#">Publishers</a>
+            <a href="#">Solutions</a>
+            <a href="#">Resources</a>
+            <a href="#">Careers</a>
+            <!-- Mobile CTAs -->
+            <div class="nav-cta mobile">
+                <button class="btn btn-outline" onclick="openLogin()">Sign In</button>
+                <button class="btn btn-primary" onclick="openRegister()">Join Now</button>
+            </div>
+        </div>
+        
+        <!-- Desktop CTAs -->
+        <div class="nav-cta desktop">
+            <button class="btn btn-outline" onclick="openLogin()">Sign In</button>
+            <button class="btn btn-primary" onclick="openRegister()">Join Now</button>
+        </div>
+        
+        <!-- Hamburger Menu -->
+        <div class="hamburger" id="hamburger" onclick="toggleMenu()">
+            <span></span>
+            <span></span>
+            <span></span>
+        </div>
+    </nav>
+</div>
+
+<!-- Hero Section -->
+<section class="hero">
+    <div class="container">
+        <div class="hero-grid">
+            <div>
+                <div class="badge">
+                    <i class="fas fa-globe"></i> 
+                    India's Fastest Growing Network
+                </div>
+                <h1 class="hero-title">
+                    Performance <span class="hero-gradient-text">Beyond Borders</span><br>
+                    Web & Mobile
+                </h1>
+                <p class="hero-desc">
+                    Join 50,000+ Indian publishers and advertisers. Drive measurable ROI with AI-powered matching, real-time analytics, and dedicated account management.
+                </p>
+                
+                <button class="btn btn-primary btn-lg" onclick="openRegister()">
+                    Become a Partner <i class="fas fa-arrow-right"></i>
+                </button>
+                
+                <div class="stats-mini">
+                    <div class="stat-item-mini">
+                        <h3>50K+</h3>
+                        <p>Indian Publishers</p>
+                    </div>
+                    <div class="stat-item-mini">
+                        <h3>1.2B</h3>
+                        <p>Monthly Impressions</p>
+                    </div>
+                    <div class="stat-item-mini">
+                        <h3><span class="rupee">₹</span>250Cr+</h3>
+                        <p>Annual Payouts</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div>
+                <div class="hero-card">
+                    <div class="flex-row">
+                        <span style="font-weight: 700; color:white; font-size: 1.25rem;">Real-time Network</span>
+                        <span class="live-badge"><i class="fas fa-circle" style="font-size: 0.5rem;"></i> LIVE</span>
+                    </div>
+                    
+                    <div class="offer-grid">
+                        <div class="offer-item">
+                            <div style="font-size: 0.75rem; color: var(--neutral-500);">TOP OFFER</div>
+                            <div style="font-weight: 700;">Flipkart Big Billion</div>
+                            <div style="color: var(--primary-600); font-weight: 700;"><span class="rupee">₹</span>850 CPA</div>
+                        </div>
+                        <div class="offer-item">
+                            <div style="font-size: 0.75rem; color: var(--neutral-500);">TODAY</div>
+                            <div style="font-weight: 700;">12,435 Conv.</div>
+                            <div style="color: #10b981;">↑ 18.2%</div>
+                        </div>
+                    </div>
+                    
+                    <div class="leaderboard-mini">
+                        <div class="flex-row">
+                            <span style="font-weight: 600;">Top Indian Affiliates</span>
+                            <span style="color: var(--primary-600); font-size: 0.875rem;">See all <i class="fas fa-chevron-right" style="font-size: 0.625rem;"></i></span>
+                        </div>
+                        <div style="display: flex; margin-top: var(--space-4); gap: var(--space-5); flex-wrap: wrap;">
+                            <div class="leaderboard-item"><i class="fas fa-circle"></i> DigitalDost <span style="font-weight: 600;"><span class="rupee">₹</span>28.4L</span></div>
+                            <div class="leaderboard-item"><i class="fas fa-circle" style="color: #8b5cf6;"></i> TechTadka <span style="font-weight: 600;"><span class="rupee">₹</span>22.1L</span></div>
+                            <div class="leaderboard-item"><i class="fas fa-circle" style="color: #ec4899;"></i> GadgetGuru <span style="font-weight: 600;"><span class="rupee">₹</span>19.7L</span></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="trusted-section">
+    <div class="container">
+        <h3 class="trusted-title">Trusted by India's leading brands</h3>
+
+        <div class="trusted-slider">
+            <div class="trusted-track">
+                <span>Flipkart</span>
+                <span>Myntra</span>
+                <span>MakeMyTrip</span>
+                <span>Reliance</span>
+                <span>Tata Sky</span>
+                <span>Paytm</span>
+                <span>Amazon</span>
+                <span>Zomato</span>
+
+                <!-- Duplicate for seamless loop -->
+                <span>Flipkart</span>
+                <span>Myntra</span>
+                <span>MakeMyTrip</span>
+                <span>Reliance</span>
+                <span>Tata Sky</span>
+                <span>Paytm</span>
+                <span>Amazon</span>
+                <span>Zomato</span>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+<!-- Products / Solutions -->
+<div class="container">
+    <div class="text-center" style="margin: var(--space-16) 0 var(--space-8);">
+        <div class="badge" style="margin: 0 auto var(--space-4); width: fit-content;">INTELLIGENT AD TECH</div>
+        <h2 style="font-size: clamp(2rem, 4vw, 3rem); max-width: 700px; margin: 0 auto; color:white;">
+            The full-stack affiliate<br>
+            <span class="hero-gradient-text">performance engine</span>
+        </h2>
+    </div>
+    
+    <div class="product-grid">
+        <div class="product-card">
+            <div class="card-icon"><i class="fas fa-chart-pie"></i></div>
+            <h3 style="font-size: 1.5rem; margin-bottom: var(--space-3); color:white;">Data Management</h3>
+            <p style="color: var(--neutral-600);">AI/ML audience discovery, lookalike modeling, connected TV cohorts, and predictive budget planner.</p>
+            <a href="#" class="link-arrow">Discover audiences <i class="fas fa-arrow-right"></i></a>
+        </div>
+        <div class="product-card">
+            <div class="card-icon"><i class="fas fa-bolt"></i></div>
+            <h3 style="font-size: 1.5rem; margin-bottom: var(--space-3); color:white;">Demand Side</h3>
+            <p style="color: var(--neutral-600);">Real-time ad serving, anti-fraud, predictive bidding, full-funnel reporting, CTV targeting.</p>
+            <a href="#" class="link-arrow">Launch campaigns <i class="fas fa-arrow-right"></i></a>
+        </div>
+        <div class="product-card">
+            <div class="card-icon"><i class="fas fa-star"></i></div>
+            <h3 style="font-size: 1.5rem; margin-bottom: var(--space-3); color:white;">Influencer Suite</h3>
+            <p style="color: var(--neutral-600);">End-to-end creator collaboration, media kit builder, automated invoicing, real-time trend insights.</p>
+            <a href="#" class="link-arrow">For brands & creators <i class="fas fa-arrow-right"></i></a>
+        </div>
+    </div>
+</div>
+
+<!-- Global Presence -->
+<div class="container">
+    <div class="global-presence">
+        <div class="global-content">
+            <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: var(--space-8);">
+                <div>
+                    <div class="badge" style="background: rgba(255,255,255,0.1); color: white; border-color: rgba(255,255,255,0.1);">GLOBAL NETWORK</div>
+                    <h2 style="font-size: 2.5rem; margin-top: var(--space-4);">8 Strategic Hubs</h2>
+                    <p style="color: var(--neutral-400); margin: var(--space-4) 0;">Delivering performance across 4 continents</p>
+                    <div class="flex" style="gap: var(--space-2);">
+                        <span class="office-tag"><i class="fas fa-map-marker-alt"></i> Gurgaon HQ</span>
+                        <span class="office-tag"><i class="fas fa-map-marker-alt"></i> Mumbai</span>
+                        <span class="office-tag"><i class="fas fa-map-marker-alt"></i> Bengaluru</span>
+                        <span class="office-tag"><i class="fas fa-map-marker-alt"></i> Delhi NCR</span>
+                        <span class="office-tag"><i class="fas fa-map-marker-alt"></i> Dubai</span>
+                        <span class="office-tag"><i class="fas fa-map-marker-alt"></i> Singapore</span>
+                        <span class="office-tag"><i class="fas fa-map-marker-alt"></i> London</span>
+                        <span class="office-tag"><i class="fas fa-map-marker-alt"></i> New York</span>
+                    </div>
+                </div>
+                <div class="stats-card" style="min-width: 200px;">
+                    <div style="font-size: 3rem; font-weight: 700;">50K+</div>
+                    <div style="color: var(--neutral-400);">Global affiliates</div>
+                    <hr style="border-color: rgba(255,255,255,0.1); margin: var(--space-4) 0;">
+                    <div style="font-size: 2rem; font-weight: 700;">40+</div>
+                    <div style="color: var(--neutral-400);">Countries served</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Dashboard Preview -->
+<div class="container">
+    <div class="card" style="padding: var(--space-10);">
+        <div class="flex-row" style="margin-bottom: var(--space-8);">
+            <div>
+                <div class="badge" style="background: var(--primary-50); color: var(--primary-700);">
+                    <i class="fas fa-chart-line"></i> PUBLISHER DASHBOARD
+                </div>
+                <h2 style="font-size: 2rem; margin-top: var(--space-3); color:white;">Your performance,<br>in real time</h2>
+            </div>
+            <div style="background: var(--neutral-100); padding: 0.5rem 1.5rem; border-radius: var(--radius-full); font-size: 0.875rem; border: 1px solid var(--border);">
+                <i class="far fa-calendar-alt"></i> March 1 – 15, 2026
+            </div>
+        </div>
+        
+        <!-- KPI Cards -->
+        <div class="kpi-grid">
+            <div class="kpi-card">
+                <div class="flex-row">
+                    <span style="color: var(--neutral-500);">Clicks</span>
+                    <span style="background: var(--primary-100); padding: 0.25rem 0.75rem; border-radius: var(--radius-full); font-size: 0.75rem; color: var(--primary-700);">+12.4%</span>
+                </div>
+                <div class="kpi-value">1,28,435</div>
+                <span class="trend-up"><i class="fas fa-arrow-up"></i> 8.2% vs last period</span>
+            </div>
+            <div class="kpi-card">
+                <span style="color: var(--neutral-500);">Conversions</span>
+                <div class="kpi-value">8,435</div>
+                <span class="trend-up">↑ 1,213 (6.8%)</span>
+            </div>
+            <div class="kpi-card">
+                <span style="color: var(--neutral-500);">Revenue (INR)</span>
+                <div class="kpi-value"><span class="rupee">₹</span>42.58L</div>
+                <span class="trend-up">↑ 12.3%</span>
+            </div>
+            <div class="kpi-card">
+                <span style="color: var(--neutral-500);">EPC (INR)</span>
+                <div class="kpi-value"><span class="rupee">₹</span>33.17</div>
+                <span style="color: #f59e0b;">↗︎ +₹4.20</span>
+            </div>
+        </div>
+
+        <!-- Chart + Offers -->
+<div class="dashboard-split">
+
+            <div class="top-offers-card" style="border-radius: var(--radius-xl); padding: var(--space-6);">
+                <div class="flex-row">
+                    <span style="font-weight: 700;">Daily Revenue (7 days)</span>
+                    <span style="color: var(--primary-600); font-size: 0.875rem;"><i class="fas fa-calendar-week"></i> This week</span>
+                </div>
+                <!-- Static Chart Bars -->
+                <div class="static-chart">
+                    <div class="chart-bar" style="height: 40px;" data-value="52.5K"></div>
+                    <div class="chart-bar" style="height: 45px;" data-value="58.0K"></div>
+                    <div class="chart-bar" style="height: 48px;" data-value="61.2K"></div>
+                    <div class="chart-bar" style="height: 47px;" data-value="59.8K"></div>
+                    <div class="chart-bar" style="height: 50px;" data-value="63.5K"></div>
+                    <div class="chart-bar" style="height: 54px;" data-value="68.9K"></div>
+                    <div class="chart-bar" style="height: 57px;" data-value="72.4K"></div>
+                </div>
+                <div class="flex-row" style="justify-content: space-between; margin-top: var(--space-2); color: var(--neutral-500); font-size: 0.75rem;">
+                    <span>Mon</span><span>Tue</span><span>Wed</span><span>Thu</span><span>Fri</span><span>Sat</span><span>Sun</span>
+                </div>
+            </div>
+            
+            <div class="top-offers-card" style="border-radius: var(--radius-xl); padding: var(--space-6);">
+                <span style="font-weight: 700;">Top Converting Offers</span>
+                <div style="margin-top: var(--space-4);">
+                    <div class="offer-row highlight">
+                        <span><i class="fas fa-crown" style="color: #f59e0b;"></i> Flipkart Big Billion</span>
+                        <span style="font-weight: 700;"><span class="rupee">₹</span>850 CPA</span>
+                    </div>
+                    <div class="offer-row">
+                        <span>Amazon Great Indian</span>
+                        <span style="font-weight: 700;"><span class="rupee">₹</span>675 CPA</span>
+                    </div>
+                    <div class="offer-row">
+                        <span>Meesho Sponsored</span>
+                        <span style="font-weight: 700;"><span class="rupee">₹</span>425 CPA</span>
+                    </div>
+                    <div class="offer-row">
+                        <span>Tata Neu</span>
+                        <span style="font-weight: 700;"><span class="rupee">₹</span>380 CPA</span>
+                    </div>
+                    <div class="offer-row">
+                        <span>Reliance Digital</span>
+                        <span style="font-weight: 700;"><span class="rupee">₹</span>520 CPA</span>
+                    </div>
+                </div>
+                <button class="btn btn-outline" style="width:100%; margin-top: var(--space-6);">Explore all offers →</button>
+            </div>
+        </div>
+
+        <!-- Referral -->
+        <div class="referral-box">
+            <div class="flex-row" style="justify-content: space-between; flex-wrap: wrap; gap: var(--space-4);">
+                <div class="flex" style="gap: var(--space-4);">
+                    <span style="font-weight: 600;">Your Referral Link</span>
+                    <span class="referral-link">https://iconmedianetwork.in/register.php?ref=admin</span>
+                </div>
+                <div class="flex" style="gap: var(--space-4);">
+                    <span><i class="fas fa-check-circle" style="color: #10b981;"></i> Pending: <span class="rupee">₹</span>12,400</span>
+                    <span><i class="fas fa-clock" style="color: var(--neutral-500);"></i> Approx. 3h</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Leadership -->
+<div class="container">
+    <div class="text-center" style="margin: var(--space-20) 0 var(--space-8);">
+        <div class="badge" style="margin: 0 auto var(--space-4); width: fit-content;">LEADERSHIP</div>
+        <h2 style="font-size: clamp(2rem, 4vw, 3rem); max-width: 600px; margin: 0 auto; color: #ffffff;">
+    Driven by industry pioneers
+</h2>
+
+    </div>
+    
+    <div class="leadership-grid">
+        <div class="leader-card">
+            <div class="leader-avatar">RA</div>
+            <h4 style="font-weight: 700;">Rajesh Agarwal</h4>
+            <p style="color: var(--neutral-500);">Co-Founder & CEO</p>
+        </div>
+        <div class="leader-card">
+            <div class="leader-avatar">PM</div>
+            <h4 style="font-weight: 700;">Priya Mehra</h4>
+            <p style="color: var(--neutral-500);">Founder & CTO</p>
+        </div>
+        <div class="leader-card">
+            <div class="leader-avatar">VK</div>
+            <h4 style="font-weight: 700;">Vikram Kapoor</h4>
+            <p style="color: var(--neutral-500);">Director, Growth</p>
+        </div>
+        <div class="leader-card">
+            <div class="leader-avatar">AJ</div>
+            <h4 style="font-weight: 700;">Anjali Jain</h4>
+            <p style="color: var(--neutral-500);">Head of Publisher Growth</p>
+        </div>
+        <div class="leader-card">
+            <div class="leader-avatar">SK</div>
+            <h4 style="font-weight: 700;">Suresh Kumar</h4>
+            <p style="color: var(--neutral-500);">Head of Advertiser Sales</p>
+        </div>
+    </div>
+</div>
+
+<!-- Footer -->
+<footer class="footer">
+    <div class="container">
+        <div class="footer-grid">
+            <div>
+                <div class="logo" style="color: white; margin-bottom: var(--space-4);">
+                    <span class="logo-mark" style="background: white; color: var(--neutral-900);">IM</span>
+                    <span>Icon</span>Media<span style="color: white;">Network</span>
+                </div>
+                <p style="line-height: 1.7;">The intelligent performance network. Connecting global advertisers with premium publishers.</p>
+                <div class="social-links">
+                    <i class="fab fa-linkedin-in"></i>
+                    <i class="fab fa-x-twitter"></i>
+                    <i class="fab fa-instagram"></i>
+                </div>
+            </div>
+            
+            <div class="footer-links">
+                <h4>Platform</h4>
+                <p>Advertisers</p>
+                <p>Publishers</p>
+                <p>Agency Partners</p>
+            </div>
+            
+            <div class="footer-links">
+                <h4>Resources</h4>
+                <p>Case Studies</p>
+                <p>Blog</p>
+                <p>Developer API</p>
+            </div>
+            
+            <div class="footer-links">
+                <h4>Get in touch</h4>
+                <p><i class="fas fa-envelope"></i> partner@iconmedia.in</p>
+                <p><i class="fas fa-phone-alt"></i> +91 82371 39130</p>
+                <div class="cta-box">
+                    <span style="color: white; font-weight: 600;">100K+ affiliates</span>
+                    <span style="color: var(--neutral-400); display: block;">are already earning</span>
+                    <button onclick="openRegister()">Join the network →</button>
+                </div>
+            </div>
+        </div>
+        
+        <div class="footer-bottom">
+            <span>© 2026 IconMediaNetwork.in. All rights reserved.</span>
+            <span>Privacy · Terms · GDPR</span>
+        </div>
+    </div>
+</footer>
+
+<!-- Spacing -->
+<div style="height: var(--space-4);"></div>
+
+<script>
+    // Hamburger Menu Toggle
+    function toggleMenu() {
+        const hamburger = document.getElementById('hamburger');
+        const navLinks = document.getElementById('navLinks');
+        hamburger.classList.toggle('active');
+        navLinks.classList.toggle('active');
+        
+        // Prevent scrolling when menu is open
+        if (navLinks.classList.contains('active')) {
+            document.body.style.overflow = 'hidden';
+        } else {
+            document.body.style.overflow = 'auto';
+        }
+    }
+
+    // Close menu when clicking on a link
+    document.querySelectorAll('.nav-links a').forEach(link => {
+        link.addEventListener('click', () => {
+            const hamburger = document.getElementById('hamburger');
+            const navLinks = document.getElementById('navLinks');
+            hamburger.classList.remove('active');
+            navLinks.classList.remove('active');
+            document.body.style.overflow = 'auto';
+        });
+    });
+
+    // Close menu on window resize (if screen becomes larger)
+    window.addEventListener('resize', () => {
+        if (window.innerWidth > 1024) {
+            const hamburger = document.getElementById('hamburger');
+            const navLinks = document.getElementById('navLinks');
+            hamburger.classList.remove('active');
+            navLinks.classList.remove('active');
+            document.body.style.overflow = 'auto';
+        }
+    });
+
+    function openLogin() {
+        window.location.href = "login.php";
+    }
+
+    function openRegister() {
+        window.location.href = "register.php";
+    }
+
+    // Animate chart bars on scroll
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.style.animation = 'barRise 1s ease-out';
+            }
+        });
+    });
+
+    document.querySelectorAll('.chart-bar').forEach(bar => {
+        observer.observe(bar);
+    });
+</script>
+
+</body>
+</html>
