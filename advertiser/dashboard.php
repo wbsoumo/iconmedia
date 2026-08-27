@@ -251,38 +251,38 @@ $topAffiliates = $affiliatesStmt->fetchAll(PDO::FETCH_ASSOC);
             background: var(--dark-gradient) !important;
         }
 
-        /* 2x2 Grid for Mobile Stat Boxes */
+        /* 2x2 Grid strictly for the 4 main stat boxes on Mobile */
         @media (max-width: 767.98px) {
-            .row > [class*="col-"] {
+            .stat-boxes-row > [class*="col-"] {
                 flex: 0 0 50% !important;
                 max-width: 50% !important;
                 padding-left: 6px !important;
                 padding-right: 6px !important;
             }
 
-            .small-box {
+            .stat-boxes-row .small-box {
                 margin-bottom: 12px !important;
             }
 
-            .small-box .inner {
+            .stat-boxes-row .small-box .inner {
                 padding: 12px 10px !important;
             }
 
-            .small-box h3 {
+            .stat-boxes-row .small-box h3 {
                 font-size: 18px !important;
                 margin-bottom: 2px !important;
             }
 
-            .small-box p {
+            .stat-boxes-row .small-box p {
                 font-size: 11px !important;
                 margin-bottom: 0 !important;
             }
 
-            .small-box .icon {
+            .stat-boxes-row .small-box .icon {
                 display: none !important;
             }
 
-            .small-box-footer {
+            .stat-boxes-row .small-box-footer {
                 padding: 4px 0 !important;
                 font-size: 11px !important;
             }
@@ -793,8 +793,8 @@ $topAffiliates = $affiliatesStmt->fetchAll(PDO::FETCH_ASSOC);
                 </div>
 
                 <!-- Main Stats Cards -->
-                <div class="row">
-                    <div class="col-md-3">
+                <div class="row stat-boxes-row">
+                    <div class="col-6 col-md-3">
                         <div class="small-box bg-gradient-primary">
                             <div class="inner">
                                 <h3><?php echo $stats['total_offers']; ?></h3>
@@ -809,7 +809,7 @@ $topAffiliates = $affiliatesStmt->fetchAll(PDO::FETCH_ASSOC);
                         </div>
                     </div>
                     
-                    <div class="col-md-3">
+                    <div class="col-6 col-md-3">
                         <div class="small-box bg-gradient-info">
                             <div class="inner">
                                 <h3><?php echo $stats['total_clicks']; ?></h3>
@@ -824,7 +824,7 @@ $topAffiliates = $affiliatesStmt->fetchAll(PDO::FETCH_ASSOC);
                         </div>
                     </div>
                     
-                    <div class="col-md-3">
+                    <div class="col-6 col-md-3">
                         <div class="small-box bg-gradient-success">
                             <div class="inner">
                                 <h3><?php echo $stats['total_conversions']; ?></h3>
@@ -839,7 +839,7 @@ $topAffiliates = $affiliatesStmt->fetchAll(PDO::FETCH_ASSOC);
                         </div>
                     </div>
                     
-                    <div class="col-md-3">
+                    <div class="col-6 col-md-3">
                         <div class="small-box bg-gradient-warning">
                             <div class="inner">
                                 <h3>$<?php echo number_format($stats['total_revenue'], 2); ?></h3>

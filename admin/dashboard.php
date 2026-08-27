@@ -599,43 +599,6 @@ $systemStats = $pdo->query("
             font-size: 12px;
             margin-left: 5px;
         }
-
-        /* 2x2 Grid for Mobile Stat Boxes */
-        @media (max-width: 767.98px) {
-            .row > [class*="col-"] {
-                flex: 0 0 50% !important;
-                max-width: 50% !important;
-                padding-left: 6px !important;
-                padding-right: 6px !important;
-            }
-
-            .small-box {
-                margin-bottom: 12px !important;
-            }
-
-            .small-box .inner {
-                padding: 12px 10px !important;
-            }
-
-            .small-box h3 {
-                font-size: 18px !important;
-                margin-bottom: 2px !important;
-            }
-
-            .small-box p {
-                font-size: 11px !important;
-                margin-bottom: 0 !important;
-            }
-
-            .small-box .icon {
-                display: none !important;
-            }
-
-            .small-box-footer {
-                padding: 4px 0 !important;
-                font-size: 11px !important;
-            }
-        }
         
         .comparison-text.positive {
             color: #28a745;
