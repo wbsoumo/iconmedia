@@ -7,6 +7,9 @@ ErrorDocument 403 /403.php
 RewriteEngine On
 RewriteRule ^favicon\.ico$ /favicon.png [L]
 
+# REST API v1 Routing
+RewriteRule ^api/v1/(.*)$ api/v1.php [QSA,L]
+
 # Set correct content type
 <Files "favicon.png">
     Header set Content-Type "image/png"
