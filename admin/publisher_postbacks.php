@@ -27,26 +27,45 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         } elseif (!filter_var($postbackUrl, FILTER_VALIDATE_URL)) {
             $error = 'Please enter a valid HTTP/HTTPS Postback URL';
         } else {
-            $stmt = $pdo->prepare("
-                INSERT INTO affiliate_postbacks 
-                    (affiliate_id, postback_url, status, postback_type, name, updated_at)
-                VALUES 
-                    (:aid, :url, :status, :type, :name, NOW())
-                ON DUPLICATE KEY UPDATE
-                    postback_url = VALUES(postback_url),
-                    status = VALUES(status),
-                    postback_type = VALUES(postback_type),
-                    name = VALUES(name),
-                    updated_at = NOW()
-            ");
+            // Check if postback record already exists for this publisher
+            $checkStmt = $pdo->prepare("SELECT id FROM affiliate_postbacks WHERE affiliate_id = ? LIMIT 1");
+            $checkStmt->execute([$affiliateId]);
+            $existingPostback = $checkStmt->fetch(PDO::FETCH_ASSOC);
 
-            $stmt->execute([
-                'aid' => $affiliateId,
-                'url' => $postbackUrl,
-                'status' => $status,
-                'type' => $postbackType,
-                'name' => $name
-            ]);
+            if ($existingPostback) {
+                // Update existing record
+                $updateStmt = $pdo->prepare("
+                    UPDATE affiliate_postbacks 
+                    SET postback_url = :url,
+                        status = :status,
+                        postback_type = :type,
+                        name = :name,
+                        updated_at = NOW()
+                    WHERE id = :id
+                ");
+                $updateStmt->execute([
+                    'url'    => $postbackUrl,
+                    'status' => $status,
+                    'type'   => $postbackType,
+                    'name'   => $name,
+                    'id'     => $existingPostback['id']
+                ]);
+            } else {
+                // Insert new record
+                $insertStmt = $pdo->prepare("
+                    INSERT INTO affiliate_postbacks 
+                        (affiliate_id, postback_url, status, postback_type, name, created_at, updated_at)
+                    VALUES 
+                        (:aid, :url, :status, :type, :name, NOW(), NOW())
+                ");
+                $insertStmt->execute([
+                    'aid'    => $affiliateId,
+                    'url'    => $postbackUrl,
+                    'status' => $status,
+                    'type'   => $postbackType,
+                    'name'   => $name
+                ]);
+            }
 
             $success = 'Postback URL configuration saved successfully!';
         }
