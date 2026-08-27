@@ -92,11 +92,11 @@
 /* Dark mode considerations — optional refinement */
 @media (prefers-color-scheme: dark) {
     :root {
-        --background: var(--neutral-900);
-        --foreground: var(--neutral-50);
-        --muted: var(--neutral-400);
-        --border: var(--neutral-700);
-        --card-bg: var(--neutral-800);
+        --background: #ffffff;
+        --foreground: #0f172a;
+        --muted: #475569;
+        --border: #cbd5e1;
+        --card-bg: #ffffff;
     }
 }
 
@@ -1098,6 +1098,11 @@ html, body {
 
 /* Stronger body contrast */
 body {
+    color: #0f172a !important;
+    background-color: #ffffff !important;
+}
+
+h1, h2, h3, h4, h5, h6 {
     color: #0f172a !important;
 }
 
