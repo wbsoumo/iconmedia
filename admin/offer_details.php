@@ -647,14 +647,13 @@ $notes = [
     <aside class="main-sidebar sidebar-dark-primary elevation-4">
         <a href="dashboard.php" class="brand-link text-center">
             <span class="brand-text font-weight-light" style="font-size: 1.5rem;">
-                <i class="fas fa-crown mr-2"></i>
-                <strong>Admin</strong>
+                <i class="fas fa-crown mr-2"></i><strong>Admin</strong>
             </span>
         </a>
 
         <div class="sidebar">
             <nav class="mt-2">
-                <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
+                <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu">
                     <li class="nav-item">
                         <a href="dashboard.php" class="nav-link">
                             <i class="nav-icon fas fa-chart-line"></i>
@@ -664,13 +663,13 @@ $notes = [
 
                     <li class="nav-header">CAMPAIGNS</li>
                     <li class="nav-item">
-                        <a href="offers.php" class="nav-link">
+                        <a href="campaigns.php" class="nav-link active">
                             <i class="nav-icon fas fa-bullhorn"></i>
                             <p>Manage Campaigns</p>
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a href="create_offer.php" class="nav-link">
+                        <a href="create_campaign.php" class="nav-link">
                             <i class="nav-icon fas fa-plus"></i>
                             <p>Create Campaign</p>
                         </a>
@@ -732,12 +731,6 @@ $notes = [
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a href="profile.php" class="nav-link">
-                            <i class="nav-icon fas fa-user-circle"></i>
-                            <p>My Profile</p>
-                        </a>
-                    </li>
-                    <li class="nav-item">
                         <a href="settings.php" class="nav-link">
                             <i class="nav-icon fas fa-cog"></i>
                             <p>Settings</p>
@@ -750,17 +743,16 @@ $notes = [
 
     <!-- Content Wrapper -->
     <div class="content-wrapper">
-        <!-- Content Header -->
         <div class="content-header">
             <div class="container-fluid">
                 <div class="row mb-2">
                     <div class="col-sm-6">
-                        <h1 class="m-0">Campaign Details</h1>
+                        <h1 class="m-0 font-weight-bold">Campaign Specifications & Analytics</h1>
                     </div>
                     <div class="col-sm-6">
                         <ol class="breadcrumb float-sm-right">
                             <li class="breadcrumb-item"><a href="dashboard.php">Home</a></li>
-                            <li class="breadcrumb-item"><a href="offers.php">Campaigns</a></li>
+                            <li class="breadcrumb-item"><a href="campaigns.php">Campaigns</a></li>
                             <li class="breadcrumb-item active">Campaign #<?php echo $offerId; ?></li>
                         </ol>
                     </div>
@@ -771,102 +763,43 @@ $notes = [
         <!-- Main Content -->
         <div class="content">
             <div class="container-fluid">
-                <!-- Offer Header -->
-                <div class="offer-header">
-                    <div class="d-flex justify-content-between align-items-start">
-                        <div>
-                            <div class="offer-id-badge mb-3">
-                                <i class="fas fa-hashtag mr-1"></i> Campaign ID: #<?php echo $offer['offer_id']; ?>
-                            </div>
-                            <h1 class="offer-title"><?php echo htmlspecialchars($offer['offer_name']); ?></h1>
-                            <div class="d-flex align-items-center mb-3">
-                                <span class="status-badge status-<?php echo $offer['status']; ?> mr-2">
-                                    <?php echo ucfirst($offer['status']); ?>
-                                </span>
-                                <span class="visibility-badge visibility-<?php echo $offer['visibility'] ?? 'public'; ?>">
-                                    <i class="fas fa-<?php echo ($offer['visibility'] ?? 'public') == 'public' ? 'globe' : 'lock'; ?> mr-1"></i>
-                                    <?php echo ucfirst($offer['visibility'] ?? 'public'); ?>
-                                </span>
-                            </div>
-                            <p class="mb-0">
-                                <i class="fas fa-calendar-alt mr-2"></i> Created: <?php echo date('F d, Y h:i A', strtotime($offer['created_at'])); ?>
-                                <?php if ($offer['updated_at'] && $offer['updated_at'] != $offer['created_at']): ?>
-                                <span class="ml-3"><i class="fas fa-edit mr-2"></i> Updated: <?php echo date('F d, Y h:i A', strtotime($offer['updated_at'])); ?></span>
-                                <?php endif; ?>
-                            </p>
-                        </div>
-                        <div class="action-buttons">
-                            <a href="offers.php" class="btn-action btn-back">
-                                <i class="fas fa-arrow-left"></i> Back
-                            </a>
-                            <a href="offer_edit.php?id=<?php echo $offer['offer_id']; ?>" class="btn-action btn-edit">
-                                <i class="fas fa-edit"></i> Edit
-                            </a>
-                            <?php if ($offer['status'] === 'pending'): ?>
-                            <a href="offers.php?action=approve&id=<?php echo $offer['offer_id']; ?>" class="btn-action btn-approve">
-                                <i class="fas fa-check"></i> Approve
-                            </a>
-                            <a href="offers.php?action=reject&id=<?php echo $offer['offer_id']; ?>" class="btn-action btn-reject">
-                                <i class="fas fa-times"></i> Reject
-                            </a>
-                            <?php elseif ($offer['status'] === 'approved'): ?>
-                            <a href="offers.php?action=activate&id=<?php echo $offer['offer_id']; ?>" class="btn-action btn-activate">
-                                <i class="fas fa-play"></i> Activate
-                            </a>
-                            <?php elseif ($offer['status'] === 'active'): ?>
-                            <a href="offers.php?action=pause&id=<?php echo $offer['offer_id']; ?>" class="btn-action btn-pause">
-                                <i class="fas fa-pause"></i> Pause
-                            </a>
-                            <?php elseif ($offer['status'] === 'paused'): ?>
-                            <a href="offers.php?action=activate&id=<?php echo $offer['offer_id']; ?>" class="btn-action btn-activate">
-                                <i class="fas fa-play"></i> Activate
-                            </a>
-                            <?php endif; ?>
-                        </div>
-                    </div>
-                </div>
 
-                <!-- Performance Metrics -->
-                <div class="row">
-                    <div class="col-lg-2 col-md-4 col-sm-6">
-                        <div class="metric-card">
-                            <div class="metric-value"><?php echo number_format($offer['total_clicks'] ?? 0); ?></div>
-                            <div class="metric-label">Total Clicks</div>
+                <!-- Summary Stat Cards (2x2 Mobile Responsive Grid) -->
+                <div class="row mb-4 stat-boxes-row">
+                    <div class="col-6 col-md-2">
+                        <div class="stat-card-custom">
+                            <div class="stat-number text-primary"><?php echo number_format($offer['total_clicks'] ?? 0); ?></div>
+                            <div class="stat-label">Total Clicks</div>
                         </div>
                     </div>
-                    <div class="col-lg-2 col-md-4 col-sm-6">
-                        <div class="metric-card">
-                            <div class="metric-value"><?php echo number_format($offer['total_conversions'] ?? 0); ?></div>
-                            <div class="metric-label">Total Conversions</div>
-                            <div class="metric-sub">
-                                Approved: <?php echo number_format($offer['approved_conversions'] ?? 0); ?>
-                            </div>
+                    <div class="col-6 col-md-2">
+                        <div class="stat-card-custom">
+                            <div class="stat-number text-success"><?php echo number_format($offer['approved_conversions'] ?? 0); ?></div>
+                            <div class="stat-label">Approved Leads</div>
                         </div>
                     </div>
-                    <div class="col-lg-2 col-md-4 col-sm-6">
-                        <div class="metric-card">
-                            <div class="metric-value"><?php echo number_format($offer['conversion_rate'] ?? 0, 2); ?>%</div>
-                            <div class="metric-label">Conversion Rate</div>
+                    <div class="col-6 col-md-2">
+                        <div class="stat-card-custom">
+                            <div class="stat-number text-info"><?php echo number_format($offer['conversion_rate'] ?? 0, 2); ?>%</div>
+                            <div class="stat-label">CR %</div>
                         </div>
                     </div>
-                    <div class="col-lg-2 col-md-4 col-sm-6">
-                        <div class="metric-card">
-                            <div class="metric-value text-success">$<?php echo number_format($offer['earned_revenue'] ?? 0, 2); ?></div>
-                            <div class="metric-label">Revenue Earned</div>
+                    <div class="col-6 col-md-2">
+                        <div class="stat-card-custom">
+                            <div class="stat-number text-success">$<?php echo number_format($offer['earned_revenue'] ?? 0, 2); ?></div>
+                            <div class="stat-label">Revenue</div>
                         </div>
                     </div>
-                    <div class="col-lg-2 col-md-4 col-sm-6">
-                        <div class="metric-card">
-                            <div class="metric-value text-warning">$<?php echo number_format($offer['paid_payout'] ?? 0, 2); ?></div>
-                            <div class="metric-label">Payout Paid</div>
+                    <div class="col-6 col-md-2">
+                        <div class="stat-card-custom">
+                            <div class="stat-number text-warning">$<?php echo number_format($offer['paid_payout'] ?? 0, 2); ?></div>
+                            <div class="stat-label">Payout</div>
                         </div>
                     </div>
-                    <div class="col-lg-2 col-md-4 col-sm-6">
-                        <div class="metric-card">
-                            <div class="metric-value <?php echo ($offer['profit'] ?? 0) >= 0 ? 'profit-positive' : 'profit-negative'; ?>">
-                                $<?php echo number_format($offer['profit'] ?? 0, 2); ?>
-                            </div>
-                            <div class="metric-label">Net Profit</div>
+                    <div class="col-6 col-md-2">
+                        <div class="stat-card-custom">
+                            <div class="stat-number text-success font-weight-bold">$<?php echo number_format($offer['profit'] ?? 0, 2); ?></div>
+                            <div class="stat-label">Net Profit</div>
                         </div>
                     </div>
                 </div>
