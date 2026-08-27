@@ -13,7 +13,49 @@ $advertiserName = $_SESSION['user_name'] ?? 'Advertiser';
 $success = $error = null;
 
 /* ===============================
-   FETCH ALL OFFERS WITH POSTBACK TOKENS
+   HANDLE LIVE TEST FIRE & SIMULATION
+================================ */
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['fire_live_test'])) {
+    $offerId = (int)$_POST['test_offer_id'];
+    $testClickId = trim($_POST['test_click_id'] ?? ('test_' . uniqid()));
+    $testPayout = (float)($_POST['test_payout'] ?? 10.00);
+    $testStatus = $_POST['test_status'] ?? 'approved';
+    $testTxnId = 'TXN_' . strtoupper(substr(md5(microtime()), 0, 8));
+
+    // Get offer details & token
+    $stmt = $pdo->prepare("SELECT offer_id, offer_name, postback_token, revenue FROM offers WHERE offer_id = :oid AND advertiser_id = :aid");
+    $stmt->execute(['oid' => $offerId, 'aid' => $advertiserId]);
+    $offerData = $stmt->fetch(PDO::FETCH_ASSOC);
+
+    if ($offerData) {
+        $token = $offerData['postback_token'];
+        $protocol = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') ? "https" : "http";
+        $host = $_SERVER['HTTP_HOST'] ?? 'iconmedianetwork.in';
+        $postbackUrl = "{$protocol}://{$host}/postback.php?click_id=" . urlencode($testClickId) . "&payout=" . urlencode($testPayout) . "&token=" . urlencode($token) . "&status=" . urlencode($testStatus) . "&transaction_id=" . urlencode($testTxnId);
+
+        // Execute cURL request to simulate incoming postback
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_URL, $postbackUrl);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch, CURLOPT_TIMEOUT, 10);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+        $response = curl_exec($ch);
+        $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+        $curlError = curl_error($ch);
+        curl_close($ch);
+
+        if ($httpCode === 200) {
+            $success = "Test Postback successfully fired! Server Response (HTTP 200): " . htmlspecialchars($response);
+        } else {
+            $error = "Test Postback fired with HTTP status {$httpCode}. Error: " . htmlspecialchars($curlError ?: $response);
+        }
+    } else {
+        $error = "Invalid Offer selected for testing.";
+    }
+}
+
+/* ===============================
+   FETCH ALL ADVERTISER OFFERS
 ================================ */
 $stmt = $pdo->prepare("
     SELECT 
@@ -24,6 +66,7 @@ $stmt = $pdo->prepare("
         created_at,
         conversion_tracking,
         payout,
+        revenue,
         currency
     FROM offers 
     WHERE advertiser_id = :aid
@@ -69,421 +112,122 @@ $logsStmt = $pdo->prepare("
     FROM conversions cv
     INNER JOIN offers o ON o.offer_id = cv.offer_id
     LEFT JOIN users u ON u.user_id = cv.affiliate_id
-    WHERE o.advertiser_id = :aid AND cv.source = 'postback'
+    WHERE o.advertiser_id = :aid
     ORDER BY cv.created_at DESC
-    LIMIT 20
+    LIMIT 30
 ");
 $logsStmt->execute(['aid' => $advertiserId]);
 $postbackLogs = $logsStmt->fetchAll(PDO::FETCH_ASSOC);
-
-/* ===============================
-   HANDLE POSTBACK TEST
-================================ */
-if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['test_postback'])) {
-    $offerId = (int)$_POST['offer_id'];
-    $testClickId = 'test_' . uniqid();
-    $testPayout = (float)$_POST['test_payout'];
-    
-    // Find the offer to get its token
-    $testOffer = array_filter($offers, function($o) use ($offerId) {
-        return $o['offer_id'] == $offerId;
-    });
-    
-    if (!empty($testOffer)) {
-        $testOffer = reset($testOffer);
-        $testUrl = "https://iconmedianetwork.in/postback.php?click_id={$testClickId}&payout={$testPayout}&token={$testOffer['postback_token']}";
-        $success = "Test URL generated successfully!";
-        $testUrlGenerated = $testUrl;
-    } else {
-        $error = "Invalid offer selected";
-    }
-}
 ?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Postback Manager | Advertiser Panel | GVS Icon Media</title>
+    <title>Postback Manager & S2S Tester | Advertiser Panel</title>
     
     <!-- Google Font: Source Sans Pro -->
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,600,700&display=fallback">
     <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <!-- AdminLTE 3 -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/admin-lte@3.2/dist/css/adminlte.min.css">
     <!-- DataTables -->
     <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/dataTables.bootstrap4.min.css">
+    <!-- Prism Syntax Highlighting -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css">
     <!-- SweetAlert2 -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
     
     <style>
         :root {
-            --primary-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            --success-gradient: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
-            --info-gradient: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
-            --warning-gradient: linear-gradient(135deg, #f7971e 0%, #ffd200 100%);
-            --danger-gradient: linear-gradient(135deg, #ff416c 0%, #ff4b2b 100%);
-            --dark-gradient: linear-gradient(135deg, #2d3748 0%, #4a5568 100%);
+            --primary-gradient: linear-gradient(135deg, #4f46e5 0%, #3b82f6 100%);
+            --accent-color: #4f46e5;
         }
         
-        .card-dashboard {
-            border-radius: 15px;
+        .card-custom {
+            border-radius: 12px;
             border: none;
-            box-shadow: 0 5px 20px rgba(0,0,0,0.08);
+            box-shadow: 0 4px 18px rgba(0,0,0,0.06);
             margin-bottom: 25px;
-            overflow: hidden;
+            background: #ffffff;
         }
-        
-        .card-dashboard .card-header {
-            border-radius: 15px 15px 0 0;
-            background: white;
-            border-bottom: 1px solid rgba(0,0,0,0.1);
+
+        .stat-card-custom {
+            border-radius: 12px;
+            background: #ffffff;
             padding: 20px;
-        }
-        
-        .card-dashboard .card-body {
-            padding: 25px;
-        }
-        
-        .postback-card {
-            background: white;
-            border-radius: 15px;
-            border: 1px solid #e3e6f0;
-            margin-bottom: 20px;
-            overflow: hidden;
-            transition: all 0.3s ease;
-        }
-        
-        .postback-card:hover {
-            box-shadow: 0 5px 20px rgba(102, 126, 234, 0.15);
-            border-color: #667eea;
-        }
-        
-        .postback-header {
-            background: linear-gradient(135deg, #f8f9fc 0%, #eaecf4 100%);
-            padding: 15px 20px;
-            border-bottom: 1px solid #e3e6f0;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-        
-        .postback-header h5 {
-            margin: 0;
-            font-weight: 600;
-            color: #2d3748;
-        }
-        
-        .postback-body {
-            padding: 20px;
-        }
-        
-        .token-box {
-            background: #f8f9fc;
-            border: 1px solid #e3e6f0;
-            border-radius: 8px;
-            padding: 15px;
-            font-family: monospace;
-            word-break: break-all;
-            position: relative;
-            margin-bottom: 15px;
-            font-size: 14px;
-        }
-        
-        .copy-btn {
-            position: absolute;
-            right: 10px;
-            top: 10px;
-            background: white;
-            border: 1px solid #e3e6f0;
-            border-radius: 6px;
-            padding: 5px 10px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            font-size: 12px;
-        }
-        
-        .copy-btn:hover {
-            background: var(--primary-gradient);
-            color: white;
-            border-color: transparent;
-        }
-        
-        .url-example {
-            background: #e8f0fe;
-            border-left: 4px solid #667eea;
-            padding: 15px;
-            border-radius: 8px;
-            margin: 15px 0;
-        }
-        
-        .url-example code {
-            background: white;
-            padding: 8px 12px;
-            border-radius: 6px;
-            display: block;
-            margin-top: 10px;
-            word-break: break-all;
-            border: 1px dashed #667eea;
-        }
-        
-        .metric-card {
-            background: white;
-            border-radius: 10px;
-            padding: 20px;
-            border: 1px solid #e3e6f0;
+            border: 1px solid #e2e8f0;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.03);
             text-align: center;
-            transition: all 0.3s ease;
-            flex: 1;
-            min-width: 150px;
         }
-        
-        .metric-card:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
-        }
-        
-        .metric-value {
+
+        .stat-card-custom .stat-number {
             font-size: 28px;
-            font-weight: 700;
-            color: #4e73df;
-            margin-bottom: 5px;
+            font-weight: 800;
+            color: #1e293b;
         }
-        
-        .metric-label {
-            font-size: 12px;
-            color: #6c757d;
+
+        .stat-card-custom .stat-label {
+            font-size: 13px;
+            font-weight: 600;
+            color: #64748b;
             text-transform: uppercase;
-            letter-spacing: 1px;
         }
-        
-        .summary-stats {
-            display: flex;
-            gap: 15px;
-            margin: 20px 0;
-            flex-wrap: wrap;
-        }
-        
-        .status-badge {
-            padding: 6px 12px;
-            border-radius: 20px;
-            font-size: 12px;
-            font-weight: 600;
+
+        .token-chip {
             display: inline-block;
-        }
-        
-        .status-active {
-            background: rgba(40, 167, 69, 0.15);
-            color: #28a745;
-        }
-        
-        .status-pending {
-            background: rgba(255, 193, 7, 0.15);
-            color: #ffc107;
-        }
-        
-        .status-paused {
-            background: rgba(108, 117, 125, 0.15);
-            color: #6c757d;
-        }
-        
-        .source-badge {
+            background: #e0e7ff;
+            color: #3730a3;
             padding: 4px 10px;
-            border-radius: 12px;
-            font-size: 11px;
-            font-weight: 600;
-            display: inline-block;
-        }
-        
-        .source-postback {
-            background: rgba(40, 167, 69, 0.15);
-            color: #28a745;
-        }
-        
-        .source-manual {
-            background: rgba(255, 193, 7, 0.15);
-            color: #ffc107;
-        }
-        
-        .source-api {
-            background: rgba(0, 123, 255, 0.15);
-            color: #007bff;
-        }
-        
-        .btn-gradient {
-            background: var(--primary-gradient);
-            border: none;
-            color: white;
-            font-weight: 600;
-            padding: 10px 25px;
-            border-radius: 8px;
-            transition: all 0.3s ease;
-        }
-        
-        .btn-gradient:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
-            color: white;
-        }
-        
-        .btn-outline-primary {
-            border: 2px solid #667eea;
-            color: #667eea;
-            font-weight: 600;
-            transition: all 0.3s ease;
-        }
-        
-        .btn-outline-primary:hover {
-            background: var(--primary-gradient);
-            border-color: transparent;
-            color: white;
-        }
-        
-        .empty-state {
-            text-align: center;
-            padding: 60px 20px;
-            color: #6c757d;
-        }
-        
-        .empty-state-icon {
-            font-size: 60px;
-            color: #e3e6f0;
-            margin-bottom: 15px;
-        }
-        
-        .dashboard-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 20px;
-        }
-        
-        .action-buttons-group {
-            display: flex;
-            gap: 10px;
-        }
-        
-        .welcome-banner {
-            background: var(--primary-gradient);
-            color: white;
-            padding: 30px;
-            border-radius: 15px;
-            margin-bottom: 30px;
-            position: relative;
-            overflow: hidden;
-        }
-        
-        .welcome-banner::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            right: 0;
-            bottom: 0;
-            left: 0;
-            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 320"><path fill="rgba(255,255,255,0.1)" d="M0,96L48,112C96,128,192,160,288,186.7C384,213,480,235,576,213.3C672,192,768,128,864,128C960,128,1056,192,1152,213.3C1248,235,1344,213,1392,202.7L1440,192L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z"></path></svg>');
-            background-size: cover;
-            opacity: 0.1;
-        }
-        
-        .advertiser-avatar {
-            width: 40px;
-            height: 40px;
-            background: var(--primary-gradient);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: white;
-            font-size: 18px;
-            font-weight: 600;
-        }
-        
-        .token-variables {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 10px;
-            margin-top: 10px;
-        }
-        
-        .token-variable {
-            background: #e3e6f0;
-            color: #4e73df;
-            padding: 4px 10px;
-            border-radius: 15px;
-            font-size: 11px;
+            border-radius: 6px;
+            font-family: monospace;
+            font-size: 13px;
             font-weight: 600;
             cursor: pointer;
-            transition: all 0.3s ease;
+            margin: 3px;
+            transition: all 0.2s;
         }
-        
-        .token-variable:hover {
-            background: #667eea;
-            color: white;
+
+        .token-chip:hover {
+            background: #c7d2fe;
+            transform: scale(1.05);
         }
-        
-        .alert {
-            border-radius: 12px;
-            padding: 15px 20px;
-            margin-bottom: 20px;
+
+        .code-box-wrapper {
+            position: relative;
+            border-radius: 8px;
+            overflow: hidden;
+            background: #1e1e1e;
+        }
+
+        .code-copy-btn {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: rgba(255,255,255,0.15);
+            color: #ffffff;
             border: none;
+            padding: 4px 12px;
+            border-radius: 4px;
+            font-size: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            z-index: 5;
+            transition: all 0.2s;
         }
-        
-        .alert-success {
-            background: rgba(40, 167, 69, 0.1);
-            border-left: 4px solid #28a745;
-            color: #155724;
-        }
-        
-        .alert-danger {
-            background: rgba(220, 53, 69, 0.1);
-            border-left: 4px solid #dc3545;
-            color: #721c24;
-        }
-        
-        .refresh-btn {
-            background: rgba(255,255,255,0.2);
-            border: 1px solid rgba(255,255,255,0.3);
-            color: white;
-            border-radius: 20px;
-            padding: 8px 20px;
-            font-size: 14px;
-            transition: all 0.3s ease;
-        }
-        
-        .refresh-btn:hover {
+
+        .code-copy-btn:hover {
             background: rgba(255,255,255,0.3);
-            transform: translateY(-2px);
         }
         
-        .modal-content {
-            border-radius: 20px;
-            border: none;
-            box-shadow: 0 20px 40px rgba(0,0,0,0.2);
-        }
-        
-        .modal-header {
-            border-bottom: 1px solid #e3e6f0;
-            padding: 20px 25px;
-        }
-        
-        .modal-body {
-            padding: 25px;
-        }
-        
-        .modal-footer {
-            border-top: 1px solid #e3e6f0;
-            padding: 20px 25px;
-        }
-        
-        .test-url-box {
-            background: #f8f9fc;
-            border: 2px dashed #667eea;
-            border-radius: 10px;
-            padding: 20px;
-            margin-top: 20px;
-            word-break: break-all;
-            font-family: monospace;
+        @media (max-width: 767.98px) {
+            .stat-boxes-row > [class*="col-"] {
+                flex: 0 0 50% !important;
+                max-width: 50% !important;
+                padding-left: 6px !important;
+                padding-right: 6px !important;
+            }
         }
     </style>
 </head>
@@ -494,9 +238,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['test_postback'])) {
     <nav class="main-header navbar navbar-expand navbar-white navbar-light">
         <ul class="navbar-nav">
             <li class="nav-item">
-                <a class="nav-link" data-widget="pushmenu" href="#" role="button">
-                    <i class="fas fa-bars"></i>
-                </a>
+                <a class="nav-link" data-widget="pushmenu" href="#" role="button"><i class="fas fa-bars"></i></a>
             </li>
             <li class="nav-item d-none d-sm-inline-block">
                 <a href="dashboard.php" class="nav-link">Dashboard</a>
@@ -508,140 +250,64 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['test_postback'])) {
 
         <ul class="navbar-nav ml-auto">
             <li class="nav-item">
-                <a class="nav-link" data-widget="fullscreen" href="#" role="button">
-                    <i class="fas fa-expand-arrows-alt"></i>
-                </a>
-            </li>
-            
-            <li class="nav-item dropdown">
-                <a class="nav-link dropdown-toggle d-flex align-items-center" href="#" id="userDropdown" role="button" data-toggle="dropdown">
-                    <div class="advertiser-avatar mr-2">
-                        <?php echo strtoupper(substr($advertiserName, 0, 1)); ?>
-                    </div>
-                    <span><?php echo htmlspecialchars($advertiserName); ?></span>
-                </a>
-                <div class="dropdown-menu dropdown-menu-right">
-                    <a href="profile.php" class="dropdown-item">
-                        <i class="fas fa-user mr-2"></i> Profile
-                    </a>
-                    <a href="settings.php" class="dropdown-item">
-                        <i class="fas fa-cog mr-2"></i> Account Settings
-                    </a>
-                    <div class="dropdown-divider"></div>
-                    <a href="../logout.php" class="dropdown-item">
-                        <i class="fas fa-sign-out-alt mr-2"></i> Logout
-                    </a>
-                </div>
-            </li>
-            
-            <li class="nav-item">
-                <a class="nav-link" href="#" id="darkModeToggle">
-                    <i class="fas fa-moon"></i>
-                </a>
+                <a class="nav-link" href="#" id="darkModeToggle"><i class="fas fa-moon"></i></a>
             </li>
         </ul>
     </nav>
 
     <!-- Sidebar -->
     <aside class="main-sidebar sidebar-dark-primary elevation-4">
-        <!-- Brand Logo -->
         <a href="dashboard.php" class="brand-link text-center">
             <span class="brand-text font-weight-light" style="font-size: 1.5rem;">
-                <i class="fas fa-chart-line mr-2"></i>
-                <strong>Advertiser</strong>
+                <i class="fas fa-chart-line mr-2"></i><strong>Advertiser</strong>
             </span>
         </a>
 
-        <!-- Sidebar -->
         <div class="sidebar">
-            <!-- Sidebar Menu -->
             <nav class="mt-2">
-                <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
+                <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu">
                     <li class="nav-item">
-                        <a href="dashboard.php" class="nav-link">
-                            <i class="nav-icon fas fa-tachometer-alt"></i>
-                            <p>Dashboard</p>
-                        </a>
+                        <a href="dashboard.php" class="nav-link"><i class="nav-icon fas fa-tachometer-alt"></i><p>Dashboard</p></a>
                     </li>
-                    
                     <li class="nav-header">CAMPAIGNS</li>
                     <li class="nav-item">
-                        <a href="campaigns.php" class="nav-link">
-                            <i class="nav-icon fas fa-bullhorn"></i>
-                            <p>Manage Campaigns</p>
-                        </a>
+                        <a href="campaigns.php" class="nav-link"><i class="nav-icon fas fa-bullhorn"></i><p>Manage Campaigns</p></a>
                     </li>
                     <li class="nav-item">
-                        <a href="offers.php" class="nav-link">
-                            <i class="nav-icon fas fa-gift"></i>
-                            <p>All Offers</p>
-                        </a>
+                        <a href="offers.php" class="nav-link"><i class="nav-icon fas fa-gift"></i><p>All Offers</p></a>
                     </li>
                     <li class="nav-item">
-                        <a href="create_offer.php" class="nav-link">
-                            <i class="nav-icon fas fa-plus-circle"></i>
-                            <p>Create New Offer</p>
-                        </a>
+                        <a href="create_offer.php" class="nav-link"><i class="nav-icon fas fa-plus-circle"></i><p>Create New Offer</p></a>
                     </li>
-                    
                     <li class="nav-header">REPORTS & ANALYTICS</li>
                     <li class="nav-item">
-                        <a href="reports_campaigns.php" class="nav-link">
-                            <i class="nav-icon fas fa-chart-bar"></i>
-                            <p>Campaign Reports</p>
-                        </a>
+                        <a href="reports_campaigns.php" class="nav-link"><i class="nav-icon fas fa-chart-bar"></i><p>Campaign Reports</p></a>
                     </li>
                     <li class="nav-item">
-                        <a href="reports_conversions.php" class="nav-link">
-                            <i class="fas fa-exchange-alt nav-icon"></i>
-                            <p>Conversion Reports</p>
-                        </a>
+                        <a href="reports_conversions.php" class="nav-link"><i class="fas fa-exchange-alt nav-icon"></i><p>Conversion Reports</p></a>
                     </li>
                     <li class="nav-item">
-                        <a href="reports_affiliates.php" class="nav-link">
-                            <i class="nav-icon fas fa-users"></i>
-                            <p>Affiliate Reports</p>
-                        </a>
+                        <a href="reports_affiliates.php" class="nav-link"><i class="nav-icon fas fa-users"></i><p>Affiliate Reports</p></a>
                     </li>
-                    
                     <li class="nav-header">TOOLS</li>
                     <li class="nav-item">
-                        <a href="ip_whitelist.php" class="nav-link">
-                            <i class="nav-icon fas fa-tower-broadcast"></i>
-                            <p>IP Whitelist</p>
-                        </a>
+                        <a href="ip_whitelist.php" class="nav-link"><i class="nav-icon fas fa-tower-broadcast"></i><p>IP Whitelist</p></a>
                     </li>
                     <li class="nav-item">
-                        <a href="postback.php" class="nav-link active">
-                            <i class="nav-icon fas fa-code"></i>
-                            <p>Postback Manager</p>
-                        </a>
+                        <a href="postback.php" class="nav-link active"><i class="nav-icon fas fa-code"></i><p>Postback Manager</p></a>
                     </li>
                     <li class="nav-item">
-                        <a href="api.php" class="nav-link">
-                            <i class="nav-icon fas fa-plug"></i>
-                            <p>API Integration</p>
-                        </a>
+                        <a href="api.php" class="nav-link"><i class="nav-icon fas fa-plug"></i><p>API Integration</p></a>
                     </li>
                     <li class="nav-item">
-                        <a href="optimization.php" class="nav-link">
-                            <i class="nav-icon fas fa-rocket"></i>
-                            <p>Optimization Tools</p>
-                        </a>
+                        <a href="optimization.php" class="nav-link"><i class="nav-icon fas fa-rocket"></i><p>Optimization Tools</p></a>
                     </li>
-                    
                     <li class="nav-header">ACCOUNT</li>
                     <li class="nav-item">
-                        <a href="profile.php" class="nav-link">
-                            <i class="nav-icon fas fa-user"></i>
-                            <p>Profile</p>
-                        </a>
+                        <a href="profile.php" class="nav-link"><i class="nav-icon fas fa-user"></i><p>Profile</p></a>
                     </li>
                     <li class="nav-item">
-                        <a href="billing.php" class="nav-link">
-                            <i class="nav-icon fas fa-wallet"></i>
-                            <p>Billing & Payments</p>
-                        </a>
+                        <a href="billing.php" class="nav-link"><i class="nav-icon fas fa-wallet"></i><p>Billing & Payments</p></a>
                     </li>
                 </ul>
             </nav>
@@ -650,17 +316,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['test_postback'])) {
 
     <!-- Content Wrapper -->
     <div class="content-wrapper">
-        <!-- Content Header -->
         <div class="content-header">
             <div class="container-fluid">
                 <div class="row mb-2">
                     <div class="col-sm-6">
-                        <h1 class="m-0">Postback Manager</h1>
+                        <h1 class="m-0 font-weight-bold">Postback Manager & S2S Tester</h1>
                     </div>
                     <div class="col-sm-6">
                         <ol class="breadcrumb float-sm-right">
                             <li class="breadcrumb-item"><a href="dashboard.php">Home</a></li>
-                            <li class="breadcrumb-item"><a href="tools.php">Tools</a></li>
                             <li class="breadcrumb-item active">Postback Manager</li>
                         </ol>
                     </div>
@@ -671,409 +335,373 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['test_postback'])) {
         <!-- Main Content -->
         <div class="content">
             <div class="container-fluid">
-                <!-- Welcome Banner -->
-                <div class="welcome-banner">
-                    <div class="row align-items-center">
-                        <div class="col-md-8">
-                            <h2>Postback URL Management</h2>
-                            <p class="mb-0">Configure and manage postback URLs for tracking conversions automatically.</p>
-                        </div>
-                        <div class="col-md-4 text-right">
-                            <button class="refresh-btn" id="refreshPage">
-                                <i class="fas fa-sync-alt mr-1"></i> Refresh
-                            </button>
-                        </div>
-                    </div>
-                </div>
 
-                <!-- Success/Error Messages -->
+                <!-- Alert Messages -->
                 <?php if ($success): ?>
-                <div class="alert alert-success alert-dismissible fade show" role="alert">
-                    <i class="fas fa-check-circle mr-2"></i>
-                    <?php echo htmlspecialchars($success); ?>
-                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
+                <div class="alert alert-success alert-dismissible fade show shadow-sm" role="alert">
+                    <h5><i class="icon fas fa-check-circle"></i> Success!</h5>
+                    <p class="mb-0"><?php echo $success; ?></p>
+                    <button type="button" class="close" data-dismiss="alert"><span>&times;</span></button>
                 </div>
                 <?php endif; ?>
-                
+
                 <?php if ($error): ?>
-                <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                    <i class="fas fa-exclamation-triangle mr-2"></i>
-                    <?php echo htmlspecialchars($error); ?>
-                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
+                <div class="alert alert-danger alert-dismissible fade show shadow-sm" role="alert">
+                    <h5><i class="icon fas fa-exclamation-triangle"></i> Error</h5>
+                    <p class="mb-0"><?php echo $error; ?></p>
+                    <button type="button" class="close" data-dismiss="alert"><span>&times;</span></button>
                 </div>
                 <?php endif; ?>
 
-                <!-- Summary Stats -->
-                <div class="summary-stats">
-                    <div class="metric-card">
-                        <div class="metric-value"><?php echo $stats['total_offers'] ?? 0; ?></div>
-                        <div class="metric-label">Total Offers</div>
+                <!-- Stat Boxes Row (2x2 Mobile Responsive Grid) -->
+                <div class="row mb-4 stat-boxes-row">
+                    <div class="col-6 col-md-3">
+                        <div class="stat-card-custom">
+                            <div class="stat-number text-primary"><?php echo number_format($stats['total_offers'] ?? 0); ?></div>
+                            <div class="stat-label">Total Offers</div>
+                        </div>
                     </div>
-                    <div class="metric-card">
-                        <div class="metric-value"><?php echo $stats['active_offers'] ?? 0; ?></div>
-                        <div class="metric-label">Active Offers</div>
+                    <div class="col-6 col-md-3">
+                        <div class="stat-card-custom">
+                            <div class="stat-number text-success"><?php echo number_format($stats['active_offers'] ?? 0); ?></div>
+                            <div class="stat-label">Active Offers</div>
+                        </div>
                     </div>
-                    <div class="metric-card">
-                        <div class="metric-value"><?php echo $stats['postback_conversions'] ?? 0; ?></div>
-                        <div class="metric-label">Postback Conversions</div>
+                    <div class="col-6 col-md-3">
+                        <div class="stat-card-custom">
+                            <div class="stat-number text-info"><?php echo number_format($stats['postback_conversions'] ?? 0); ?></div>
+                            <div class="stat-label">S2S Conversions</div>
+                        </div>
                     </div>
-                    <div class="metric-card">
-                        <div class="metric-value"><?php echo $stats['total_conversions'] ?? 0; ?></div>
-                        <div class="metric-label">Total Conversions</div>
-                    </div>
-                </div>
-
-                <!-- Instructions Card -->
-                <div class="card-dashboard">
-                    <div class="card-header">
-                        <h3 class="card-title">
-                            <i class="fas fa-info-circle mr-2"></i> How Postback URLs Work
-                        </h3>
-                    </div>
-                    <div class="card-body">
-                        <div class="row">
-                            <div class="col-md-6">
-                                <h5>What is a Postback URL?</h5>
-                                <p class="text-muted">A postback URL (also called server-to-server tracking) allows your server to notify our system when a conversion occurs. When a user completes a desired action on your website, your server sends a request to our postback URL with the conversion details.</p>
-                                
-                                <h5 class="mt-4">Available Variables</h5>
-                                <div class="token-variables">
-                                    <span class="token-variable" onclick="copyToClipboard('{click_id}')">{click_id}</span>
-                                    <span class="token-variable" onclick="copyToClipboard('{payout}')">{payout}</span>
-                                    <span class="token-variable" onclick="copyToClipboard('{revenue}')">{revenue}</span>
-                                    <span class="token-variable" onclick="copyToClipboard('{status}')">{status}</span>
-                                    <span class="token-variable" onclick="copyToClipboard('{transaction_id}')">{transaction_id}</span>
-                                    <span class="token-variable" onclick="copyToClipboard('{affiliate_id}')">{affiliate_id}</span>
-                                    <span class="token-variable" onclick="copyToClipboard('{offer_id}')">{offer_id}</span>
-                                    <span class="token-variable" onclick="copyToClipboard('{sub1}')">{sub1}</span>
-                                    <span class="token-variable" onclick="copyToClipboard('{sub2}')">{sub2}</span>
-                                    <span class="token-variable" onclick="copyToClipboard('{sub3}')">{sub3}</span>
-                                </div>
-                            </div>
-                            <div class="col-md-6">
-                                <h5>Postback URL Format</h5>
-                                <div class="url-example">
-                                    <strong>Base URL:</strong>
-                                    <code>https://iconmedianetwork.in/postback.php</code>
-                                    
-                                    <strong class="d-block mt-3">Parameters:</strong>
-                                    <ul class="mt-2">
-                                        <li><code>click_id</code> - Unique click identifier (required)</li>
-                                        <li><code>token</code> - Your unique postback token (required)</li>
-                                        <li><code>payout</code> - Amount paid for this conversion</li>
-                                        <li><code>status</code> - Conversion status (approved/pending/rejected)</li>
-                                        <li><code>transaction_id</code> - Your internal transaction ID</li>
-                                    </ul>
-                                </div>
-                            </div>
+                    <div class="col-6 col-md-3">
+                        <div class="stat-card-custom">
+                            <div class="stat-number text-warning"><?php echo number_format($stats['total_conversions'] ?? 0); ?></div>
+                            <div class="stat-label">Total Conversions</div>
                         </div>
                     </div>
                 </div>
 
-                <!-- Postback URLs List -->
-                <div class="card-dashboard">
-                    <div class="card-header">
-                        <h3 class="card-title">
-                            <i class="fas fa-code mr-2"></i> Your Postback URLs
-                        </h3>
-                        <div class="card-tools">
-                            <button type="button" class="btn btn-sm btn-gradient" data-toggle="modal" data-target="#testPostbackModal">
-                                <i class="fas fa-vial mr-1"></i> Test Postback
-                            </button>
+                <!-- Live Postback Simulator Card -->
+                <div class="card card-custom p-4">
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <h4 class="font-weight-bold text-primary mb-0"><i class="fas fa-paper-plane mr-2"></i>Live Postback Endpoint Simulator & S2S Tester</h4>
+                        <button class="btn btn-primary font-weight-bold" data-toggle="modal" data-target="#liveTestModal">
+                            <i class="fas fa-play-circle mr-1"></i> Fire Live Test Request
+                        </button>
+                    </div>
+                    <p class="text-muted mb-3">Test your server-to-server (S2S) postback integration directly from your browser in real-time.</p>
+
+                    <div class="bg-light p-3 rounded border mb-3">
+                        <strong class="d-block text-dark mb-1"><i class="fas fa-globe mr-1"></i>Global S2S Server-to-Server Postback URL Structure:</strong>
+                        <code class="d-block p-2 bg-dark text-white rounded">https://iconmedianetwork.in/postback.php?click_id=<span class="text-warning">{click_id}</span>&token=<span class="text-info">{YOUR_POSTBACK_TOKEN}</span>&payout=<span class="text-success">{payout}</span>&status=<span class="text-danger">approved</span></code>
+                    </div>
+
+                    <div>
+                        <span class="font-weight-bold text-dark mr-2">Supported Dynamic Macros:</span>
+                        <span class="token-chip" onclick="copyText('{click_id}')">{click_id}</span>
+                        <span class="token-chip" onclick="copyText('{token}')">{token}</span>
+                        <span class="token-chip" onclick="copyText('{payout}')">{payout}</span>
+                        <span class="token-chip" onclick="copyText('{revenue}')">{revenue}</span>
+                        <span class="token-chip" onclick="copyText('{status}')">{status}</span>
+                        <span class="token-chip" onclick="copyText('{transaction_id}')">{transaction_id}</span>
+                    </div>
+                </div>
+
+                <!-- Tabbed Integration Snippets (PHP, Node.js, Python, Curl) -->
+                <div class="card card-custom p-4">
+                    <h4 class="font-weight-bold text-primary mb-3"><i class="fas fa-laptop-code mr-2"></i>Developer Server Integration Snippets</h4>
+                    
+                    <ul class="nav nav-pills mb-3" id="snippetTabs" role="tablist">
+                        <li class="nav-item"><a class="nav-link active font-weight-bold" id="php-tab" data-toggle="pill" href="#tab-php">PHP (cURL)</a></li>
+                        <li class="nav-item"><a class="nav-link font-weight-bold" id="node-tab" data-toggle="pill" href="#tab-node">Node.js (Axios)</a></li>
+                        <li class="nav-item"><a class="nav-link font-weight-bold" id="python-tab" data-toggle="pill" href="#tab-python">Python (Requests)</a></li>
+                        <li class="nav-item"><a class="nav-link font-weight-bold" id="curl-tab" data-toggle="pill" href="#tab-curl">cURL CLI</a></li>
+                    </ul>
+
+                    <div class="tab-content" id="snippetTabsContent">
+                        <!-- PHP -->
+                        <div class="tab-pane fade show active" id="tab-php">
+                            <div class="code-box-wrapper">
+                                <button class="code-copy-btn" onclick="copyCode('code-php')"><i class="fas fa-copy mr-1"></i>Copy</button>
+                                <pre><code class="language-php" id="code-php">&lt;?php
+$clickId = $_GET['click_id']; // Passed from Icon Media tracking link
+$token = "YOUR_OFFER_POSTBACK_TOKEN"; 
+$payout = 35.00;
+
+$url = "https://iconmedianetwork.in/postback.php?" . http_build_query([
+    'click_id' => $clickId,
+    'token'    => $token,
+    'payout'   => $payout,
+    'status'   => 'approved'
+]);
+
+$ch = curl_init($url);
+curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+$response = curl_exec($ch);
+curl_close($ch);
+?&gt;</code></pre>
+                            </div>
+                        </div>
+
+                        <!-- NODE.JS -->
+                        <div class="tab-pane fade" id="tab-node">
+                            <div class="code-box-wrapper">
+                                <button class="code-copy-btn" onclick="copyCode('code-node')"><i class="fas fa-copy mr-1"></i>Copy</button>
+                                <pre><code class="language-javascript" id="code-node">const axios = require('axios');
+
+async function sendPostback(clickId, payout, token) {
+    try {
+        const response = await axios.get('https://iconmedianetwork.in/postback.php', {
+            params: {
+                click_id: clickId,
+                token: token,
+                payout: payout,
+                status: 'approved'
+            }
+        });
+        console.log('Postback Sent Successfully:', response.data);
+    } catch (error) {
+        console.error('Postback Failed:', error.message);
+    }
+}</code></pre>
+                            </div>
+                        </div>
+
+                        <!-- PYTHON -->
+                        <div class="tab-pane fade" id="tab-python">
+                            <div class="code-box-wrapper">
+                                <button class="code-copy-btn" onclick="copyCode('code-python')"><i class="fas fa-copy mr-1"></i>Copy</button>
+                                <pre><code class="language-python" id="code-python">import requests
+
+def fire_postback(click_id, payout, token):
+    params = {
+        'click_id': click_id,
+        'token': token,
+        'payout': payout,
+        'status': 'approved'
+    }
+    response = requests.get('https://iconmedianetwork.in/postback.php', params=params)
+    print("Response Status:", response.status_code)
+    print("Response Text:", response.text)</code></pre>
+                            </div>
+                        </div>
+
+                        <!-- CURL -->
+                        <div class="tab-pane fade" id="tab-curl">
+                            <div class="code-box-wrapper">
+                                <button class="code-copy-btn" onclick="copyCode('code-curl')"><i class="fas fa-copy mr-1"></i>Copy</button>
+                                <pre><code class="language-bash" id="code-curl">curl -X GET "https://iconmedianetwork.in/postback.php?click_id=CLICK_ID_12345&token=YOUR_OFFER_POSTBACK_TOKEN&payout=35.00&status=approved"</code></pre>
+                            </div>
                         </div>
                     </div>
-                    <div class="card-body">
-                        <?php if (empty($offers)): ?>
-                        <div class="empty-state">
-                            <div class="empty-state-icon">
-                                <i class="fas fa-code"></i>
-                            </div>
-                            <h5>No Offers Found</h5>
-                            <p class="text-muted">You need to create an offer first to get postback URLs.</p>
-                            <a href="create_offer.php" class="btn btn-gradient">
-                                <i class="fas fa-plus-circle mr-2"></i> Create Your First Offer
-                            </a>
-                        </div>
-                        <?php else: ?>
-                            <?php foreach ($offers as $offer): ?>
-                            <div class="postback-card">
-                                <div class="postback-header">
-                                    <div>
-                                        <h5><?php echo htmlspecialchars($offer['offer_name']); ?></h5>
-                                        <small class="text-muted">ID: #<?php echo $offer['offer_id']; ?> | Created: <?php echo date('M d, Y', strtotime($offer['created_at'])); ?></small>
-                                    </div>
-                                    <div>
-                                        <span class="status-badge status-<?php echo $offer['status']; ?>">
+                </div>
+
+                <!-- Offers & Tokens Accordion / Cards List -->
+                <div class="card card-custom p-4">
+                    <h4 class="font-weight-bold text-primary mb-3"><i class="fas fa-key mr-2"></i>Active Campaign Postback Tokens & Links</h4>
+
+                    <?php if (empty($offers)): ?>
+                    <div class="text-center py-5">
+                        <i class="fas fa-code fa-3x text-muted mb-3"></i>
+                        <h5 class="text-dark font-weight-bold">No Active Campaigns Found</h5>
+                        <p class="text-muted mb-3">Create your first campaign to generate unique postback security tokens.</p>
+                        <a href="create_offer.php" class="btn btn-primary font-weight-bold"><i class="fas fa-plus mr-1"></i>Create Offer Now</a>
+                    </div>
+                    <?php else: ?>
+                    <div class="table-responsive">
+                        <table class="table table-hover align-middle">
+                            <thead class="thead-light">
+                                <tr>
+                                    <th>Offer ID & Title</th>
+                                    <th>Status</th>
+                                    <th>Payout</th>
+                                    <th>Postback Security Token</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <?php foreach ($offers as $offer): ?>
+                                <tr>
+                                    <td>
+                                        <strong class="d-block text-dark">#<?php echo $offer['offer_id']; ?> - <?php echo htmlspecialchars($offer['offer_name']); ?></strong>
+                                        <small class="text-muted">Created: <?php echo date('M d, Y', strtotime($offer['created_at'])); ?></small>
+                                    </td>
+                                    <td>
+                                        <span class="badge badge-<?php echo $offer['status'] === 'active' ? 'success' : 'warning'; ?> p-2">
                                             <?php echo ucfirst($offer['status']); ?>
                                         </span>
-                                    </div>
-                                </div>
-                                <div class="postback-body">
-                                    <div class="row">
-                                        <div class="col-md-8">
-                                            <label class="font-weight-bold">Postback Token:</label>
-                                            <div class="token-box">
-                                                <?php echo htmlspecialchars($offer['postback_token']); ?>
-                                                <span class="copy-btn" onclick="copyToClipboard('<?php echo $offer['postback_token']; ?>')">
-                                                    <i class="fas fa-copy mr-1"></i> Copy Token
-                                                </span>
-                                            </div>
-                                            
-                                            <label class="font-weight-bold mt-3">Full Postback URL:</label>
-                                            <div class="token-box">
-                                                https://iconmedianetwork.in/postback.php?click_id={click_id}&payout={payout}&token=<?php echo $offer['postback_token']; ?>
-                                                <span class="copy-btn" onclick="copyToClipboard('https://iconmedianetwork.in/postback.php?click_id={click_id}&payout={payout}&token=<?php echo $offer['postback_token']; ?>')">
-                                                    <i class="fas fa-copy mr-1"></i> Copy URL
-                                                </span>
-                                            </div>
-                                        </div>
-                                        <div class="col-md-4">
-                                            <div class="url-example">
-                                                <strong>Offer Details:</strong>
-                                                <ul class="list-unstyled mt-2">
-                                                    <li><i class="fas fa-dollar-sign mr-2 text-success"></i> Payout: $<?php echo number_format($offer['payout'], 2); ?> <?php echo $offer['currency']; ?></li>
-                                                    <li><i class="fas fa-exchange-alt mr-2 text-info"></i> Tracking: <?php echo ucfirst($offer['conversion_tracking'] ?? 'postback'); ?></li>
-                                                    <li><i class="fas fa-tag mr-2 text-warning"></i> Status: <?php echo ucfirst($offer['status']); ?></li>
-                                                </ul>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    
-                                    <div class="mt-3">
-                                        <h6>Example Implementation:</h6>
-                                        <pre class="bg-light p-3 rounded"><code>// PHP Example
-$click_id = $_GET['click_id']; // Get from your tracking link
-$payout = 50.00; // Your conversion amount
+                                    </td>
+                                    <td>
+                                        <strong class="text-success">$<?php echo number_format($offer['payout'], 2); ?></strong>
+                                    </td>
+                                    <td>
+                                        <code class="p-2 bg-light rounded text-primary font-weight-bold"><?php echo htmlspecialchars($offer['postback_token']); ?></code>
+                                    </td>
+                                    <td>
+                                        <button class="btn btn-sm btn-outline-primary font-weight-bold mr-1" onclick="copyText('https://iconmedianetwork.in/postback.php?click_id={click_id}&token=<?php echo $offer['postback_token']; ?>')">
+                                            <i class="fas fa-copy mr-1"></i>Copy URL
+                                        </button>
+                                        <button class="btn btn-sm btn-success font-weight-bold" onclick="openTestModal('<?php echo $offer['offer_id']; ?>', '<?php echo number_format($offer['payout'], 2); ?>')">
+                                            <i class="fas fa-vial mr-1"></i>Test
+                                        </button>
+                                    </td>
+                                </tr>
+                                <?php endforeach; ?>
+                            </tbody>
+                        </table>
+                    </div>
+                    <?php endif; ?>
+                </div>
 
-$postback_url = "https://iconmedianetwork.in/postback.php?click_id={$click_id}&payout={$payout}&token=<?php echo $offer['postback_token']; ?>";
-
-file_get_contents($postback_url); // Send postback</code></pre>
-                                    </div>
-                                </div>
-                            </div>
-                            <?php endforeach; ?>
-                        <?php endif; ?>
+                <!-- Recent Postback Conversion Logs Table -->
+                <div class="card card-custom p-4">
+                    <h4 class="font-weight-bold text-primary mb-3"><i class="fas fa-history mr-2"></i>Real-time S2S Postback Conversion Audit Logs</h4>
+                    
+                    <div class="table-responsive">
+                        <table class="table table-striped table-hover" id="postbackLogsTable">
+                            <thead class="thead-light">
+                                <tr>
+                                    <th>Conversion ID</th>
+                                    <th>Offer Name</th>
+                                    <th>Affiliate</th>
+                                    <th>Revenue / Payout</th>
+                                    <th>Source</th>
+                                    <th>Status</th>
+                                    <th>Timestamp</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <?php foreach ($postbackLogs as $log): ?>
+                                <tr>
+                                    <td><strong>#<?php echo $log['conversion_id']; ?></strong></td>
+                                    <td><?php echo htmlspecialchars($log['offer_name']); ?></td>
+                                    <td>
+                                        <?php if ($log['affiliate_name']): ?>
+                                            <span class="text-dark font-weight-bold"><?php echo htmlspecialchars($log['affiliate_name']); ?></span>
+                                            <small class="d-block text-muted"><?php echo htmlspecialchars($log['affiliate_email']); ?></small>
+                                        <?php else: ?>
+                                            <span class="text-muted">Unassigned / Direct</span>
+                                        <?php endif; ?>
+                                    </td>
+                                    <td>
+                                        <span class="text-success font-weight-bold">$<?php echo number_format($log['revenue'], 2); ?></span>
+                                        <small class="d-block text-muted">Payout: $<?php echo number_format($log['payout'], 2); ?></small>
+                                    </td>
+                                    <td>
+                                        <span class="badge badge-info p-2"><?php echo strtoupper($log['source']); ?></span>
+                                    </td>
+                                    <td>
+                                        <span class="badge badge-<?php echo $log['status'] === 'approved' ? 'success' : 'warning'; ?> p-2">
+                                            <?php echo ucfirst($log['status']); ?>
+                                        </span>
+                                    </td>
+                                    <td><small class="text-muted"><?php echo date('M d, Y H:i:s', strtotime($log['created_at'])); ?></small></td>
+                                </tr>
+                                <?php endforeach; ?>
+                            </tbody>
+                        </table>
                     </div>
                 </div>
 
-                <!-- Recent Postback Logs -->
-                <?php if (!empty($postbackLogs)): ?>
-                <div class="card-dashboard">
-                    <div class="card-header">
-                        <h3 class="card-title">
-                            <i class="fas fa-history mr-2"></i> Recent Postback Conversions
-                        </h3>
-                    </div>
-                    <div class="card-body">
-                        <div class="table-responsive">
-                            <table class="table table-dashboard" id="logsTable">
-                                <thead>
-                                    <tr>
-                                        <th>Conversion ID</th>
-                                        <th>Offer</th>
-                                        <th>Affiliate</th>
-                                        <th>Amount</th>
-                                        <th>Status</th>
-                                        <th>Source</th>
-                                        <th>Date</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <?php foreach ($postbackLogs as $log): ?>
-                                    <tr>
-                                        <td>#<?php echo $log['conversion_id']; ?></td>
-                                        <td><?php echo htmlspecialchars($log['offer_name']); ?></td>
-                                        <td>
-                                            <?php if ($log['affiliate_name']): ?>
-                                                <?php echo htmlspecialchars($log['affiliate_name']); ?>
-                                                <small class="text-muted d-block"><?php echo htmlspecialchars($log['affiliate_email']); ?></small>
-                                            <?php else: ?>
-                                                <span class="text-muted">Unknown</span>
-                                            <?php endif; ?>
-                                        </td>
-                                        <td>
-                                            <span class="text-success">$<?php echo number_format($log['revenue'], 2); ?></span>
-                                            <small class="text-muted d-block">Payout: $<?php echo number_format($log['payout'], 2); ?></small>
-                                        </td>
-                                        <td>
-                                            <span class="status-badge status-<?php echo $log['status']; ?>">
-                                                <?php echo ucfirst($log['status']); ?>
-                                            </span>
-                                        </td>
-                                        <td>
-                                            <span class="source-badge source-<?php echo $log['source']; ?>">
-                                                <?php echo ucfirst($log['source']); ?>
-                                            </span>
-                                        </td>
-                                        <td><?php echo date('M d, H:i', strtotime($log['created_at'])); ?></td>
-                                    </tr>
-                                    <?php endforeach; ?>
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-                </div>
-                <?php endif; ?>
             </div>
         </div>
     </div>
 
-    <!-- Footer -->
-    <footer class="main-footer">
-        <div class="float-right d-none d-sm-inline">
-            <strong>Advertiser Panel v3.0</strong>
+    <!-- Live Postback Tester Modal -->
+    <div class="modal fade" id="liveTestModal" tabindex="-1" role="dialog">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content border-0 shadow-lg" style="border-radius: 15px;">
+                <div class="modal-header bg-primary text-white" style="border-radius: 15px 15px 0 0;">
+                    <h5 class="modal-title font-weight-bold"><i class="fas fa-vial mr-2"></i>Fire Live S2S Postback Request</h5>
+                    <button type="button" class="close text-white" data-dismiss="modal"><span>&times;</span></button>
+                </div>
+                <form method="post">
+                    <div class="modal-body p-4">
+                        <div class="form-group mb-3">
+                            <label class="font-weight-bold">Select Campaign Offer <span class="text-danger">*</span></label>
+                            <select name="test_offer_id" id="modal_offer_id" class="form-control" required>
+                                <option value="">Choose offer to test...</option>
+                                <?php foreach ($offers as $of): ?>
+                                <option value="<?php echo $of['offer_id']; ?>"><?php echo htmlspecialchars($of['offer_name']); ?> (#<?php echo $of['offer_id']; ?>)</option>
+                                <?php endforeach; ?>
+                            </select>
+                        </div>
+                        
+                        <div class="form-group mb-3">
+                            <label class="font-weight-bold">Test Click ID</label>
+                            <input type="text" name="test_click_id" class="form-control" value="TEST_CLICK_<?php echo rand(10000,99999); ?>">
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group mb-3">
+                                    <label class="font-weight-bold">Test Payout ($)</label>
+                                    <input type="number" step="0.01" name="test_payout" id="modal_test_payout" class="form-control" value="10.00" required>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group mb-3">
+                                    <label class="font-weight-bold">Status</label>
+                                    <select name="test_status" class="form-control">
+                                        <option value="approved">Approved</option>
+                                        <option value="pending">Pending</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer bg-light" style="border-radius: 0 0 15px 15px;">
+                        <button type="button" class="btn btn-outline-secondary font-weight-bold" data-dismiss="modal">Cancel</button>
+                        <button type="submit" name="fire_live_test" class="btn btn-success font-weight-bold"><i class="fas fa-paper-plane mr-2"></i>Fire Postback Request</button>
+                    </div>
+                </form>
+            </div>
         </div>
+    </div>
+
+    <footer class="main-footer">
+        <div class="float-right d-none d-sm-inline"><strong>Advertiser Panel v3.0</strong></div>
         <strong>Copyright &copy; <?php echo date('Y'); ?> <a href="#">GVS Icon Media</a>.</strong> All rights reserved.
     </footer>
 </div>
 
-<!-- Test Postback Modal -->
-<div class="modal fade" id="testPostbackModal" tabindex="-1" role="dialog">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title">
-                    <i class="fas fa-vial mr-2"></i> Test Postback URL
-                </h5>
-                <button type="button" class="close" data-dismiss="modal">
-                    <span>&times;</span>
-                </button>
-            </div>
-            <form method="post">
-                <div class="modal-body">
-                    <div class="form-group">
-                        <label for="offer_id">Select Offer</label>
-                        <select name="offer_id" id="offer_id" class="form-control" required>
-                            <option value="">Choose an offer...</option>
-                            <?php foreach ($offers as $offer): ?>
-                            <option value="<?php echo $offer['offer_id']; ?>">
-                                <?php echo htmlspecialchars($offer['offer_name']); ?>
-                            </option>
-                            <?php endforeach; ?>
-                        </select>
-                    </div>
-                    
-                    <div class="form-group">
-                        <label for="test_payout">Test Payout Amount ($)</label>
-                        <input type="number" step="0.01" name="test_payout" id="test_payout" class="form-control" value="10.00" required>
-                    </div>
-                    
-                    <?php if (isset($testUrlGenerated)): ?>
-                    <div class="test-url-box">
-                        <strong>Generated Test URL:</strong>
-                        <code class="d-block mt-2"><?php echo $testUrlGenerated; ?></code>
-                        <button type="button" class="btn btn-sm btn-gradient mt-2" onclick="copyToClipboard('<?php echo $testUrlGenerated; ?>')">
-                            <i class="fas fa-copy mr-1"></i> Copy URL
-                        </button>
-                    </div>
-                    <?php endif; ?>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
-                    <button type="submit" name="test_postback" class="btn btn-gradient">
-                        <i class="fas fa-play mr-2"></i> Generate Test URL
-                    </button>
-                </div>
-            </form>
-        </div>
-    </div>
-</div>
-
-<!-- REQUIRED SCRIPTS -->
-<!-- jQuery -->
+<!-- SCRIPTS -->
 <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
-<!-- Bootstrap 4 -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js"></script>
-<!-- AdminLTE App -->
 <script src="https://cdn.jsdelivr.net/npm/admin-lte@3.2/dist/js/adminlte.min.js"></script>
-<!-- DataTables -->
 <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
 <script src="https://cdn.datatables.net/1.13.6/js/dataTables.bootstrap4.min.js"></script>
-<!-- SweetAlert2 -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-php.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-python.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-bash.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
 <script>
 $(document).ready(function() {
-    // Initialize DataTable for logs
-    $('#logsTable').DataTable({
+    $('#postbackLogsTable').DataTable({
         pageLength: 10,
-        lengthMenu: [[10, 25, 50, -1], [10, 25, 50, "All"]],
         order: [[6, 'desc']],
-        responsive: true,
-        language: {
-            emptyTable: "No postback logs found"
-        }
-    });
-    
-    // Dark mode toggle
-    $('#darkModeToggle').click(function(e) {
-        e.preventDefault();
-        $('body').toggleClass('dark-mode');
-        $(this).find('i').toggleClass('fa-moon fa-sun');
-        localStorage.setItem('darkMode', $('body').hasClass('dark-mode'));
-    });
-    
-    if (localStorage.getItem('darkMode') === 'true') {
-        $('body').addClass('dark-mode');
-        $('#darkModeToggle i').removeClass('fa-moon').addClass('fa-sun');
-    }
-    
-    // Refresh page
-    $('#refreshPage').click(function() {
-        const $btn = $(this);
-        $btn.prop('disabled', true).html('<i class="fas fa-spinner fa-spin mr-1"></i> Refreshing...');
-        
-        setTimeout(() => {
-            window.location.reload();
-        }, 1000);
-    });
-    
-    // Auto-dismiss alerts after 5 seconds
-    $('.alert').delay(5000).fadeOut('slow');
-    
-    // Initialize SweetAlert2 Toast
-    const Toast = Swal.mixin({
-        toast: true,
-        position: 'top-end',
-        showConfirmButton: false,
-        timer: 3000,
-        timerProgressBar: true
+        responsive: true
     });
 });
 
-// Copy to clipboard function
-function copyToClipboard(text) {
+function copyText(text) {
     navigator.clipboard.writeText(text).then(() => {
-        Swal.fire({
-            title: 'Copied!',
-            text: 'Copied to clipboard',
-            icon: 'success',
-            timer: 2000,
-            showConfirmButton: false
-        });
-    }).catch(err => {
-        // Fallback for older browsers
-        const textarea = document.createElement('textarea');
-        textarea.value = text;
-        document.body.appendChild(textarea);
-        textarea.select();
-        document.execCommand('copy');
-        document.body.removeChild(textarea);
-        
-        Swal.fire({
-            title: 'Copied!',
-            text: 'Copied to clipboard',
-            icon: 'success',
-            timer: 2000,
-            showConfirmButton: false
-        });
+        Swal.fire({ title: 'Copied!', text: text, icon: 'success', timer: 1500, showConfirmButton: false });
     });
 }
-</script>
 
+function copyCode(elementId) {
+    const code = document.getElementById(elementId).innerText;
+    copyText(code);
+}
+
+function openTestModal(offerId, payout) {
+    $('#modal_offer_id').val(offerId);
+    if(payout) $('#modal_test_payout').val(payout);
+    $('#liveTestModal').modal('show');
+}
+</script>
 </body>
 </html>
