@@ -265,6 +265,43 @@ $avgRevenue = $summary['total_conversions'] > 0 ? $summary['total_revenue'] / $s
             opacity: 0.3;
             transform: translateY(-50%) scale(1.1);
         }
+
+        /* 2x2 Grid for Stat Boxes on Mobile */
+        @media (max-width: 767.98px) {
+            .stat-boxes-row > [class*="col-"] {
+                flex: 0 0 50% !important;
+                max-width: 50% !important;
+                padding-left: 6px !important;
+                padding-right: 6px !important;
+            }
+
+            .stat-boxes-row .small-box {
+                margin-bottom: 12px !important;
+            }
+
+            .stat-boxes-row .small-box .inner {
+                padding: 12px 10px !important;
+            }
+
+            .stat-boxes-row .small-box h3 {
+                font-size: 18px !important;
+                margin-bottom: 2px !important;
+            }
+
+            .stat-boxes-row .small-box p {
+                font-size: 11px !important;
+                margin-bottom: 0 !important;
+            }
+
+            .stat-boxes-row .small-box .icon {
+                display: none !important;
+            }
+
+            .stat-boxes-row .small-box-footer {
+                padding: 4px 0 !important;
+                font-size: 11px !important;
+            }
+        }
         
         .small-box .inner {
             padding: 20px;
@@ -910,7 +947,7 @@ $avgRevenue = $summary['total_conversions'] > 0 ? $summary['total_revenue'] / $s
                 </div>
 
                 <!-- Summary Stats Cards (Small Boxes like dashboard) -->
-                <div class="row">
+                <div class="row stat-boxes-row">
                     <div class="col-md-2">
                         <div class="small-box bg-gradient-info">
                             <div class="inner">

@@ -345,6 +345,43 @@ $todayClicks = $todayStmt->fetchColumn();
         .brand-text {
             font-size: 1.5rem;
         }
+
+        /* 2x2 Grid strictly for 4 main stat boxes on Mobile */
+        @media (max-width: 767.98px) {
+            .stat-boxes-row > [class*="col-"] {
+                flex: 0 0 50% !important;
+                max-width: 50% !important;
+                padding-left: 6px !important;
+                padding-right: 6px !important;
+            }
+
+            .stat-boxes-row .small-box {
+                margin-bottom: 12px !important;
+            }
+
+            .stat-boxes-row .small-box .inner {
+                padding: 12px 10px !important;
+            }
+
+            .stat-boxes-row .small-box h3 {
+                font-size: 18px !important;
+                margin-bottom: 2px !important;
+            }
+
+            .stat-boxes-row .small-box p {
+                font-size: 11px !important;
+                margin-bottom: 0 !important;
+            }
+
+            .stat-boxes-row .small-box .icon {
+                display: none !important;
+            }
+
+            .stat-boxes-row .small-box-footer {
+                padding: 4px 0 !important;
+                font-size: 11px !important;
+            }
+        }
     </style>
 </head>
 <body class="hold-transition sidebar-mini layout-fixed">
@@ -615,8 +652,8 @@ $todayClicks = $todayStmt->fetchColumn();
                 </div>
 
                 <!-- Stats Summary -->
-                <div class="row mb-3">
-                    <div class="col-lg-3 col-6">
+                <div class="row mb-3 stat-boxes-row">
+                    <div class="col-6 col-md-3">
                         <div class="small-box bg-gradient-info">
                             <div class="inner">
                                 <h3><?php echo number_format($totalRecords); ?></h3>
@@ -629,7 +666,7 @@ $todayClicks = $todayStmt->fetchColumn();
                         </div>
                     </div>
                     
-                    <div class="col-lg-3 col-6">
+                    <div class="col-6 col-md-3">
                         <div class="small-box bg-gradient-success">
                             <div class="inner">
                                 <h3><?php echo number_format($convRate, 2); ?>%</h3>
@@ -642,7 +679,7 @@ $todayClicks = $todayStmt->fetchColumn();
                         </div>
                     </div>
                     
-                    <div class="col-lg-3 col-6">
+                    <div class="col-6 col-md-3">
                         <div class="small-box bg-gradient-warning">
                             <div class="inner">
                                 <h3><?php echo number_format($uniqueClicks); ?></h3>
@@ -655,7 +692,7 @@ $todayClicks = $todayStmt->fetchColumn();
                         </div>
                     </div>
                     
-                    <div class="col-lg-3 col-6">
+                    <div class="col-6 col-md-3">
                         <div class="small-box bg-gradient-danger">
                             <div class="inner">
                                 <h3><?php echo number_format($todayClicks); ?></h3>

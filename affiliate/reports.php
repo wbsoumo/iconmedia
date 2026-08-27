@@ -397,6 +397,43 @@ if (isset($_GET['export']) && $_GET['export'] === 'excel') {
             opacity: 0.5;
             transform: scale(1.1);
         }
+
+        /* 2x2 Grid strictly for 4 main stat boxes on Mobile */
+        @media (max-width: 767.98px) {
+            .stat-boxes-row > [class*="col-"] {
+                flex: 0 0 50% !important;
+                max-width: 50% !important;
+                padding-left: 6px !important;
+                padding-right: 6px !important;
+            }
+
+            .stat-boxes-row .small-box {
+                margin-bottom: 12px !important;
+            }
+
+            .stat-boxes-row .small-box .inner {
+                padding: 12px 10px !important;
+            }
+
+            .stat-boxes-row .small-box h3 {
+                font-size: 18px !important;
+                margin-bottom: 2px !important;
+            }
+
+            .stat-boxes-row .small-box p {
+                font-size: 11px !important;
+                margin-bottom: 0 !important;
+            }
+
+            .stat-boxes-row .small-box .icon {
+                display: none !important;
+            }
+
+            .stat-boxes-row .small-box-footer {
+                padding: 4px 0 !important;
+                font-size: 11px !important;
+            }
+        }
         
         .bg-gradient-primary {
             background: var(--primary-gradient) !important;
@@ -1002,8 +1039,8 @@ if (isset($_GET['export']) && $_GET['export'] === 'excel') {
                 </div>
 
                 <!-- Metrics Overview -->
-                <div class="row mb-4">
-                    <div class="col-md-3">
+                <div class="row mb-4 stat-boxes-row">
+                    <div class="col-6 col-md-3">
                         <div class="small-box bg-gradient-success">
                             <div class="inner">
                                 <h3><?php echo number_format($stats['approved'] ?? 0); ?></h3>
