@@ -60,6 +60,8 @@ function auth_login($email, $password)
     $stmt = $pdo->prepare("
         SELECT 
             u.user_id,
+            u.name,
+            u.email,
             u.password_hash,
             u.status,
             r.role_name
@@ -88,6 +90,8 @@ function auth_login($email, $password)
         'role'     => $user['role_name'],
         'login_at' => time()
     ];
+    $_SESSION['user_name']  = $user['name'] ?? 'User';
+    $_SESSION['user_email'] = $user['email'] ?? '';
 
     // Update last login
     $upd = $pdo->prepare("

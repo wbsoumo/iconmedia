@@ -94,9 +94,9 @@ $pdo->beginTransaction();
 try {
 
     /* -------------------------------------------------
-       Duplicate Protection
+       Duplicate Protection (WITH ROW LOCKING)
     -------------------------------------------------- */
-    $dup = $pdo->prepare("SELECT conversion_id FROM conversions WHERE click_id=? LIMIT 1");
+    $dup = $pdo->prepare("SELECT conversion_id FROM conversions WHERE click_id=? FOR UPDATE");
     $dup->execute([$clickId]);
 
     if ($dup->fetch()) {
@@ -106,7 +106,7 @@ try {
     }
 
     /* -------------------------------------------------
-       Fetch Click + Offer + Advertiser
+       Fetch Click + Offer + Advertiser (WITH ROW LOCKING)
     -------------------------------------------------- */
     $stmt = $pdo->prepare("
         SELECT
@@ -124,7 +124,7 @@ try {
         FROM clicks c
         INNER JOIN offers o ON o.offer_id = c.offer_id
         WHERE c.click_id = ?
-        LIMIT 1
+        FOR UPDATE
     ");
     $stmt->execute([$clickId]);
     $click = $stmt->fetch(PDO::FETCH_ASSOC);
@@ -142,6 +142,35 @@ try {
     }
 
     /* -------------------------------------------------
+       Advertiser IP Whitelist Check
+    -------------------------------------------------- */
+    $ipCheckStmt = $pdo->prepare("
+        SELECT COUNT(*) 
+        FROM advertiser_ip_whitelist 
+        WHERE advertiser_id = :aid
+    ");
+    $ipCheckStmt->execute(['aid' => $click['advertiser_id']]);
+    $whitelistCount = (int)$ipCheckStmt->fetchColumn();
+
+    if ($whitelistCount > 0) {
+        $ipVerifyStmt = $pdo->prepare("
+            SELECT COUNT(*) 
+            FROM advertiser_ip_whitelist 
+            WHERE advertiser_id = :aid AND ip_address = INET6_ATON(:ip)
+        ");
+        $ipVerifyStmt->execute([
+            'aid' => $click['advertiser_id'],
+            'ip'  => $ipAddress
+        ]);
+        if ((int)$ipVerifyStmt->fetchColumn() === 0) {
+            logAdvertiserPostback($pdo, $rawRequest, $ipAddress, $clickId, 'ip_not_whitelisted');
+            $pdo->rollBack();
+            http_response_code(403);
+            exit('IP_NOT_WHITELISTED');
+        }
+    }
+
+    /* -------------------------------------------------
        Token Validation
     -------------------------------------------------- */
     if (empty($click['postback_token']) ||
@@ -154,7 +183,7 @@ try {
     }
 
     /* -------------------------------------------------
-       Determine Payout
+       Determine Payout & Revenue Validation
     -------------------------------------------------- */
     $payout = (float)$click['payout'];
 

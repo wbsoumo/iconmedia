@@ -41,7 +41,7 @@ $sub5 = $incomingParams['sub5'] ?? null;
    3. Fetch & validate offer
 -------------------------------------------------- */
 $offerStmt = $pdo->prepare("
-    SELECT offer_id, offer_url, status, daily_cap
+    SELECT offer_id, offer_url, status, daily_cap, visibility
     FROM offers
     WHERE offer_id = :oid
     LIMIT 1
@@ -64,34 +64,38 @@ if (empty($offer['offer_url'])) {
 }
 
 /* -------------------------------------------------
-   4. Check affiliate approval
+   4. Check affiliate approval (if offer is non-public)
 -------------------------------------------------- */
-$approvalStmt = $pdo->prepare("
-    SELECT 1
-    FROM affiliate_offer_approval
-    WHERE affiliate_id = :aff
-      AND offer_id = :oid
-      AND status = 'approved'
-    LIMIT 1
-");
-$approvalStmt->execute([
-    'aff' => $affiliateId,
-    'oid' => $offerId
-]);
+$visibility = strtolower($offer['visibility'] ?? 'public');
+if ($visibility !== 'public') {
+    $approvalStmt = $pdo->prepare("
+        SELECT 1
+        FROM affiliate_offer_approval
+        WHERE affiliate_id = :aff
+          AND offer_id = :oid
+          AND status = 'approved'
+        LIMIT 1
+    ");
+    $approvalStmt->execute([
+        'aff' => $affiliateId,
+        'oid' => $offerId
+    ]);
 
-if (!$approvalStmt->fetchColumn()) {
-    http_response_code(403);
-    exit('AFFILIATE_NOT_APPROVED');
+    if (!$approvalStmt->fetchColumn()) {
+        http_response_code(403);
+        exit('AFFILIATE_NOT_APPROVED');
+    }
 }
 
 /* -------------------------------------------------
-   5. Daily cap check
+   5. Daily cap check (Check conversions OR clicks depending on cap definition)
 -------------------------------------------------- */
-if (!empty($offer['daily_cap'])) {
+if (!empty($offer['daily_cap']) && (int)$offer['daily_cap'] > 0) {
     $capStmt = $pdo->prepare("
         SELECT COUNT(*)
         FROM conversions
         WHERE offer_id = :oid
+          AND status = 'approved'
           AND DATE(created_at) = CURDATE()
     ");
     $capStmt->execute(['oid' => $offerId]);
@@ -158,19 +162,33 @@ $insert->execute([
 ]);
 
 /* -------------------------------------------------
-   9. Build redirect URL (FORWARD EVERYTHING)
+   9. Build redirect URL (MACRO REPLACEMENT + FORWARDING)
 -------------------------------------------------- */
 $redirectUrl = $offer['offer_url'];
 
-/* Add click_id to forwarded params */
-$incomingParams['click_id'] = $clickId;
+$macroMap = [
+    '{click_id}'     => rawurlencode($clickId),
+    '{offer_id}'     => rawurlencode((string)$offerId),
+    '{affiliate_id}' => rawurlencode((string)$affiliateId),
+    '{sub1}'         => rawurlencode((string)($sub1 ?? '')),
+    '{sub2}'         => rawurlencode((string)($sub2 ?? '')),
+    '{sub3}'         => rawurlencode((string)($sub3 ?? '')),
+    '{sub4}'         => rawurlencode((string)($sub4 ?? '')),
+    '{sub5}'         => rawurlencode((string)($sub5 ?? ''))
+];
 
-/* Build query string */
-$queryString = http_build_query($incomingParams);
+// Perform macro replacements on offer URL
+$redirectUrl = str_replace(array_keys($macroMap), array_values($macroMap), $redirectUrl);
 
-/* Append correctly */
-$separator = (strpos($redirectUrl, '?') === false) ? '?' : '&';
-$redirectUrl .= $separator . $queryString;
+// Forward any remaining query params if offer URL does not use macro syntax for them
+$unusedParams = $incomingParams;
+unset($unusedParams['sub1'], $unusedParams['sub2'], $unusedParams['sub3'], $unusedParams['sub4'], $unusedParams['sub5']);
+
+if (!empty($unusedParams)) {
+    $queryString = http_build_query($unusedParams);
+    $separator   = (strpos($redirectUrl, '?') === false) ? '?' : '&';
+    $redirectUrl .= $separator . $queryString;
+}
 
 /* -------------------------------------------------
    10. Redirect

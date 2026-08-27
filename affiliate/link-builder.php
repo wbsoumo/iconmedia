@@ -13,15 +13,19 @@ $affiliateName = $_SESSION['user_name'] ?? 'Affiliate';
 $success = $error = null;
 
 /* ===============================
-   FETCH APPROVED OFFERS (SAFE)
+   FETCH APPROVED OFFERS (SAFE & AUTHORIZED)
 ================================ */
 $offersStmt = $pdo->prepare("
-    SELECT offer_id, offer_name, preview_url, payout, category
-    FROM offers
-    WHERE status = 'approved'
-    ORDER BY offer_name ASC
+    SELECT o.offer_id, o.offer_name, o.preview_url, o.payout, o.category
+    FROM offers o
+    LEFT JOIN affiliate_offer_approval aoa 
+      ON aoa.offer_id = o.offer_id 
+     AND aoa.affiliate_id = :aid
+    WHERE o.status = 'approved'
+      AND (LOWER(o.visibility) = 'public' OR aoa.status = 'approved')
+    ORDER BY o.offer_name ASC
 ");
-$offersStmt->execute();
+$offersStmt->execute(['aid' => $affiliateId]);
 $offers = $offersStmt->fetchAll(PDO::FETCH_ASSOC);
 
 /* ===============================
@@ -51,14 +55,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && ($_POST['action'] ?? '') === 'save_
         $subs[$i] = trim($_POST['sub'.$i] ?? '');
     }
 
-    /* ---- Validate offer ---- */
+    /* ---- Validate offer authorization ---- */
     $check = $pdo->prepare("
-        SELECT offer_id
-        FROM offers
-        WHERE offer_id = :oid AND status = 'approved'
+        SELECT o.offer_id
+        FROM offers o
+        LEFT JOIN affiliate_offer_approval aoa 
+          ON aoa.offer_id = o.offer_id 
+         AND aoa.affiliate_id = :aid
+        WHERE o.offer_id = :oid 
+          AND o.status = 'approved'
+          AND (LOWER(o.visibility) = 'public' OR aoa.status = 'approved')
         LIMIT 1
     ");
-    $check->execute(['oid' => $offerId]);
+    $check->execute(['oid' => $offerId, 'aid' => $affiliateId]);
 
     if (!$check->fetch()) {
         http_response_code(400);
