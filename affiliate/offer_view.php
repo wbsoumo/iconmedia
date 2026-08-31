@@ -29,7 +29,7 @@ $stmt = $pdo->prepare("
         o.category,
         o.payout,
         o.currency,
-        o.target_url,
+        o.offer_url,
         o.status AS offer_status,
         o.visibility,
         o.daily_cap,
