@@ -883,7 +883,7 @@ $underperforming = array_filter($offers, function($offer) {
                     <a href="profile.php" class="dropdown-item">
                         <i class="fas fa-user mr-2"></i> Profile
                     </a>
-                    <a href="settings.php" class="dropdown-item">
+                    <a href="profile.php" class="dropdown-item">
                         <i class="fas fa-cog mr-2"></i> Settings
                     </a>
                     <div class="dropdown-divider"></div>
@@ -950,7 +950,7 @@ $underperforming = array_filter($offers, function($offer) {
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a href="reports_conversions.php" class="nav-link">
+                        <a href="reports_campaigns.php" class="nav-link">
                             <i class="fas fa-exchange-alt nav-icon"></i>
                             <p>Conversion Reports</p>
                         </a>

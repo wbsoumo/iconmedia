@@ -580,7 +580,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     <a href="profile.php" class="dropdown-item">
                         <i class="fas fa-user mr-2"></i> My Profile
                     </a>
-                    <a href="settings.php" class="dropdown-item">
+                    <a href="profile.php" class="dropdown-item">
                         <i class="fas fa-cog mr-2"></i> Account Settings
                     </a>
                     <div class="dropdown-divider"></div>
@@ -645,7 +645,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a href="reports_conversions.php" class="nav-link">
+                        <a href="reports_campaigns.php" class="nav-link">
                             <i class="nav-icon fas fa-exchange-alt"></i>
                             <p>Conversion Report</p>
                         </a>
@@ -653,13 +653,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     
                     <li class="nav-header">BILLING</li>
                     <li class="nav-item">
-                        <a href="transactions.php" class="nav-link">
+                        <a href="billing.php" class="nav-link">
                             <i class="nav-icon fas fa-credit-card"></i>
                             <p>Transactions</p>
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a href="deposit.php" class="nav-link">
+                        <a href="billing.php" class="nav-link">
                             <i class="nav-icon fas fa-wallet"></i>
                             <p>Deposit Funds</p>
                         </a>
@@ -673,7 +673,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a href="settings.php" class="nav-link">
+                        <a href="profile.php" class="nav-link">
                             <i class="nav-icon fas fa-cog"></i>
                             <p>Settings</p>
                         </a>

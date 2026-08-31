@@ -799,7 +799,7 @@ $systemStats = $pdo->query("
                     <span class="dropdown-item dropdown-header"><?php echo $totalAlerts; ?> Pending Items</span>
                     <div class="dropdown-divider"></div>
                     <?php if ($pendingConversions > 0): ?>
-                    <a href="pending_conversions.php" class="dropdown-item">
+                    <a href="reports_campaigns.php" class="dropdown-item">
                         <i class="fas fa-exchange-alt mr-2 text-warning"></i>
                         <?php echo $pendingConversions; ?> Pending Conversions
                     </a>
@@ -811,13 +811,13 @@ $systemStats = $pdo->query("
                     </a>
                     <?php endif; ?>
                     <?php if (($systemStats['pending_payouts'] ?? 0) > 0): ?>
-                    <a href="pending_payouts.php" class="dropdown-item">
+                    <a href="reports_affiliates.php" class="dropdown-item">
                         <i class="fas fa-money-bill-wave mr-2 text-success"></i>
                         <?php echo $systemStats['pending_payouts']; ?> Pending Payouts
                     </a>
                     <?php endif; ?>
                     <?php if (($systemStats['pending_deposits'] ?? 0) > 0): ?>
-                    <a href="pending_deposits.php" class="dropdown-item">
+                    <a href="reports_advertisers.php" class="dropdown-item">
                         <i class="fas fa-wallet mr-2 text-primary"></i>
                         <?php echo $systemStats['pending_deposits']; ?> Pending Deposits
                     </a>
@@ -844,7 +844,7 @@ $systemStats = $pdo->query("
                     <a href="profile.php" class="dropdown-item">
                         <i class="fas fa-user mr-2"></i> Admin Profile
                     </a>
-                    <a href="settings.php" class="dropdown-item">
+                    <a href="profile.php" class="dropdown-item">
                         <i class="fas fa-cog mr-2"></i> System Settings
                     </a>
                     <div class="dropdown-divider"></div>
@@ -955,7 +955,7 @@ $systemStats = $pdo->query("
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a href="settings.php" class="nav-link">
+                        <a href="profile.php" class="nav-link">
                             <i class="nav-icon fas fa-cog"></i>
                             <p>Settings</p>
                         </a>
@@ -1039,7 +1039,7 @@ $systemStats = $pdo->query("
                         <strong>Pending Actions Required:</strong>
                         <div class="ml-3">
                             <?php if ($pendingConversions > 0): ?>
-                            <a href="pending_conversions.php" class="badge badge-warning mr-2">
+                            <a href="reports_campaigns.php" class="badge badge-warning mr-2">
                                 <?php echo $pendingConversions; ?> Conversions
                             </a>
                             <?php endif; ?>
@@ -1049,12 +1049,12 @@ $systemStats = $pdo->query("
                             </a>
                             <?php endif; ?>
                             <?php if (($systemStats['pending_payouts'] ?? 0) > 0): ?>
-                            <a href="pending_payouts.php" class="badge badge-success mr-2">
+                            <a href="reports_affiliates.php" class="badge badge-success mr-2">
                                 <?php echo $systemStats['pending_payouts']; ?> Payouts
                             </a>
                             <?php endif; ?>
                             <?php if (($systemStats['pending_deposits'] ?? 0) > 0): ?>
-                            <a href="pending_deposits.php" class="badge badge-primary">
+                            <a href="reports_advertisers.php" class="badge badge-primary">
                                 <?php echo $systemStats['pending_deposits']; ?> Deposits
                             </a>
                             <?php endif; ?>
@@ -1091,7 +1091,7 @@ $systemStats = $pdo->query("
                             <div class="icon">
                                 <i class="fas fa-wallet"></i>
                             </div>
-                            <a href="pending_payouts.php" class="small-box-footer">
+                            <a href="reports_affiliates.php" class="small-box-footer">
                                 Manage Payouts <i class="fas fa-arrow-circle-right"></i>
                             </a>
                         </div>
@@ -1123,7 +1123,7 @@ $systemStats = $pdo->query("
                             <div class="icon">
                                 <i class="fas fa-exchange-alt"></i>
                             </div>
-                            <a href="reports_conversions.php" class="small-box-footer">
+                            <a href="reports_campaigns.php" class="small-box-footer">
                                 View All Conversions <i class="fas fa-arrow-circle-right"></i>
                             </a>
                         </div>
@@ -1190,7 +1190,7 @@ $systemStats = $pdo->query("
                             <div class="icon">
                                 <i class="fas fa-mouse-pointer"></i>
                             </div>
-                            <a href="reports_clicks.php" class="small-box-footer">
+                            <a href="reports_subid.php" class="small-box-footer">
                                 View Click Report <i class="fas fa-arrow-circle-right"></i>
                             </a>
                         </div>
@@ -1229,13 +1229,13 @@ $systemStats = $pdo->query("
                                     <button class="btn btn-gradient" onclick="window.location.href='create_campaign.php'">
                                         <i class="fas fa-plus-circle mr-2"></i> Create New Campaign
                                     </button>
-                                    <button class="btn btn-outline-primary" onclick="window.location.href='pending_conversions.php'">
+                                    <button class="btn btn-outline-primary" onclick="window.location.href='reports_campaigns.php'">
                                         <i class="fas fa-exchange-alt mr-2"></i> Review Conversions
                                     </button>
-                                    <button class="btn btn-outline-success" onclick="window.location.href='pending_payouts.php'">
+                                    <button class="btn btn-outline-success" onclick="window.location.href='reports_affiliates.php'">
                                         <i class="fas fa-money-bill-wave mr-2"></i> Process Payouts
                                     </button>
-                                    <button class="btn btn-outline-info" onclick="window.location.href='settings.php'">
+                                    <button class="btn btn-outline-info" onclick="window.location.href='profile.php'">
                                         <i class="fas fa-cog mr-2"></i> System Settings
                                     </button>
                                 </div>

@@ -226,7 +226,7 @@ foreach ($conversions as $cv) {
                 <a href="dashboard.php" class="nav-link">Dashboard</a>
             </li>
             <li class="nav-item d-none d-sm-inline-block">
-                <a href="reports_conversions.php" class="nav-link active">Conversion Reports</a>
+                <a href="reports_campaigns.php" class="nav-link active">Conversion Reports</a>
             </li>
         </ul>
 
@@ -266,7 +266,7 @@ foreach ($conversions as $cv) {
                         <a href="reports_campaigns.php" class="nav-link"><i class="nav-icon fas fa-chart-bar"></i><p>Campaign Reports</p></a>
                     </li>
                     <li class="nav-item">
-                        <a href="reports_conversions.php" class="nav-link active"><i class="fas fa-exchange-alt nav-icon"></i><p>Conversion Reports</p></a>
+                        <a href="reports_campaigns.php" class="nav-link active"><i class="fas fa-exchange-alt nav-icon"></i><p>Conversion Reports</p></a>
                     </li>
                     <li class="nav-item">
                         <a href="reports_affiliates.php" class="nav-link"><i class="nav-icon fas fa-users"></i><p>Affiliate Reports</p></a>
@@ -362,7 +362,7 @@ foreach ($conversions as $cv) {
                                 <button type="submit" class="btn btn-primary font-weight-bold shadow-sm mr-1">
                                     <i class="fas fa-filter mr-1"></i> Filter
                                 </button>
-                                <a href="reports_conversions.php" class="btn btn-outline-secondary font-weight-bold mr-1" title="Reset Filters">
+                                <a href="reports_campaigns.php" class="btn btn-outline-secondary font-weight-bold mr-1" title="Reset Filters">
                                     <i class="fas fa-redo"></i>
                                 </a>
                                 <a href="?export=1&from=<?php echo urlencode($fromDate); ?>&to=<?php echo urlencode($toDate); ?>&offer_id=<?php echo urlencode($offerId); ?>&status=<?php echo urlencode($status); ?>" class="btn btn-success font-weight-bold shadow-sm">

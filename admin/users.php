@@ -561,7 +561,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['bulk_action'])) {
                         <i class="fas fa-briefcase mr-2 text-primary"></i>
                         <?php echo $stats['pending_advertisers']; ?> Pending Advertisers
                     </a>
-                    <a href="kyc_approvals.php" class="dropdown-item">
+                    <a href="pending_kyc.php" class="dropdown-item">
                         <i class="fas fa-id-card mr-2 text-purple"></i>
                         <?php echo $stats['pending_kyc']; ?> Pending KYC
                     </a>
@@ -585,7 +585,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['bulk_action'])) {
                     <a href="profile.php" class="dropdown-item">
                         <i class="fas fa-user mr-2"></i> Admin Profile
                     </a>
-                    <a href="settings.php" class="dropdown-item">
+                    <a href="profile.php" class="dropdown-item">
                         <i class="fas fa-cog mr-2"></i> System Settings
                     </a>
                     <div class="dropdown-divider"></div>
@@ -712,7 +712,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['bulk_action'])) {
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a href="settings.php" class="nav-link">
+                        <a href="profile.php" class="nav-link">
                             <i class="nav-icon fas fa-cog"></i>
                             <p>Settings</p>
                         </a>
@@ -1002,7 +1002,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['bulk_action'])) {
                                                        onclick="return confirm('Are you sure you want to reject this user?')">
                                                         <i class="fas fa-times"></i>
                                                     </a>
-                                                    <a href="user_details.php?id=<?php echo $user['user_id']; ?>" 
+                                                    <a href="users.php?id=<?php echo $user['user_id']; ?>" 
                                                        class="btn-action btn-view"
                                                        title="View Details">
                                                         <i class="fas fa-eye"></i>

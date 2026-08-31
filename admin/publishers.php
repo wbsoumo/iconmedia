@@ -754,7 +754,7 @@ if (isset($_GET['export'])) {
                     <a href="profile.php" class="dropdown-item">
                         <i class="fas fa-user mr-2"></i> Admin Profile
                     </a>
-                    <a href="settings.php" class="dropdown-item">
+                    <a href="profile.php" class="dropdown-item">
                         <i class="fas fa-cog mr-2"></i> System Settings
                     </a>
                     <div class="dropdown-divider"></div>
@@ -860,7 +860,7 @@ if (isset($_GET['export'])) {
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a href="settings.php" class="nav-link">
+                        <a href="profile.php" class="nav-link">
                             <i class="nav-icon fas fa-cog"></i>
                             <p>Settings</p>
                         </a>
@@ -899,7 +899,7 @@ if (isset($_GET['export'])) {
                         <a href="?export=csv" class="btn btn-outline-primary">
                             <i class="fas fa-download mr-2"></i> Export CSV
                         </a>
-                        <a href="add_publisher.php" class="btn btn-gradient">
+                        <a href="create_advertiser.php" class="btn btn-gradient">
                             <i class="fas fa-plus mr-2"></i> Add New Publisher
                         </a>
                     </div>
@@ -1222,7 +1222,7 @@ if (isset($_GET['export'])) {
                                                         </a>
                                                         
                                                         <!-- Edit -->
-                                                        <a href="edit_publisher.php?id=<?php echo $pub['user_id']; ?>" 
+                                                        <a href="affiliate_details.php?id=<?php echo $pub['user_id']; ?>" 
                                                            class="btn-action btn-edit"
                                                            title="Edit Publisher">
                                                             <i class="fas fa-edit"></i>

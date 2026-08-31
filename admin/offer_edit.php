@@ -747,7 +747,7 @@ $conversions = $recentConversions->fetchAll(PDO::FETCH_ASSOC);
                     <a href="profile.php" class="dropdown-item">
                         <i class="fas fa-user mr-2"></i> Admin Profile
                     </a>
-                    <a href="settings.php" class="dropdown-item">
+                    <a href="profile.php" class="dropdown-item">
                         <i class="fas fa-cog mr-2"></i> System Settings
                     </a>
                     <div class="dropdown-divider"></div>
@@ -860,7 +860,7 @@ $conversions = $recentConversions->fetchAll(PDO::FETCH_ASSOC);
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a href="settings.php" class="nav-link">
+                        <a href="profile.php" class="nav-link">
                             <i class="nav-icon fas fa-cog"></i>
                             <p>Settings</p>
                         </a>
@@ -1428,7 +1428,7 @@ $conversions = $recentConversions->fetchAll(PDO::FETCH_ASSOC);
                             <i class="fas fa-exchange-alt mr-2"></i> Recent Conversions
                         </h3>
                         <div class="card-tools">
-                            <a href="reports_conversions.php?offer_id=<?php echo $offerId; ?>" class="btn btn-sm btn-outline-primary">
+                            <a href="reports_campaigns.php?offer_id=<?php echo $offerId; ?>" class="btn btn-sm btn-outline-primary">
                                 View All <i class="fas fa-arrow-right ml-1"></i>
                             </a>
                         </div>

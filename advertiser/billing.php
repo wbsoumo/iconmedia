@@ -318,7 +318,7 @@ foreach ($transactions as $tx) {
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a href="reports_conversions.php" class="nav-link">
+                        <a href="reports_campaigns.php" class="nav-link">
                             <i class="fas fa-exchange-alt nav-icon"></i><p>Conversion Reports</p>
                         </a>
                     </li>

@@ -881,7 +881,7 @@ if (isset($_GET['action']) && isset($_GET['id'])) {
                 <a href="offers.php" class="nav-link active">Campaigns</a>
             </li>
             <li class="nav-item d-none d-sm-inline-block">
-                <a href="create_offer.php" class="nav-link">Create Campaign</a>
+                <a href="create_campaign.php" class="nav-link">Create Campaign</a>
             </li>
         </ul>
 
@@ -920,7 +920,7 @@ if (isset($_GET['action']) && isset($_GET['id'])) {
                     <a href="profile.php" class="dropdown-item">
                         <i class="fas fa-user mr-2"></i> Admin Profile
                     </a>
-                    <a href="settings.php" class="dropdown-item">
+                    <a href="profile.php" class="dropdown-item">
                         <i class="fas fa-cog mr-2"></i> System Settings
                     </a>
                     <div class="dropdown-divider"></div>
@@ -1036,7 +1036,7 @@ if (isset($_GET['action']) && isset($_GET['id'])) {
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a href="settings.php" class="nav-link">
+                        <a href="profile.php" class="nav-link">
                             <i class="nav-icon fas fa-cog"></i>
                             <p>Settings</p>
                         </a>
@@ -1076,7 +1076,7 @@ if (isset($_GET['action']) && isset($_GET['id'])) {
                             <p class="mb-0">Review, approve, and manage all advertiser campaigns across the network.</p>
                         </div>
                         <div class="col-md-4 text-right">
-                            <a href="create_offer.php" class="btn btn-light">
+                            <a href="create_campaign.php" class="btn btn-light">
                                 <i class="fas fa-plus-circle mr-2"></i> New Campaign
                             </a>
                         </div>

@@ -886,7 +886,7 @@ $avgEPC = $summary['total_clicks'] > 0 ?
                     <a href="profile.php" class="dropdown-item">
                         <i class="fas fa-user mr-2"></i> Profile
                     </a>
-                    <a href="settings.php" class="dropdown-item">
+                    <a href="profile.php" class="dropdown-item">
                         <i class="fas fa-cog mr-2"></i> Settings
                     </a>
                     <div class="dropdown-divider"></div>
@@ -953,7 +953,7 @@ $avgEPC = $summary['total_clicks'] > 0 ?
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a href="reports_conversions.php" class="nav-link">
+                        <a href="reports_campaigns.php" class="nav-link">
                             <i class="fas fa-exchange-alt nav-icon"></i>
                             <p>Conversion Reports</p>
                         </a>
@@ -1437,7 +1437,7 @@ $avgEPC = $summary['total_clicks'] > 0 ?
                                     <a href="reports_campaigns.php" class="btn btn-gradient btn-block">
                                         <i class="fas fa-chart-bar mr-2"></i> Campaign Reports
                                     </a>
-                                    <a href="reports_conversions.php" class="btn btn-outline-primary btn-block">
+                                    <a href="reports_campaigns.php" class="btn btn-outline-primary btn-block">
                                         <i class="fas fa-exchange-alt mr-2"></i> Conversion Reports
                                     </a>
                                 </div>

@@ -703,7 +703,7 @@ if (isset($_GET['export']) && $_GET['export'] === 'excel') {
                     <a href="profile.php" class="dropdown-item">
                         <i class="fas fa-user mr-2"></i> Profile
                     </a>
-                    <a href="settings.php" class="dropdown-item">
+                    <a href="profile.php" class="dropdown-item">
                         <i class="fas fa-cog mr-2"></i> Settings
                     </a>
                     <div class="dropdown-divider"></div>
@@ -784,13 +784,13 @@ if (isset($_GET['export']) && $_GET['export'] === 'excel') {
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a href="payouts.php" class="nav-link">
+                        <a href="profile.php" class="nav-link">
                             <i class="nav-icon fas fa-wallet"></i>
                             <p>Payouts</p>
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a href="settings.php" class="nav-link">
+                        <a href="profile.php" class="nav-link">
                             <i class="nav-icon fas fa-cog"></i>
                             <p>Settings</p>
                         </a>

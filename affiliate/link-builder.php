@@ -487,7 +487,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && ($_POST['action'] ?? '') === 'save_
                     <a href="profile.php" class="dropdown-item">
                         <i class="fas fa-user mr-2"></i> Profile
                     </a>
-                    <a href="settings.php" class="dropdown-item">
+                    <a href="profile.php" class="dropdown-item">
                         <i class="fas fa-cog mr-2"></i> Settings
                     </a>
                     <div class="dropdown-divider"></div>
@@ -554,7 +554,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && ($_POST['action'] ?? '') === 'save_
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a href="insights.php" class="nav-link">
+                        <a href="reports.php" class="nav-link">
                             <i class="nav-icon fas fa-chart-bar"></i>
                             <p>Smart Insights</p>
                         </a>
@@ -568,7 +568,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && ($_POST['action'] ?? '') === 'save_
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a href="payouts.php" class="nav-link">
+                        <a href="profile.php" class="nav-link">
                             <i class="nav-icon fas fa-wallet"></i>
                             <p>Payouts</p>
                         </a>

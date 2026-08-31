@@ -122,7 +122,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 <a class="nav-link" data-widget="pushmenu" href="#" role="button"><i class="fas fa-bars"></i></a>
             </li>
             <li class="nav-item d-none d-sm-inline-block"><a href="dashboard.php" class="nav-link">Dashboard</a></li>
-            <li class="nav-item d-none d-sm-inline-block"><a href="settings.php" class="nav-link active">System Settings</a></li>
+            <li class="nav-item d-none d-sm-inline-block"><a href="profile.php" class="nav-link active">System Settings</a></li>
         </ul>
     </nav>
 
@@ -214,7 +214,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a href="settings.php" class="nav-link active">
+                        <a href="profile.php" class="nav-link active">
                             <i class="nav-icon fas fa-cog"></i>
                             <p>Settings</p>
                         </a>

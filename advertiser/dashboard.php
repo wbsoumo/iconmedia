@@ -581,7 +581,7 @@ $topAffiliates = $affiliatesStmt->fetchAll(PDO::FETCH_ASSOC);
                 <div class="dropdown-menu dropdown-menu-lg dropdown-menu-right">
                     <span class="dropdown-item dropdown-header"><?php echo $today['today_conversions'] ?? 0; ?> New Conversions Today</span>
                     <div class="dropdown-divider"></div>
-                    <a href="reports_conversions.php" class="dropdown-item">
+                    <a href="reports_campaigns.php" class="dropdown-item">
                         <i class="fas fa-exchange-alt mr-2 text-primary"></i> Today's Revenue: $<?php echo number_format($today['today_revenue'] ?? 0, 2); ?>
                     </a>
                     <div class="dropdown-divider"></div>
@@ -603,7 +603,7 @@ $topAffiliates = $affiliatesStmt->fetchAll(PDO::FETCH_ASSOC);
                     <a href="profile.php" class="dropdown-item">
                         <i class="fas fa-user mr-2"></i> Profile
                     </a>
-                    <a href="account.php" class="dropdown-item">
+                    <a href="profile.php" class="dropdown-item">
                         <i class="fas fa-cog mr-2"></i> Account Settings
                     </a>
                     <div class="dropdown-divider"></div>
@@ -674,7 +674,7 @@ $topAffiliates = $affiliatesStmt->fetchAll(PDO::FETCH_ASSOC);
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a href="reports_conversions.php" class="nav-link">
+                        <a href="reports_campaigns.php" class="nav-link">
                             <i class="fas fa-exchange-alt nav-icon"></i>
                             <p>Conversion Reports</p>
                         </a>
@@ -832,7 +832,7 @@ $topAffiliates = $affiliatesStmt->fetchAll(PDO::FETCH_ASSOC);
                             <div class="icon">
                                 <i class="fas fa-exchange-alt"></i>
                             </div>
-                            <a href="reports_conversions.php" class="small-box-footer">
+                            <a href="reports_campaigns.php" class="small-box-footer">
                                 View Conversions <i class="fas fa-arrow-circle-right"></i>
                             </a>
                         </div>
@@ -891,7 +891,7 @@ $topAffiliates = $affiliatesStmt->fetchAll(PDO::FETCH_ASSOC);
                                     <button class="btn btn-outline-success" onclick="window.location.href='optimization.php'">
                                         <i class="fas fa-rocket mr-2"></i> Optimize Campaigns
                                     </button>
-                                    <button class="btn btn-outline-info" onclick="window.location.href='support.php'">
+                                    <button class="btn btn-outline-info" onclick="window.location.href='dashboard.php'">
                                         <i class="fas fa-headset mr-2"></i> Contact Support
                                     </button>
                                 </div>
@@ -1025,7 +1025,7 @@ $topAffiliates = $affiliatesStmt->fetchAll(PDO::FETCH_ASSOC);
                                     </div>
                                     <?php endforeach; ?>
                                     <div class="text-center mt-3">
-                                        <a href="reports_conversions.php" class="btn btn-outline-primary btn-sm">
+                                        <a href="reports_campaigns.php" class="btn btn-outline-primary btn-sm">
                                             View All Conversions <i class="fas fa-arrow-right ml-1"></i>
                                         </a>
                                     </div>

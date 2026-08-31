@@ -421,10 +421,10 @@ $requestedUrl = $_SERVER['REQUEST_URI'] ?? '';
                             <a href="/affiliate/dashboard.php" class="quick-link">Dashboard</a>
                             <a href="/affiliate/offers.php" class="quick-link">Offers</a>
                             <a href="/affiliate/reports.php" class="quick-link">Reports</a>
-                            <a href="/affiliate/tools.php" class="quick-link">Tools</a>
+                            <a href="/affiliate/link-builder.php" class="quick-link">Tools</a>
                         <?php endif; ?>
                     <?php else: ?>
-                        <a href="/index.php" class="quick-link">Home</a>
+                        <a href="/index.html" class="quick-link">Home</a>
                         <a href="/login.php" class="quick-link">Login</a>
                         <a href="/register.php" class="quick-link">Register</a>
                         <a href="/about.php" class="quick-link">About Us</a>

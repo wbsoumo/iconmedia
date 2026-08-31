@@ -715,7 +715,7 @@ $activeSessions = $sessionsStmt->fetchAll(PDO::FETCH_ASSOC);
                     <a href="profile.php" class="dropdown-item active">
                         <i class="fas fa-user mr-2"></i> My Profile
                     </a>
-                    <a href="settings.php" class="dropdown-item">
+                    <a href="profile.php" class="dropdown-item">
                         <i class="fas fa-cog mr-2"></i> System Settings
                     </a>
                     <div class="dropdown-divider"></div>
@@ -828,7 +828,7 @@ $activeSessions = $sessionsStmt->fetchAll(PDO::FETCH_ASSOC);
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a href="settings.php" class="nav-link">
+                        <a href="profile.php" class="nav-link">
                             <i class="nav-icon fas fa-cog"></i>
                             <p>Settings</p>
                         </a>

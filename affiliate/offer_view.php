@@ -431,13 +431,13 @@ $topSubids = $topSubidsStmt->fetchAll();
                     <span class="dropdown-item dropdown-header"><?php echo count($recentConversions); ?> Recent Conversions</span>
                     <div class="dropdown-divider"></div>
                     <?php foreach ($recentConversions as $conv): ?>
-                    <a href="conversions.php" class="dropdown-item">
+                    <a href="reports.php" class="dropdown-item">
                         <i class="fas fa-check-circle mr-2 text-success"></i> Conversion #<?php echo $conv['conversion_id']; ?>
                         <span class="float-right text-muted text-sm">$<?php echo number_format($conv['payout'], 2); ?></span>
                     </a>
                     <div class="dropdown-divider"></div>
                     <?php endforeach; ?>
-                    <a href="conversions.php" class="dropdown-item">
+                    <a href="reports.php" class="dropdown-item">
                         <i class="fas fa-list mr-2"></i> View all conversions
                     </a>
                 </div>
@@ -455,7 +455,7 @@ $topSubids = $topSubidsStmt->fetchAll();
                     <a href="profile.php" class="dropdown-item">
                         <i class="fas fa-user mr-2"></i> Profile
                     </a>
-                    <a href="settings.php" class="dropdown-item">
+                    <a href="profile.php" class="dropdown-item">
                         <i class="fas fa-cog mr-2"></i> Settings
                     </a>
                     <div class="dropdown-divider"></div>
@@ -508,7 +508,7 @@ $topSubids = $topSubidsStmt->fetchAll();
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a href="conversions.php" class="nav-link">
+                        <a href="reports.php" class="nav-link">
                             <i class="fas fa-exchange-alt nav-icon"></i>
                             <p>Conversion Logs</p>
                         </a>
@@ -528,7 +528,7 @@ $topSubids = $topSubidsStmt->fetchAll();
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a href="insights.php" class="nav-link">
+                        <a href="reports.php" class="nav-link">
                             <i class="nav-icon fas fa-chart-bar"></i>
                             <p>Smart Insights</p>
                         </a>
@@ -542,13 +542,13 @@ $topSubids = $topSubidsStmt->fetchAll();
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a href="payouts.php" class="nav-link">
+                        <a href="profile.php" class="nav-link">
                             <i class="nav-icon fas fa-wallet"></i>
                             <p>Payouts</p>
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a href="settings.php" class="nav-link">
+                        <a href="profile.php" class="nav-link">
                             <i class="nav-icon fas fa-cog"></i>
                             <p>Settings</p>
                         </a>
@@ -629,7 +629,7 @@ $topSubids = $topSubidsStmt->fetchAll();
                             <div class="icon">
                                 <i class="fas fa-check-circle"></i>
                             </div>
-                            <a href="conversions.php?offer_id=<?php echo $offerId; ?>" class="small-box-footer">View Conversions <i class="fas fa-arrow-circle-right"></i></a>
+                            <a href="reports.php?offer_id=<?php echo $offerId; ?>" class="small-box-footer">View Conversions <i class="fas fa-arrow-circle-right"></i></a>
                         </div>
                     </div>
                     
@@ -642,7 +642,7 @@ $topSubids = $topSubidsStmt->fetchAll();
                             <div class="icon">
                                 <i class="fas fa-dollar-sign"></i>
                             </div>
-                            <a href="payouts.php" class="small-box-footer">View Payouts <i class="fas fa-arrow-circle-right"></i></a>
+                            <a href="profile.php" class="small-box-footer">View Payouts <i class="fas fa-arrow-circle-right"></i></a>
                         </div>
                     </div>
                     
@@ -891,7 +891,7 @@ $topSubids = $topSubidsStmt->fetchAll();
                                     <a href="clicks.php?offer_id=<?php echo $offerId; ?>" class="btn btn-outline-info">
                                         <i class="fas fa-mouse-pointer mr-2"></i> View Click Logs
                                     </a>
-                                    <a href="conversions.php?offer_id=<?php echo $offerId; ?>" class="btn btn-outline-success">
+                                    <a href="reports.php?offer_id=<?php echo $offerId; ?>" class="btn btn-outline-success">
                                         <i class="fas fa-exchange-alt mr-2"></i> View Conversions
                                     </a>
                                     <a href="link-builder.php?offer_id=<?php echo $offerId; ?>" class="btn btn-outline-primary">

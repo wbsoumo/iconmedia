@@ -1000,7 +1000,7 @@ if (isset($_GET['export'])) {
                     <a href="profile.php" class="dropdown-item">
                         <i class="fas fa-user mr-2"></i> Profile
                     </a>
-                    <a href="settings.php" class="dropdown-item">
+                    <a href="profile.php" class="dropdown-item">
                         <i class="fas fa-cog mr-2"></i> Settings
                     </a>
                     <div class="dropdown-divider"></div>
@@ -1109,7 +1109,7 @@ if (isset($_GET['export'])) {
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a href="settings.php" class="nav-link">
+                        <a href="profile.php" class="nav-link">
                             <i class="nav-icon fas fa-cog"></i>
                             <p>Settings</p>
                         </a>
@@ -1131,7 +1131,7 @@ if (isset($_GET['export'])) {
                     <div class="col-sm-6">
                         <ol class="breadcrumb float-sm-right">
                             <li class="breadcrumb-item"><a href="dashboard.php">Home</a></li>
-                            <li class="breadcrumb-item"><a href="reports.php">Reports</a></li>
+                            <li class="breadcrumb-item"><a href="reports_campaigns.php">Reports</a></li>
                             <li class="breadcrumb-item active">Advertiser Performance</li>
                         </ol>
                     </div>
@@ -1549,17 +1549,17 @@ if (isset($_GET['export'])) {
                                             </td>
                                             <td>
                                                 <div class="action-buttons">
-                                                    <a href="advertiser_details.php?id=<?php echo $row['advertiser_id']; ?>" 
+                                                    <a href="reports_advertisers.php?id=<?php echo $row['advertiser_id']; ?>" 
                                                        class="btn-action btn-view"
                                                        title="View Details">
                                                         <i class="fas fa-eye"></i>
                                                     </a>
-                                                    <a href="reports_advertiser_detail.php?id=<?php echo $row['advertiser_id']; ?>&from=<?php echo $dateFrom; ?>&to=<?php echo $dateTo; ?>" 
+                                                    <a href="reports_advertisers.php?id=<?php echo $row['advertiser_id']; ?>&from=<?php echo $dateFrom; ?>&to=<?php echo $dateTo; ?>" 
                                                        class="btn-action btn-chart"
                                                        title="View Detailed Report">
                                                         <i class="fas fa-chart-line"></i>
                                                     </a>
-                                                    <a href="advertiser_offers.php?id=<?php echo $row['advertiser_id']; ?>" 
+                                                    <a href="reports_advertisers.php?id=<?php echo $row['advertiser_id']; ?>" 
                                                        class="btn-action btn-offers"
                                                        title="View Campaigns">
                                                         <i class="fas fa-bullhorn"></i>
