@@ -16,7 +16,7 @@ $affiliateName = $_SESSION['user_name'] ?? 'Affiliate';
    FETCH APPROVED & PUBLIC CAMPAIGN OFFERS
 -------------------------------------------------- */
 $offersStmt = $pdo->prepare("
-    SELECT o.offer_id, o.offer_name, o.category, o.payout, o.currency, o.tracking_url
+    SELECT o.offer_id, o.offer_name, o.category, o.payout, o.currency
     FROM offers o
     LEFT JOIN affiliate_offer_approval aoa 
       ON aoa.offer_id = o.offer_id 
