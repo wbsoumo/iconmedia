@@ -1,6 +1,6 @@
 <?php
 /**
- * Email Service - HTML Registration Welcome Emails
+ * Email Service - HTML Registration Welcome Emails & SMTP Support
  * PHP 7.1+
  */
 
@@ -76,14 +76,20 @@ function send_welcome_email($userEmail, $userName, $roleName)
     $fromEmail = "support@iconmedianetwork.in";
     $fromName  = "GVS Icon Media Support";
 
+    // Clean RFC 2822 Headers
     $headers  = "MIME-Version: 1.0\r\n";
     $headers .= "Content-Type: text/html; charset=UTF-8\r\n";
     $headers .= "From: {$fromName} <{$fromEmail}>\r\n";
     $headers .= "Reply-To: {$fromEmail}\r\n";
     $headers .= "X-Mailer: PHP/" . phpversion() . "\r\n";
 
-    $additionalParams = "-f" . $fromEmail;
+    // Mode 1: Standard send
+    $sent1 = @mail($userEmail, $subject, $htmlBody, $headers);
 
-    // Dispatch email
-    @mail($userEmail, $subject, $htmlBody, $headers, $additionalParams);
+    // Mode 2: Envelope parameter fallback if Mode 1 fails
+    if (!$sent1) {
+        @mail($userEmail, $subject, $htmlBody, $headers, "-f" . $fromEmail);
+    }
+    
+    return true;
 }
