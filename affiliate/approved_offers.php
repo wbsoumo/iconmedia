@@ -23,14 +23,14 @@ $stmt = $pdo->prepare("
         SUM(CASE WHEN cv.status = 'approved' THEN 1 ELSE 0 END) AS conversions
     FROM offers o
     INNER JOIN affiliate_offer_approval a ON a.offer_id = o.offer_id
-    LEFT JOIN clicks c ON c.offer_id = o.offer_id AND c.affiliate_id = :aid
-    LEFT JOIN conversions cv ON cv.offer_id = o.offer_id AND cv.affiliate_id = :aid
-    WHERE a.affiliate_id = :aid
+    LEFT JOIN clicks c ON c.offer_id = o.offer_id AND c.affiliate_id = ?
+    LEFT JOIN conversions cv ON cv.offer_id = o.offer_id AND cv.affiliate_id = ?
+    WHERE a.affiliate_id = ?
       AND a.status = 'approved'
     GROUP BY o.offer_id
     ORDER BY o.created_at DESC
 ");
-$stmt->execute(['aid' => $affiliateId]);
+$stmt->execute([$affiliateId, $affiliateId, $affiliateId]);
 $approvedOffers = $stmt->fetchAll(PDO::FETCH_ASSOC);
 ?>
 <!DOCTYPE html>
