@@ -376,57 +376,96 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     </nav>
 
     <!-- Sidebar -->
+        <!-- Sidebar -->
     <aside class="main-sidebar sidebar-dark-primary elevation-4">
         <a href="dashboard.php" class="brand-link text-center">
-            <span class="brand-text font-weight-light" style="font-size: 1.5rem;">
-                <i class="fas fa-chart-line mr-2"></i><strong>Advertiser</strong>
+            <span class="brand-text font-weight-light" style="font-size: 1.4rem;">
+                <i class="fas fa-bullhorn mr-2"></i><strong>Advertiser Portal</strong>
             </span>
         </a>
+
         <div class="sidebar">
             <nav class="mt-2">
                 <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu">
                     <li class="nav-item">
-                        <a href="dashboard.php" class="nav-link"><i class="nav-icon fas fa-tachometer-alt"></i><p>Dashboard</p></a>
+                        <a href="dashboard.php" class="nav-link">
+                            <i class="nav-icon fas fa-tachometer-alt"></i>
+                            <p>Dashboard</p>
+                        </a>
                     </li>
-                    <li class="nav-header">CAMPAIGNS</li>
+
+                    <li class="nav-header">CAMPAIGNS & OFFERS</li>
                     <li class="nav-item">
-                        <a href="campaigns.php" class="nav-link"><i class="nav-icon fas fa-bullhorn"></i><p>Manage Campaigns</p></a>
-                    </li>
-                    <li class="nav-item">
-                        <a href="offers.php" class="nav-link"><i class="nav-icon fas fa-gift"></i><p>All Offers</p></a>
-                    </li>
-                    <li class="nav-item">
-                        <a href="create_offer.php" class="nav-link active"><i class="nav-icon fas fa-plus-circle"></i><p>Create New Offer</p></a>
-                    </li>
-                    <li class="nav-header">REPORTS & ANALYTICS</li>
-                    <li class="nav-item">
-                        <a href="reports_campaigns.php" class="nav-link"><i class="nav-icon fas fa-chart-bar"></i><p>Campaign Reports</p></a>
+                        <a href="campaigns.php" class="nav-link">
+                            <i class="nav-icon fas fa-bullhorn"></i>
+                            <p>Manage Campaigns</p>
+                        </a>
                     </li>
                     <li class="nav-item">
-                        <a href="reports_campaigns.php" class="nav-link"><i class="fas fa-exchange-alt nav-icon"></i><p>Conversion Reports</p></a>
+                        <a href="create_offer.php" class="nav-link active">
+                            <i class="nav-icon fas fa-plus-circle"></i>
+                            <p>Create New Offer</p>
+                        </a>
                     </li>
                     <li class="nav-item">
-                        <a href="reports_affiliates.php" class="nav-link"><i class="nav-icon fas fa-users"></i><p>Affiliate Reports</p></a>
+                        <a href="optimization.php" class="nav-link">
+                            <i class="nav-icon fas fa-rocket"></i>
+                            <p>Campaign Optimization</p>
+                        </a>
                     </li>
-                    <li class="nav-header">TOOLS</li>
+
+                    <li class="nav-header">ANALYTICS & REPORTS</li>
                     <li class="nav-item">
-                        <a href="ip_whitelist.php" class="nav-link"><i class="nav-icon fas fa-tower-broadcast"></i><p>IP Whitelist</p></a>
+                        <a href="reports_campaigns.php" class="nav-link">
+                            <i class="nav-icon fas fa-chart-bar"></i>
+                            <p>Campaign Performance</p>
+                        </a>
                     </li>
                     <li class="nav-item">
-                        <a href="postback.php" class="nav-link"><i class="nav-icon fas fa-code"></i><p>Postback Manager</p></a>
+                        <a href="reports_conversions.php" class="nav-link">
+                            <i class="nav-icon fas fa-chart-line"></i>
+                            <p>Conversion Logs</p>
+                        </a>
                     </li>
                     <li class="nav-item">
-                        <a href="api.php" class="nav-link"><i class="nav-icon fas fa-plug"></i><p>API Integration</p></a>
+                        <a href="reports_affiliates.php" class="nav-link">
+                            <i class="nav-icon fas fa-users"></i>
+                            <p>Publisher Breakdown</p>
+                        </a>
+                    </li>
+
+                    <li class="nav-header">BILLING & INTEGRATION</li>
+                    <li class="nav-item">
+                        <a href="billing.php" class="nav-link">
+                            <i class="nav-icon fas fa-wallet"></i>
+                            <p>Billing & Deposit</p>
+                        </a>
                     </li>
                     <li class="nav-item">
-                        <a href="optimization.php" class="nav-link"><i class="nav-icon fas fa-rocket"></i><p>Optimization Tools</p></a>
+                        <a href="postback.php" class="nav-link">
+                            <i class="nav-icon fas fa-code"></i>
+                            <p>S2S Postback Integration</p>
+                        </a>
                     </li>
+                    <li class="nav-item">
+                        <a href="ip_whitelist.php" class="nav-link">
+                            <i class="nav-icon fas fa-shield-alt"></i>
+                            <p>IP Whitelist</p>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="api.php" class="nav-link">
+                            <i class="nav-icon fas fa-key"></i>
+                            <p>API Access Keys</p>
+                        </a>
+                    </li>
+
                     <li class="nav-header">ACCOUNT</li>
                     <li class="nav-item">
-                        <a href="profile.php" class="nav-link"><i class="nav-icon fas fa-user"></i><p>Profile</p></a>
-                    </li>
-                    <li class="nav-item">
-                        <a href="billing.php" class="nav-link"><i class="nav-icon fas fa-wallet"></i><p>Billing & Payments</p></a>
+                        <a href="profile.php" class="nav-link">
+                            <i class="nav-icon fas fa-user-cog"></i>
+                            <p>Account Profile</p>
+                        </a>
                     </li>
                 </ul>
             </nav>
