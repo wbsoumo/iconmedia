@@ -130,10 +130,11 @@ $totals['profit'] = $totals['revenue'] - $totals['payout'];
     </nav>
 
     <!-- Sidebar -->
+        <!-- Sidebar -->
     <aside class="main-sidebar sidebar-dark-primary elevation-4">
         <a href="dashboard.php" class="brand-link text-center">
-            <span class="brand-text font-weight-light" style="font-size: 1.5rem;">
-                <i class="fas fa-crown mr-2"></i><strong>Admin</strong>
+            <span class="brand-text font-weight-light" style="font-size: 1.4rem;">
+                <i class="fas fa-crown mr-2"></i><strong>Admin Console</strong>
             </span>
         </a>
 
@@ -142,12 +143,12 @@ $totals['profit'] = $totals['revenue'] - $totals['payout'];
                 <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu">
                     <li class="nav-item">
                         <a href="dashboard.php" class="nav-link">
-                            <i class="nav-icon fas fa-chart-line"></i>
+                            <i class="nav-icon fas fa-tachometer-alt"></i>
                             <p>Dashboard</p>
                         </a>
                     </li>
 
-                    <li class="nav-header">CAMPAIGNS</li>
+                    <li class="nav-header">CAMPAIGNS & OFFERS</li>
                     <li class="nav-item">
                         <a href="campaigns.php" class="nav-link">
                             <i class="nav-icon fas fa-bullhorn"></i>
@@ -156,60 +157,36 @@ $totals['profit'] = $totals['revenue'] - $totals['payout'];
                     </li>
                     <li class="nav-item">
                         <a href="create_campaign.php" class="nav-link">
-                            <i class="nav-icon fas fa-plus"></i>
+                            <i class="nav-icon fas fa-plus-circle"></i>
                             <p>Create Campaign</p>
                         </a>
                     </li>
                     <li class="nav-item">
                         <a href="campaign_access.php" class="nav-link">
                             <i class="nav-icon fas fa-key"></i>
-                            <p>Campaign Access</p>
+                            <p>Offer Approval Rules</p>
                         </a>
                     </li>
 
-                    <li class="nav-header">REPORTS</li>
+                    <li class="nav-header">USER MANAGEMENT</li>
                     <li class="nav-item">
-                        <a href="reports_campaigns.php" class="nav-link active">
-                            <i class="nav-icon fas fa-chart-bar"></i>
-                            <p>Campaign Report</p>
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a href="reports_affiliates.php" class="nav-link">
+                        <a href="users.php" class="nav-link">
                             <i class="nav-icon fas fa-users"></i>
-                            <p>Affiliate Report</p>
+                            <p>All System Users</p>
                         </a>
                     </li>
-                    <li class="nav-item">
-                        <a href="reports_advertisers.php" class="nav-link">
-                            <i class="nav-icon fas fa-building"></i>
-                            <p>Advertiser Report</p>
-                        </a>
-                    </li>
-
-                    <li class="nav-header">PUBLISHERS</li>
                     <li class="nav-item">
                         <a href="publishers.php" class="nav-link">
                             <i class="nav-icon fas fa-user-friends"></i>
-                            <p>Manage Publishers</p>
+                            <p>Publishers / Affiliates</p>
                         </a>
                     </li>
-                    <li class="nav-item">
-                        <a href="publisher_postbacks.php" class="nav-link">
-                            <i class="nav-icon fas fa-link"></i>
-                            <p>Publisher Postbacks</p>
-                        </a>
-                    </li>
-
-                    <li class="nav-header">ADVERTISERS</li>
                     <li class="nav-item">
                         <a href="advertisers.php" class="nav-link">
                             <i class="nav-icon fas fa-briefcase"></i>
-                            <p>Manage Advertisers</p>
+                            <p>Advertisers</p>
                         </a>
                     </li>
-
-                    <li class="nav-header">ACCOUNT</li>
                     <li class="nav-item">
                         <a href="account_managers.php" class="nav-link">
                             <i class="nav-icon fas fa-user-tie"></i>
@@ -217,9 +194,61 @@ $totals['profit'] = $totals['revenue'] - $totals['payout'];
                         </a>
                     </li>
                     <li class="nav-item">
+                        <a href="pending_kyc.php" class="nav-link">
+                            <i class="nav-icon fas fa-id-card"></i>
+                            <p>Pending KYC Approvals</p>
+                        </a>
+                    </li>
+
+                    <li class="nav-header">ANALYTICS & REPORTS</li>
+                    <li class="nav-item">
+                        <a href="reports_campaigns.php" class="nav-link active">
+                            <i class="nav-icon fas fa-chart-bar"></i>
+                            <p>Campaign Reports</p>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="reports_affiliates.php" class="nav-link">
+                            <i class="nav-icon fas fa-chart-line"></i>
+                            <p>Affiliate Reports</p>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="reports_advertisers.php" class="nav-link">
+                            <i class="nav-icon fas fa-chart-pie"></i>
+                            <p>Advertiser Reports</p>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="reports_subid.php" class="nav-link">
+                            <i class="nav-icon fas fa-list"></i>
+                            <p>SubID Performance</p>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="fraud_dashboard.php" class="nav-link">
+                            <i class="nav-icon fas fa-shield-alt"></i>
+                            <p>Anti-Fraud Security</p>
+                        </a>
+                    </li>
+
+                    <li class="nav-header">SYSTEM & POSTBACKS</li>
+                    <li class="nav-item">
+                        <a href="publisher_postbacks.php" class="nav-link">
+                            <i class="nav-icon fas fa-code"></i>
+                            <p>Global Postbacks Log</p>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="settings.php" class="nav-link">
+                            <i class="nav-icon fas fa-cogs"></i>
+                            <p>System Settings</p>
+                        </a>
+                    </li>
+                    <li class="nav-item">
                         <a href="profile.php" class="nav-link">
-                            <i class="nav-icon fas fa-cog"></i>
-                            <p>Settings</p>
+                            <i class="nav-icon fas fa-user-cog"></i>
+                            <p>My Profile</p>
                         </a>
                     </li>
                 </ul>
