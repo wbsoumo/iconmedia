@@ -1229,7 +1229,7 @@ if (isset($_GET['export'])) {
                                                         </a>
                                                         
                                                         <!-- View Details -->
-                                                        <a href="publisher_details.php?id=<?php echo $pub['user_id']; ?>" 
+                                                        <a href="affiliate_details.php?id=<?php echo $pub['user_id']; ?>" 
                                                            class="btn-action btn-view"
                                                            title="View Details">
                                                             <i class="fas fa-eye"></i>

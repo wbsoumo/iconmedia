@@ -573,12 +573,12 @@ $requestedUrl = $_SERVER['REQUEST_URI'] ?? '';
                 <a href="/contact.php" class="support-link">
                     <i class="fas fa-envelope"></i> Contact Support
                 </a>
-                <a href="/help.php" class="support-link">
-                    <i class="fas fa-question-circle"></i> Help Center
-                </a>
-                <a href="/request-access.php" class="support-link">
-                    <i class="fas fa-key"></i> Request Access
-                </a>
+                    <a href="/login.php" class="btn btn-outline">
+                        <i class="fas fa-sign-in-alt"></i> Login
+                    </a>
+                    <a href="/register.php" class="btn btn-primary">
+                        <i class="fas fa-user-plus"></i> Register
+                    </a>
             </div>
             
             <!-- Debug Info (remove in production) -->

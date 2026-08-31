@@ -1263,7 +1263,7 @@ $underperforming = array_filter($offers, function($offer) {
                                             </div>
                                             <div class="campaign-footer">
                                                 <span class="text-success">$<?php echo number_format($profit, 2); ?> profit</span>
-                                                <a href="edit_offer.php?id=<?php echo $offer['offer_id']; ?>" class="btn-small">
+                                                <a href="offer_edit.php?id=<?php echo $offer['offer_id']; ?>" class="btn-small">
                                                     <i class="fas fa-chart-line"></i> Scale
                                                 </a>
                                             </div>
@@ -1324,7 +1324,7 @@ $underperforming = array_filter($offers, function($offer) {
                                             </div>
                                             <div class="campaign-footer">
                                                 <span class="text-danger">Needs Review</span>
-                                                <a href="edit_offer.php?id=<?php echo $offer['offer_id']; ?>" class="btn-small">
+                                                <a href="offer_edit.php?id=<?php echo $offer['offer_id']; ?>" class="btn-small">
                                                     <i class="fas fa-edit"></i> Fix
                                                 </a>
                                             </div>
@@ -1401,7 +1401,7 @@ $underperforming = array_filter($offers, function($offer) {
                                                         </span>
                                                     </td>
                                                     <td>
-                                                        <a href="edit_offer.php?id=<?php echo $offer['offer_id']; ?>" class="btn btn-sm btn-outline-primary">
+                                                        <a href="offer_edit.php?id=<?php echo $offer['offer_id']; ?>" class="btn btn-sm btn-outline-primary">
                                                             <i class="fas fa-edit"></i>
                                                         </a>
                                                     </td>

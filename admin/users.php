@@ -695,7 +695,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['bulk_action'])) {
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a href="kyc_approvals.php" class="nav-link">
+                        <a href="pending_kyc.php" class="btn btn-warning">
                             <i class="nav-icon fas fa-id-card"></i>
                             <p>KYC Approvals</p>
                             <?php if ($stats['pending_kyc'] > 0): ?>

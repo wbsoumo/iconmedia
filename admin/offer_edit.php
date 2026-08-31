@@ -792,7 +792,7 @@ $conversions = $recentConversions->fetchAll(PDO::FETCH_ASSOC);
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a href="create_offer.php" class="nav-link">
+                        <a href="create_campaign.php" class="nav-link">
                             <i class="nav-icon fas fa-plus"></i>
                             <p>Create Campaign</p>
                         </a>
