@@ -6,7 +6,7 @@ define('APP_INIT', true);
 
 require_once __DIR__ . '/app/services/MailService.php';
 
-$version = "v1.6.0 (Dual-Dispatch HTML Template Tester)";
+$version = "v1.7.0 (Multi-Format & SMTP Diagnostics)";
 $status = null;
 $message = null;
 $logs = [];
@@ -15,85 +15,61 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $toEmail  = trim($_POST['email'] ?? '');
     $roleType = $_POST['role_type'] ?? 'affiliate';
     $name     = trim($_POST['name'] ?? 'John Doe');
+    $mode     = $_POST['dispatch_mode'] ?? 'html';
     
     if (filter_var($toEmail, FILTER_VALIDATE_EMAIL)) {
-        $subject = "Welcome to GVS Icon Media Network - Your " . ucfirst($roleType) . " Account is Created!";
-
-        $htmlBody = "
-        <!DOCTYPE html>
-        <html>
-        <head>
-            <meta charset='utf-8'>
-            <style>
-                body { font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; background-color: #f1f5f9; margin: 0; padding: 40px 0; color: #1e293b; }
-                .email-container { max-width: 600px; margin: 0 auto; background: #ffffff; border-radius: 12px; overflow: hidden; box-shadow: 0 10px 25px rgba(0,0,0,0.08); border: 1px solid #e2e8f0; }
-                .header { background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%); padding: 35px 30px; text-align: center; color: #ffffff; }
-                .header h1 { margin: 0; font-size: 26px; font-weight: 800; color: #38bdf8; letter-spacing: -0.5px; }
-                .header p { margin: 6px 0 0; color: #94a3b8; font-size: 14px; }
-                .content { padding: 35px 30px; line-height: 1.6; font-size: 15px; }
-                .greeting { font-size: 18px; font-weight: 700; color: #0f172a; margin-bottom: 15px; }
-                .role-badge { display: inline-block; background: #e0f2fe; color: #0369a1; font-size: 12px; font-weight: 700; padding: 4px 12px; border-radius: 20px; text-transform: uppercase; margin-bottom: 20px; }
-                .details-box { background: #f8fafc; border-left: 4px solid #38bdf8; border-radius: 6px; padding: 18px; margin: 20px 0; }
-                .details-box p { margin: 4px 0; color: #475569; font-size: 14px; }
-                .cta-button { display: block; width: 220px; margin: 30px auto; padding: 14px 0; background: #0284c7; color: #ffffff !important; text-align: center; text-decoration: none; font-weight: 700; border-radius: 8px; font-size: 15px; box-shadow: 0 4px 12px rgba(2, 132, 199, 0.3); }
-                .footer { background: #f8fafc; padding: 25px 30px; text-align: center; border-top: 1px solid #e2e8f0; font-size: 13px; color: #94a3b8; }
-                .footer a { color: #0284c7; text-decoration: none; }
-            </style>
-        </head>
-        <body>
-            <div class='email-container'>
-                <div class='header'>
-                    <h1>GVS Icon Media</h1>
-                    <p>Global Affiliate & Performance Marketing Network</p>
-                </div>
-                <div class='content'>
-                    <div class='greeting'>Welcome aboard, " . htmlspecialchars($name) . "!</div>
-                    <div class='role-badge'>" . htmlspecialchars(ucfirst($roleType)) . " Account Created</div>
-                    <p>Thank you for joining GVS Icon Media. Your partner account has been successfully registered on our enterprise performance marketing platform.</p>
-                    
-                    <div class='details-box'>
-                        <p><strong>Account Name:</strong> " . htmlspecialchars($name) . "</p>
-                        <p><strong>Registered Email:</strong> " . htmlspecialchars($toEmail) . "</p>
-                        <p><strong>Account Type:</strong> " . htmlspecialchars(ucfirst($roleType)) . "</p>
-                        <p><strong>Account Status:</strong> Pending Verification / Activation</p>
-                    </div>
-
-                    <p>Our compliance and account manager team is reviewing your profile details. You can log into your dashboard below to complete your KYC details and set up postbacks.</p>
-                    
-                    <a href='https://iconmedianetwork.in/login.php' class='cta-button'>Log In to Portal</a>
-                </div>
-                <div class='footer'>
-                    <p>&copy; " . date('Y') . " GVS Icon Media Network. All rights reserved.</p>
-                    <p>Need assistance? Contact our team at <a href='mailto:support@iconmedianetwork.in'>support@iconmedianetwork.in</a></p>
-                </div>
-            </div>
-        </body>
-        </html>
-        ";
-
+        $subject = "GVS Icon Media - Mail Test [" . strtoupper($mode) . "] (" . date('H:i:s') . ")";
+        
         $fromEmail = "support@iconmedianetwork.in";
         $fromName  = "GVS Icon Media Support";
 
-        $headers  = "MIME-Version: 1.0\r\n";
-        $headers .= "Content-Type: text/html; charset=UTF-8\r\n";
-        $headers .= "From: {$fromName} <{$fromEmail}>\r\n";
-        $headers .= "Reply-To: {$fromEmail}\r\n";
-        $headers .= "X-Mailer: PHP/" . phpversion() . "\r\n";
+        if ($mode === 'plain') {
+            // Test Mode: Plain Text (Minimal headers to test basic spam filters)
+            $body = "Hello " . $name . ",\n\nThis is a plain-text test email sent from GVS Icon Media Network.\n\nSender: " . $fromEmail . "\nTime: " . date('Y-m-d H:i:s') . "\n\nIf you received this message, basic email delivery is working!";
+            $headers  = "From: {$fromEmail}\r\n";
+            $headers .= "Reply-To: {$fromEmail}\r\n";
+            $headers .= "X-Mailer: PHP/" . phpversion();
 
-        // Mode 1: Standard RFC send
-        $sent1 = @mail($toEmail, $subject, $htmlBody, $headers);
-        $logs[] = "Mode 1 (Standard RFC 2822): " . ($sent1 ? "DISPATCHED" : "FAILED");
+            $sent = @mail($toEmail, $subject, $body, $headers);
+            $logs[] = "Plain-Text Basic Dispatch: " . ($sent ? "SUCCESS" : "FAILED");
+        } else {
+            // Test Mode: HTML Welcome Template
+            $htmlBody = "
+            <!DOCTYPE html>
+            <html>
+            <head><meta charset='utf-8'></head>
+            <body style='font-family: Arial, sans-serif; background:#f1f5f9; padding:20px;'>
+                <div style='max-width:550px; margin:0 auto; background:#ffffff; border-radius:10px; padding:30px; border:1px solid #cbd5e1;'>
+                    <h2 style='color:#0284c7; margin-top:0;'>GVS Icon Media Network</h2>
+                    <h3>Welcome, " . htmlspecialchars($name) . "!</h3>
+                    <p style='background:#e0f2fe; color:#0369a1; padding:8px 14px; border-radius:20px; display:inline-block; font-weight:bold;'>
+                        " . strtoupper($roleType) . " ACCOUNT REGISTERED
+                    </p>
+                    <p>Your partner account has been created on our performance marketing platform.</p>
+                    <p style='margin-top:25px;'><a href='https://iconmedianetwork.in/login.php' style='background:#0284c7; color:#ffffff; padding:12px 24px; text-decoration:none; border-radius:6px; font-weight:bold;'>Login to Partner Portal</a></p>
+                    <hr style='border:none; border-top:1px solid #e2e8f0; margin-top:30px;'>
+                    <small style='color:#94a3b8;'>Sender: support@iconmedianetwork.in | Time: " . date('Y-m-d H:i:s T') . "</small>
+                </div>
+            </body>
+            </html>
+            ";
 
-        // Mode 2: Envelope parameter send
-        $sent2 = @mail($toEmail, $subject, $htmlBody, $headers, "-f" . $fromEmail);
-        $logs[] = "Mode 2 (Forced Envelope -f): " . ($sent2 ? "DISPATCHED" : "FAILED");
+            $headers  = "MIME-Version: 1.0\r\n";
+            $headers .= "Content-Type: text/html; charset=UTF-8\r\n";
+            $headers .= "From: {$fromName} <{$fromEmail}>\r\n";
+            $headers .= "Reply-To: {$fromEmail}\r\n";
+            $headers .= "X-Mailer: PHP/" . phpversion() . "\r\n";
 
-        if ($sent1 || $sent2) {
+            $sent = @mail($toEmail, $subject, $htmlBody, $headers);
+            $logs[] = "HTML Template Dispatch: " . ($sent ? "SUCCESS" : "FAILED");
+        }
+
+        if ($sent) {
             $status = 'success';
-            $message = "Test <strong>" . strtoupper($roleType) . "</strong> HTML welcome template dispatched to <strong>" . htmlspecialchars($toEmail) . "</strong>! Please check your inbox and SPAM folder.";
+            $message = "Mail dispatched to <strong>" . htmlspecialchars($toEmail) . "</strong>! If not in inbox, please check your <strong>SPAM / JUNK</strong> folder.";
         } else {
             $status = 'danger';
-            $message = "Failed to dispatch email. Server mail function returned false.";
+            $message = "Server mail() function returned false. The hosting server requires SMTP socket connection.";
         }
     } else {
         $status = 'warning';
@@ -132,7 +108,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <body>
     <div class="card">
         <h1><i class="fas fa-paper-plane mr-2"></i>Mail & Template Tester <span class="version-badge"><?php echo $version; ?></span></h1>
-        <p>Test and preview registration HTML email templates live.</p>
+        <p>Test and preview registration email templates live.</p>
 
         <div class="sender-badge">
             <i class="fas fa-envelope-open-text text-info mr-1"></i> Sender Email: <strong>support@iconmedianetwork.in</strong>
@@ -146,7 +122,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         <form method="post">
             <div class="form-group">
-                <label><i class="fas fa-user-tag mr-1"></i> Select Account Template Type *</label>
+                <label><i class="fas fa-sliders-h mr-1"></i> Dispatch Format / Mode *</label>
+                <select name="dispatch_mode" required>
+                    <option value="html" <?php echo (isset($_POST['dispatch_mode']) && $_POST['dispatch_mode'] === 'html') ? 'selected' : ''; ?>>HTML Welcome Email Template</option>
+                    <option value="plain" <?php echo (isset($_POST['dispatch_mode']) && $_POST['dispatch_mode'] === 'plain') ? 'selected' : ''; ?>>Plain Text Basic Email (Bypasses HTML Spam Filters)</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label><i class="fas fa-user-tag mr-1"></i> Account Template Type *</label>
                 <select name="role_type" required>
                     <option value="affiliate" <?php echo (isset($_POST['role_type']) && $_POST['role_type'] === 'affiliate') ? 'selected' : ''; ?>>Publisher / Affiliate Welcome Email</option>
                     <option value="advertiser" <?php echo (isset($_POST['role_type']) && $_POST['role_type'] === 'advertiser') ? 'selected' : ''; ?>>Advertiser Welcome Email</option>
@@ -164,7 +148,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 <input type="email" name="email" required placeholder="name@example.com" value="<?php echo htmlspecialchars($_POST['email'] ?? ''); ?>">
             </div>
 
-            <button type="submit" class="btn-submit"><i class="fas fa-paper-plane mr-2"></i> Send HTML Template Test Email</button>
+            <button type="submit" class="btn-submit"><i class="fas fa-paper-plane mr-2"></i> Send Test Email</button>
         </form>
 
         <?php if (!empty($logs)): ?>
