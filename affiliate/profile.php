@@ -294,9 +294,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
     </nav>
 
     <!-- Sidebar -->
+        <!-- Sidebar -->
     <aside class="main-sidebar sidebar-dark-primary elevation-4">
         <a href="dashboard.php" class="brand-link text-center">
-            <span class="brand-text font-weight-light" style="font-size: 1.5rem;">
+            <span class="brand-text font-weight-light" style="font-size: 1.4rem;">
                 <i class="fas fa-rocket mr-2"></i><strong>Icon Media</strong>
             </span>
         </a>
@@ -305,28 +306,60 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
             <nav class="mt-2">
                 <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu">
                     <li class="nav-item">
-                        <a href="dashboard.php" class="nav-link"><i class="nav-icon fas fa-tachometer-alt"></i><p>Dashboard</p></a>
+                        <a href="dashboard.php" class="nav-link">
+                            <i class="nav-icon fas fa-tachometer-alt"></i>
+                            <p>Dashboard</p>
+                        </a>
                     </li>
-                    <li class="nav-header">CAMPAIGNS & OFFERS</li>
+
+                    <li class="nav-header">CAMPAIGNS</li>
                     <li class="nav-item">
-                        <a href="offers.php" class="nav-link"><i class="nav-icon fas fa-gift"></i><p>My Campaigns</p></a>
-                    </li>
-                    <li class="nav-item">
-                        <a href="clicks.php" class="nav-link"><i class="nav-icon fas fa-mouse-pointer"></i><p>Click Logs</p></a>
-                    </li>
-                    <li class="nav-item">
-                        <a href="reports.php" class="nav-link"><i class="fas fa-exchange-alt nav-icon"></i><p>Conversions & Reports</p></a>
-                    </li>
-                    <li class="nav-header">TOOLS</li>
-                    <li class="nav-item">
-                        <a href="link-builder.php" class="nav-link"><i class="nav-icon fas fa-link"></i><p>Link Builder</p></a>
+                        <a href="offers.php" class="nav-link">
+                            <i class="nav-icon fas fa-gift"></i>
+                            <p>All Campaigns</p>
+                        </a>
                     </li>
                     <li class="nav-item">
-                        <a href="postback.php" class="nav-link"><i class="nav-icon fas fa-code"></i><p>Postback Settings</p></a>
+                        <a href="approved_offers.php" class="nav-link">
+                            <i class="nav-icon fas fa-check-circle"></i>
+                            <p>My Approved Offers</p>
+                        </a>
                     </li>
+
+                    <li class="nav-header">ANALYTICS & LOGS</li>
+                    <li class="nav-item">
+                        <a href="clicks.php" class="nav-link">
+                            <i class="nav-icon fas fa-mouse-pointer"></i>
+                            <p>Click Logs</p>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="reports.php" class="nav-link">
+                            <i class="nav-icon fas fa-chart-line"></i>
+                            <p>Performance & Conversions</p>
+                        </a>
+                    </li>
+
+                    <li class="nav-header">TOOLS & POSTBACKS</li>
+                    <li class="nav-item">
+                        <a href="link-builder.php" class="nav-link">
+                            <i class="nav-icon fas fa-link"></i>
+                            <p>Link Builder</p>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="postback.php" class="nav-link">
+                            <i class="nav-icon fas fa-code"></i>
+                            <p>Postback Settings</p>
+                        </a>
+                    </li>
+
                     <li class="nav-header">ACCOUNT</li>
                     <li class="nav-item">
-                        <a href="profile.php" class="nav-link active"><i class="nav-icon fas fa-user"></i><p>Profile & Payments</p></a>
+                        <a href="profile.php" class="nav-link active">
+                            <i class="nav-icon fas fa-user-cog"></i>
+                            <p>Profile & Payments</p>
+                        </a>
                     </li>
                 </ul>
             </nav>

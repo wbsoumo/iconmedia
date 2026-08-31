@@ -721,48 +721,53 @@ if (isset($_GET['export']) && $_GET['export'] === 'excel') {
     </nav>
 
     <!-- Sidebar -->
+        <!-- Sidebar -->
     <aside class="main-sidebar sidebar-dark-primary elevation-4">
-        <!-- Brand Logo -->
         <a href="dashboard.php" class="brand-link text-center">
-            <span class="brand-text font-weight-light" style="font-size: 1.5rem;">
-                <i class="fas fa-rocket mr-2"></i>
-                <strong>GVS Icon Media</strong>
+            <span class="brand-text font-weight-light" style="font-size: 1.4rem;">
+                <i class="fas fa-rocket mr-2"></i><strong>Icon Media</strong>
             </span>
         </a>
 
-        <!-- Sidebar -->
         <div class="sidebar">
-            <!-- Sidebar Menu -->
             <nav class="mt-2">
-                <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
+                <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu">
                     <li class="nav-item">
                         <a href="dashboard.php" class="nav-link">
                             <i class="nav-icon fas fa-tachometer-alt"></i>
                             <p>Dashboard</p>
                         </a>
                     </li>
-                    
-                    <li class="nav-header">REPORTS</li>
+
+                    <li class="nav-header">CAMPAIGNS</li>
                     <li class="nav-item">
                         <a href="offers.php" class="nav-link">
                             <i class="nav-icon fas fa-gift"></i>
-                            <p>Offer Performance</p>
+                            <p>All Campaigns</p>
                         </a>
                     </li>
                     <li class="nav-item">
+                        <a href="approved_offers.php" class="nav-link">
+                            <i class="nav-icon fas fa-check-circle"></i>
+                            <p>My Approved Offers</p>
+                        </a>
+                    </li>
+
+                    <li class="nav-header">ANALYTICS & LOGS</li>
+                    <li class="nav-item">
                         <a href="clicks.php" class="nav-link">
                             <i class="nav-icon fas fa-mouse-pointer"></i>
-                            <p>Click Report</p>
+                            <p>Click Logs</p>
                         </a>
                     </li>
                     <li class="nav-item">
                         <a href="reports.php" class="nav-link active">
-                            <i class="nav-icon fas fa-exchange-alt"></i>
-                            <p>Conversions</p>
+                            <i class="nav-icon fas fa-chart-line"></i>
+                            <p>Performance & Conversions</p>
                         </a>
                     </li>
-                    
-                    <li class="nav-header">TOOLS</li>
+
+                    <li class="nav-header">TOOLS & POSTBACKS</li>
                     <li class="nav-item">
                         <a href="link-builder.php" class="nav-link">
                             <i class="nav-icon fas fa-link"></i>
@@ -772,27 +777,15 @@ if (isset($_GET['export']) && $_GET['export'] === 'excel') {
                     <li class="nav-item">
                         <a href="postback.php" class="nav-link">
                             <i class="nav-icon fas fa-code"></i>
-                            <p>Postback URL</p>
+                            <p>Postback Settings</p>
                         </a>
                     </li>
-                    
+
                     <li class="nav-header">ACCOUNT</li>
                     <li class="nav-item">
                         <a href="profile.php" class="nav-link">
-                            <i class="nav-icon fas fa-user"></i>
-                            <p>Profile</p>
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a href="profile.php" class="nav-link">
-                            <i class="nav-icon fas fa-wallet"></i>
-                            <p>Payouts</p>
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a href="profile.php" class="nav-link">
-                            <i class="nav-icon fas fa-cog"></i>
-                            <p>Settings</p>
+                            <i class="nav-icon fas fa-user-cog"></i>
+                            <p>Profile & Payments</p>
                         </a>
                     </li>
                 </ul>
