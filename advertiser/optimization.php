@@ -275,11 +275,6 @@ $underperforming = array_filter($offers, function($offer) {
             --light: #f8fafc;
         }
         
-        body {
-            background: #f8fafc;
-            font-family: 'Inter', sans-serif;
-        }
-        
         .content-wrapper {
             background: #f8fafc;
         }
