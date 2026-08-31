@@ -87,5 +87,9 @@ function register_user($role_name, array $data)
         'company'  => isset($data['company']) ? trim($data['company']) : null
     ]);
 
+    // Send Welcome Email
+    require_once __DIR__ . '/../services/MailService.php';
+    send_welcome_email(strtolower(trim($data['email'])), trim($data['name']), $role_name);
+
     return ['success' => true];
 }
