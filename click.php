@@ -14,8 +14,8 @@ require_once __DIR__ . '/app/config/database.php';
 /* -------------------------------------------------
    1. Validate required params
 -------------------------------------------------- */
-$offerId     = isset($_GET['offer']) ? (int)$_GET['offer'] : 0;
-$affiliateId = isset($_GET['aff'])   ? (int)$_GET['aff']   : 0;
+$offerId     = isset($_GET['offer_id']) ? (int)$_GET['offer_id'] : (isset($_GET['offer']) ? (int)$_GET['offer'] : 0);
+$affiliateId = isset($_GET['aff_id'])   ? (int)$_GET['aff_id']   : (isset($_GET['aff'])   ? (int)$_GET['aff']   : 0);
 
 if ($offerId <= 0 || $affiliateId <= 0) {
     http_response_code(400);
