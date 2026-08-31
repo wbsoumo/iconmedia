@@ -891,7 +891,7 @@ $topAffiliates = $affiliatesStmt->fetchAll(PDO::FETCH_ASSOC);
                                     <button class="btn btn-outline-success" onclick="window.location.href='optimization.php'">
                                         <i class="fas fa-rocket mr-2"></i> Optimize Campaigns
                                     </button>
-                                    <button class="btn btn-outline-info" onclick="window.location.href='dashboard.php'">
+                                    <button class="btn btn-outline-info" onclick="window.location.href='/contact.php'">
                                         <i class="fas fa-headset mr-2"></i> Contact Support
                                     </button>
                                 </div>
