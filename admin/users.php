@@ -105,7 +105,6 @@ $query = "
         u.kyc_status,
         u.company,
         u.telegram_id,
-        u.skype_id,
         u.balance,
         (SELECT COUNT(*) FROM conversions WHERE affiliate_id = u.user_id) AS conversion_count
     FROM users u
