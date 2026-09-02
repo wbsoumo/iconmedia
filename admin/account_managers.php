@@ -110,8 +110,33 @@ foreach ($managers as $m) {
     <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/dataTables.bootstrap4.min.css">
     <!-- Select2 -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@ttskch/select2-bootstrap4-theme@1.5.2/dist/select2-bootstrap4.min.css">
 
     <style>
+        /* Select2 bootstrap4 theme fixes */
+        .select2-container--bootstrap4 .select2-selection--single {
+            height: 46px !important;
+            border-radius: 8px !important;
+            border: 1px solid #cbd5e1 !important;
+            padding: 8px 14px !important;
+            background-color: #ffffff !important;
+            display: flex !important;
+            align-items: center !important;
+        }
+
+        .select2-container--bootstrap4 .select2-selection--single .select2-selection__rendered {
+            color: #1e293b !important;
+            font-weight: 600 !important;
+            font-size: 14px !important;
+            padding-left: 0 !important;
+            line-height: normal !important;
+        }
+
+        .select2-container--bootstrap4 .select2-selection--single .select2-selection__placeholder {
+            color: #64748b !important;
+            font-weight: 400 !important;
+        }
+
         .card-custom {
             border-radius: 12px;
             border: none;
