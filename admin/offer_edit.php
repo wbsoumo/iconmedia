@@ -315,49 +315,46 @@ $conversions = $recentConversions->fetchAll(PDO::FETCH_ASSOC);
     
     <style>
         :root {
-            --primary-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            --success-gradient: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
-            --info-gradient: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
-            --warning-gradient: linear-gradient(135deg, #f7971e 0%, #ffd200 100%);
-            --danger-gradient: linear-gradient(135deg, #ff416c 0%, #ff4b2b 100%);
-            --dark-gradient: linear-gradient(135deg, #2d3748 0%, #4a5568 100%);
-            --purple-gradient: linear-gradient(135deg, #9f7aea 0%, #667eea 100%);
+            --primary-gradient: linear-gradient(135deg, #4f46e5 0%, #3730a3 100%);
+            --success-gradient: linear-gradient(135deg, #059669 0%, #10b981 100%);
+            --info-gradient: linear-gradient(135deg, #0284c7 0%, #0369a1 100%);
+            --warning-gradient: linear-gradient(135deg, #d97706 0%, #f59e0b 100%);
+            --danger-gradient: linear-gradient(135deg, #dc2626 0%, #ef4444 100%);
+            --accent-color: #4f46e5;
         }
         
         .card-dashboard {
             border-radius: 15px;
             border: none;
-            box-shadow: 0 5px 20px rgba(0,0,0,0.08);
+            box-shadow: 0 5px 25px rgba(0,0,0,0.06);
             margin-bottom: 25px;
-            overflow: hidden;
+            background: #ffffff;
         }
-        
-        .card-dashboard .card-header {
-            border-radius: 15px 15px 0 0;
-            background: white;
-            border-bottom: 1px solid rgba(0,0,0,0.1);
-            padding: 20px;
-        }
-        
-        .card-dashboard .card-body {
-            padding: 30px;
+
+        .welcome-banner {
+            background: linear-gradient(135deg, #4f46e5 0%, #3730a3 100%);
+            color: white;
+            padding: 25px 30px;
+            border-radius: 15px;
+            margin-bottom: 25px;
+            box-shadow: 0 4px 20px rgba(79, 70, 229, 0.25);
         }
         
         .form-section {
-            background: #f8f9fc;
-            border-radius: 10px;
-            padding: 20px;
+            background: #f8fafc;
+            border-radius: 12px;
+            padding: 22px;
             margin-bottom: 25px;
-            border: 1px solid #e3e6f0;
+            border: 1px solid #e2e8f0;
         }
         
         .form-section-title {
-            color: #4e73df;
-            font-size: 18px;
-            font-weight: 600;
-            margin-bottom: 20px;
+            color: #1e293b;
+            font-size: 17px;
+            font-weight: 700;
+            margin-bottom: 18px;
             padding-bottom: 10px;
-            border-bottom: 2px solid #e3e6f0;
+            border-bottom: 2px solid #cbd5e1;
             display: flex;
             align-items: center;
             justify-content: space-between;
@@ -365,33 +362,36 @@ $conversions = $recentConversions->fetchAll(PDO::FETCH_ASSOC);
         
         .form-section-title i {
             margin-right: 10px;
-            font-size: 20px;
+            color: #4f46e5;
+            font-size: 18px;
         }
         
         .form-group-enhanced {
-            margin-bottom: 25px;
+            margin-bottom: 20px;
         }
         
         .form-group-enhanced label {
             font-weight: 600;
-            color: #4a5568;
-            margin-bottom: 8px;
+            color: #334155;
+            margin-bottom: 6px;
             display: block;
+            font-size: 13px;
         }
         
-        .form-group-enhanced .form-control, 
-        .form-group-enhanced .select2-container--default .select2-selection--single {
+        .form-group-enhanced .form-control {
             border-radius: 8px;
-            border: 1px solid #d1d3e2;
-            padding: 10px 15px;
+            border: 1px solid #cbd5e1;
+            padding: 10px 14px;
             transition: all 0.3s ease;
             width: 100%;
+            font-size: 14px;
+            background: #ffffff;
         }
         
-        .form-group-enhanced .form-control:focus, 
-        .form-group-enhanced .select2-container--default.select2-container--focus .select2-selection--single {
-            border-color: #667eea;
-            box-shadow: 0 0 0 0.2rem rgba(102, 126, 234, 0.25);
+        .form-group-enhanced .form-control:focus {
+            border-color: #4f46e5;
+            box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1);
+            outline: none;
         }
         
         .form-control:disabled, .form-control[readonly] {
