@@ -54,7 +54,7 @@ if (!$offer) {
     exit('OFFER_NOT_FOUND');
 }
 
-if ($offer['status'] !== 'approved') {
+if (!in_array(strtolower($offer['status']), ['approved', 'active', 'live'], true)) {
     http_response_code(403);
     exit('OFFER_NOT_APPROVED');
 }
