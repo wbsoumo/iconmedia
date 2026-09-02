@@ -357,6 +357,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                             <p>Dashboard</p>
                         </a>
                     </li>
+
                     <li class="nav-header">CAMPAIGNS & OFFERS</li>
                     <li class="nav-item">
                         <a href="campaigns.php" class="nav-link active">
@@ -394,6 +395,70 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         <a href="advertisers.php" class="nav-link">
                             <i class="nav-icon fas fa-briefcase"></i>
                             <p>Advertisers</p>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="account_managers.php" class="nav-link">
+                            <i class="nav-icon fas fa-user-tie"></i>
+                            <p>Account Managers</p>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="pending_kyc.php" class="nav-link">
+                            <i class="nav-icon fas fa-id-card"></i>
+                            <p>Pending KYC Approvals</p>
+                        </a>
+                    </li>
+
+                    <li class="nav-header">ANALYTICS & REPORTS</li>
+                    <li class="nav-item">
+                        <a href="reports_campaigns.php" class="nav-link">
+                            <i class="nav-icon fas fa-chart-bar"></i>
+                            <p>Campaign Reports</p>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="reports_affiliates.php" class="nav-link">
+                            <i class="nav-icon fas fa-chart-line"></i>
+                            <p>Affiliate Reports</p>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="reports_advertisers.php" class="nav-link">
+                            <i class="nav-icon fas fa-chart-pie"></i>
+                            <p>Advertiser Reports</p>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="reports_subid.php" class="nav-link">
+                            <i class="nav-icon fas fa-list"></i>
+                            <p>SubID Performance</p>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="fraud_dashboard.php" class="nav-link">
+                            <i class="nav-icon fas fa-shield-alt"></i>
+                            <p>Anti-Fraud Security</p>
+                        </a>
+                    </li>
+
+                    <li class="nav-header">SYSTEM & POSTBACKS</li>
+                    <li class="nav-item">
+                        <a href="publisher_postbacks.php" class="nav-link">
+                            <i class="nav-icon fas fa-code"></i>
+                            <p>Global Postbacks Log</p>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="settings.php" class="nav-link">
+                            <i class="nav-icon fas fa-cogs"></i>
+                            <p>System Settings</p>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="profile.php" class="nav-link">
+                            <i class="nav-icon fas fa-user-cog"></i>
+                            <p>My Profile</p>
                         </a>
                     </li>
                 </ul>
