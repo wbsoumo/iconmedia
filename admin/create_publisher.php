@@ -47,9 +47,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $passwordHash = password_hash($password, PASSWORD_DEFAULT);
                 $stmt = $pdo->prepare("
                     INSERT INTO users 
-                        (role_id, name, email, password_hash, mobile, company, telegram_id, skype_id, status, kyc_status, manager_id, payment_method, payment_details, balance, created_at, updated_at)
+                        (role_id, name, email, password_hash, mobile, company, telegram_id, status, kyc_status, manager_id, payment_method, payment_details, balance, created_at, updated_at)
                     VALUES
-                        (3, :name, :email, :password, :mobile, :company, :telegram_id, :skype_id, :status, :kyc_status, :manager_id, :payment_method, :payment_details, 0.00, NOW(), NOW())
+                        (3, :name, :email, :password, :mobile, :company, :telegram_id, :status, :kyc_status, :manager_id, :payment_method, :payment_details, 0.00, NOW(), NOW())
                 ");
 
                 $stmt->execute([
@@ -59,7 +59,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     'mobile'          => $mobile,
                     'company'         => $company,
                     'telegram_id'     => $telegram_id,
-                    'skype_id'        => $skype_id,
                     'status'          => $status,
                     'kyc_status'      => $kyc_status,
                     'manager_id'      => $manager_id,
