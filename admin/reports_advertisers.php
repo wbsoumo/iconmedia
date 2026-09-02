@@ -420,18 +420,45 @@ if (isset($_GET['export'])) {
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/admin-lte@3.2/dist/css/adminlte.min.css">
     <!-- DataTables -->
     <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/dataTables.bootstrap4.min.css">
+    <!-- Select2 -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@ttskch/select2-bootstrap4-theme@1.5.2/dist/select2-bootstrap4.min.css">
     <!-- SweetAlert2 -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
     
     <style>
         :root {
-            --primary-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            --success-gradient: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
-            --info-gradient: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
-            --warning-gradient: linear-gradient(135deg, #f7971e 0%, #ffd200 100%);
-            --danger-gradient: linear-gradient(135deg, #ff416c 0%, #ff4b2b 100%);
-            --profit-gradient: linear-gradient(135deg, #28a745 0%, #20c997 100%);
-            --loss-gradient: linear-gradient(135deg, #dc3545 0%, #fd7e14 100%);
+            --primary-gradient: linear-gradient(135deg, #4f46e5 0%, #3730a3 100%);
+            --success-gradient: linear-gradient(135deg, #059669 0%, #10b981 100%);
+            --info-gradient: linear-gradient(135deg, #0284c7 0%, #0369a1 100%);
+            --warning-gradient: linear-gradient(135deg, #d97706 0%, #f59e0b 100%);
+            --danger-gradient: linear-gradient(135deg, #dc2626 0%, #ef4444 100%);
+            --profit-gradient: linear-gradient(135deg, #059669 0%, #10b981 100%);
+            --loss-gradient: linear-gradient(135deg, #dc2626 0%, #ef4444 100%);
+        }
+
+        /* Select2 bootstrap4 theme fixes */
+        .select2-container--bootstrap4 .select2-selection--single {
+            height: 46px !important;
+            border-radius: 8px !important;
+            border: 1px solid #cbd5e1 !important;
+            padding: 8px 14px !important;
+            background-color: #ffffff !important;
+            display: flex !important;
+            align-items: center !important;
+        }
+
+        .select2-container--bootstrap4 .select2-selection--single .select2-selection__rendered {
+            color: #1e293b !important;
+            font-weight: 600 !important;
+            font-size: 14px !important;
+            padding-left: 0 !important;
+            line-height: normal !important;
+        }
+
+        .select2-container--bootstrap4 .select2-selection--single .select2-selection__placeholder {
+            color: #64748b !important;
+            font-weight: 400 !important;
         }
         
         .card-dashboard {
@@ -1252,7 +1279,7 @@ if (isset($_GET['export'])) {
                             
                             <div class="filter-group">
                                 <label for="advertiser"><i class="fas fa-building mr-1"></i> Advertiser</label>
-                                <select name="advertiser" id="advertiser" class="filter-control">
+                                <select name="advertiser" id="advertiser" class="filter-control select2">
                                     <option value="all" <?php echo $advertiserFilter === 'all' ? 'selected' : ''; ?>>All Advertisers</option>
                                     <?php foreach ($allAdvertisers as $adv): ?>
                                     <option value="<?php echo $adv['user_id']; ?>" <?php echo $advertiserFilter == $adv['user_id'] ? 'selected' : ''; ?>>
@@ -1264,7 +1291,7 @@ if (isset($_GET['export'])) {
                             
                             <div class="filter-group">
                                 <label for="roi"><i class="fas fa-chart-line mr-1"></i> ROI Filter</label>
-                                <select name="roi" id="roi" class="filter-control">
+                                <select name="roi" id="roi" class="filter-control select2">
                                     <option value="all" <?php echo $roiFilter === 'all' ? 'selected' : ''; ?>>All ROI</option>
                                     <option value="profitable" <?php echo $roiFilter === 'profitable' ? 'selected' : ''; ?>>Profitable Only</option>
                                     <option value="unprofitable" <?php echo $roiFilter === 'unprofitable' ? 'selected' : ''; ?>>Unprofitable Only</option>
@@ -1652,11 +1679,14 @@ if (isset($_GET['export'])) {
 <!-- DataTables -->
 <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
 <script src="https://cdn.datatables.net/1.13.6/js/dataTables.bootstrap4.min.js"></script>
+<!-- Select2 -->
+<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
 <!-- SweetAlert2 -->
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
 <script>
 $(document).ready(function() {
+    $('.select2').select2({ theme: 'bootstrap4', width: '100%' });
     // Initialize DataTable with custom sorting
     $('#performanceTable').DataTable({
         pageLength: 25,
