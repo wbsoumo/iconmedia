@@ -44,8 +44,8 @@ $stmt = $pdo->prepare("
 $stmt->execute([$affiliateId, $offerId]);
 $offer = $stmt->fetch(PDO::FETCH_ASSOC);
 
-if (!$offer) {
-    die('<div style="font-family:sans-serif; text-align:center; padding:50px;"><h2>Campaign offer not found.</h2><a href="offers.php">Back to Offers</a></div>');
+if (!$offer || !in_array(strtolower($offer['offer_status']), ['approved', 'active', 'live'], true)) {
+    die('<div style="font-family:sans-serif; text-align:center; padding:50px;"><h2>Campaign offer not found or inactive.</h2><a href="offers.php">Back to Offers</a></div>');
 }
 
 $visibility = strtolower($offer['visibility'] ?? 'public');
