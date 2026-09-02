@@ -218,11 +218,23 @@ foreach ($assignments as $as) {
         }
 
         /* Fix Select2 visibility & styling */
-        .select2-container--bootstrap4 .select2-selection {
-            min-height: 44px !important;
+        .select2-container--bootstrap4 .select2-selection--single {
+            height: 46px !important;
             border-radius: 8px !important;
             border: 1px solid #cbd5e1 !important;
-            padding: 6px 12px !important;
+            padding: 8px 12px !important;
+            display: flex !important;
+            align-items: center !important;
+        }
+
+        .select2-container--bootstrap4 .select2-selection--multiple {
+            min-height: 46px !important;
+            border-radius: 8px !important;
+            border: 1px solid #cbd5e1 !important;
+            padding: 4px 8px !important;
+            display: flex !important;
+            align-items: center !important;
+            flex-wrap: wrap !important;
         }
 
         .select2-container--bootstrap4 .select2-selection--multiple .select2-selection__choice {
@@ -232,11 +244,17 @@ foreach ($assignments as $as) {
             border-radius: 6px !important;
             padding: 4px 10px !important;
             font-weight: 600 !important;
+            font-size: 13px !important;
+            margin: 2px 4px !important;
+            display: inline-flex !important;
+            align-items: center !important;
         }
 
         .select2-container--bootstrap4 .select2-selection--multiple .select2-selection__choice__remove {
             color: #ffffff !important;
             margin-right: 6px !important;
+            font-size: 14px !important;
+            line-height: 1 !important;
         }
 
         .generated-link-box {
@@ -526,8 +544,8 @@ foreach ($assignments as $as) {
                                 </div>
                             </div>
                             <div class="col-md-2 d-flex align-items-end mb-3">
-                                <button type="submit" class="btn btn-success btn-block font-weight-bold shadow-sm" style="height: 44px;">
-                                    <i class="fas fa-check mr-1"></i> Grant & Generate
+                                <button type="submit" class="btn btn-success btn-block font-weight-bold shadow-sm" style="height: 46px; border-radius: 8px; font-size: 14px; white-space: nowrap;">
+                                    <i class="fas fa-check-circle mr-1"></i> Grant & Generate
                                 </button>
                             </div>
                         </div>
