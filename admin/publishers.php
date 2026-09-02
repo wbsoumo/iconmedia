@@ -928,7 +928,7 @@ if (isset($_GET['export'])) {
                         <a href="?export=csv" class="btn btn-outline-primary">
                             <i class="fas fa-download mr-2"></i> Export CSV
                         </a>
-                        <a href="create_advertiser.php" class="btn btn-gradient">
+                        <a href="create_publisher.php" class="btn btn-gradient">
                             <i class="fas fa-plus mr-2"></i> Add New Publisher
                         </a>
                     </div>
