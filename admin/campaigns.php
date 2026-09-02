@@ -17,9 +17,9 @@ $success = $error = null;
 if (!empty($_GET['action']) && !empty($_GET['id'])) {
     $id = (int)$_GET['id'];
     $act = $_GET['action'];
-    if ($act === 'activate') {
+    if ($act === 'activate' || $act === 'approve') {
         $pdo->exec("UPDATE offers SET status='active', updated_at=NOW() WHERE offer_id=$id");
-        $success = "Campaign #$id activated successfully.";
+        $success = "Campaign #$id approved & activated successfully.";
     } elseif ($act === 'pause') {
         $pdo->exec("UPDATE offers SET status='paused', updated_at=NOW() WHERE offer_id=$id");
         $success = "Campaign #$id paused successfully.";
@@ -391,9 +391,15 @@ foreach ($offers as $of) {
                                         <small class="d-block text-muted">Rev: $<?php echo number_format($of['revenue'], 2); ?></small>
                                     </td>
                                     <td>
-                                        <span class="badge badge-<?php echo ($of['status'] === 'active' || $of['status'] === 'approved') ? 'success' : 'secondary'; ?> p-2">
-                                            <?php echo ucfirst($of['status']); ?>
-                                        </span>
+                                        <?php if ($of['status'] === 'active'): ?>
+                                            <span class="badge badge-success p-2"><i class="fas fa-check-circle mr-1"></i>Active</span>
+                                        <?php elseif ($of['status'] === 'approved'): ?>
+                                            <span class="badge badge-primary p-2"><i class="fas fa-thumbs-up mr-1"></i>Approved (Pending Launch)</span>
+                                        <?php elseif ($of['status'] === 'paused'): ?>
+                                            <span class="badge badge-warning p-2"><i class="fas fa-pause-circle mr-1"></i>Paused</span>
+                                        <?php else: ?>
+                                            <span class="badge badge-secondary p-2"><?php echo ucfirst($of['status']); ?></span>
+                                        <?php endif; ?>
                                     </td>
                                     <td><strong><?php echo number_format($clicks); ?></strong></td>
                                     <td><strong><?php echo number_format($convs); ?></strong></td>
@@ -402,10 +408,10 @@ foreach ($offers as $of) {
                                         <div class="btn-group">
                                             <a href="offer_details.php?id=<?php echo $of['offer_id']; ?>" class="btn btn-sm btn-outline-info" title="View Specs"><i class="fas fa-eye"></i></a>
                                             <a href="offer_edit.php?id=<?php echo $of['offer_id']; ?>" class="btn btn-sm btn-outline-primary" title="Edit Campaign"><i class="fas fa-edit"></i></a>
-                                            <?php if ($of['status'] === 'active'): ?>
-                                                <a href="?action=pause&id=<?php echo $of['offer_id']; ?>" class="btn btn-sm btn-outline-warning" title="Pause"><i class="fas fa-pause"></i></a>
+                                            <?php if ($of['status'] !== 'active'): ?>
+                                                <a href="?action=approve&id=<?php echo $of['offer_id']; ?>" class="btn btn-sm btn-success font-weight-bold" title="Approve & Activate Campaign"><i class="fas fa-check-circle mr-1"></i> Approve</a>
                                             <?php else: ?>
-                                                <a href="?action=activate&id=<?php echo $of['offer_id']; ?>" class="btn btn-sm btn-outline-success" title="Activate"><i class="fas fa-play"></i></a>
+                                                <a href="?action=pause&id=<?php echo $of['offer_id']; ?>" class="btn btn-sm btn-outline-warning" title="Pause Campaign"><i class="fas fa-pause"></i></a>
                                             <?php endif; ?>
                                         </div>
                                     </td>
