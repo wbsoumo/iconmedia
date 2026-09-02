@@ -21,7 +21,7 @@ $offersStmt = $pdo->prepare("
     LEFT JOIN affiliate_offer_approval aoa 
       ON aoa.offer_id = o.offer_id 
      AND aoa.affiliate_id = ?
-    WHERE o.status = 'approved'
+    WHERE LOWER(o.status) IN ('approved', 'active', 'live')
       AND (LOWER(o.visibility) = 'public' OR aoa.status = 'approved')
     ORDER BY o.offer_name ASC
 ");

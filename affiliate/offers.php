@@ -20,7 +20,7 @@ $affiliateName = $_SESSION['user_name'] ?? 'Affiliate';
 $where  = [];
 $params = ['aid' => $affiliateId];
 
-$where[] = "o.status = 'approved'";
+$where[] = "LOWER(o.status) IN ('approved', 'active', 'live')";
 
 if (!empty($_GET['search'])) {
     $where[] = "(o.offer_name LIKE :search OR o.offer_description LIKE :search)";
