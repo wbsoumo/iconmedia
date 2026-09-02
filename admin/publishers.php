@@ -84,7 +84,6 @@ SELECT
     u.email,
     u.mobile,
     u.telegram_id,
-    u.teams_id,
     u.status,
     u.kyc_status,
     u.payout_enabled,
