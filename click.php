@@ -168,13 +168,32 @@ $redirectUrl = $offer['offer_url'];
 
 $macroMap = [
     '{click_id}'     => rawurlencode($clickId),
+    '{transaction_id}'=> rawurlencode($clickId),
     '{offer_id}'     => rawurlencode((string)$offerId),
     '{affiliate_id}' => rawurlencode((string)$affiliateId),
+    '{aff_id}'       => rawurlencode((string)$affiliateId),
+    '{sub_aff_id}'   => rawurlencode((string)($sub1 ?? '')),
+    '{sub_aff}'      => rawurlencode((string)($sub1 ?? '')),
     '{sub1}'         => rawurlencode((string)($sub1 ?? '')),
     '{sub2}'         => rawurlencode((string)($sub2 ?? '')),
     '{sub3}'         => rawurlencode((string)($sub3 ?? '')),
     '{sub4}'         => rawurlencode((string)($sub4 ?? '')),
-    '{sub5}'         => rawurlencode((string)($sub5 ?? ''))
+    '{sub5}'         => rawurlencode((string)($sub5 ?? '')),
+    '{aff_sub1}'     => rawurlencode((string)($sub1 ?? '')),
+    '{aff_sub2}'     => rawurlencode((string)($sub2 ?? '')),
+    '{aff_sub3}'     => rawurlencode((string)($sub3 ?? '')),
+    '{aff_sub4}'     => rawurlencode((string)($sub4 ?? '')),
+    '{aff_sub5}'     => rawurlencode((string)($sub5 ?? '')),
+    '{p1}'           => rawurlencode((string)($sub1 ?? '')),
+    '{p2}'           => rawurlencode((string)($sub2 ?? '')),
+    '{p3}'           => rawurlencode((string)($sub3 ?? '')),
+    '{p4}'           => rawurlencode((string)($sub4 ?? '')),
+    '{p5}'           => rawurlencode((string)($sub5 ?? '')),
+    '{source}'       => rawurlencode((string)($sub1 ?? '')),
+    '{ip_address}'   => rawurlencode($ipAddress),
+    '{country}'      => rawurlencode($_SERVER['HTTP_CF_IPCOUNTRY'] ?? ''),
+    '{gaid}'         => rawurlencode((string)($incomingParams['gaid'] ?? '')),
+    '{idfa}'         => rawurlencode((string)($incomingParams['idfa'] ?? ''))
 ];
 
 // Perform macro replacements on offer URL

@@ -623,12 +623,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                                     <input type="url" name="campaign_url" id="campaign_url" class="form-control" placeholder="https://yourdomain.com/landing?click_id={click_id}" required value="<?php echo htmlspecialchars($_POST['campaign_url'] ?? ''); ?>">
                                 </div>
                                 <div class="mt-2">
-                                    <span class="form-help-text d-block mb-1">Click tokens to insert into URL:</span>
+                                    <span class="form-help-text d-block mb-1">Click tokens to insert into URL (Offer18 Standard Tokens):</span>
                                     <span class="token-chip" onclick="insertToken('{click_id}')">{click_id}</span>
                                     <span class="token-chip" onclick="insertToken('{affiliate_id}')">{affiliate_id}</span>
+                                    <span class="token-chip" onclick="insertToken('{sub_aff_id}')">{sub_aff_id}</span>
+                                    <span class="token-chip" onclick="insertToken('{offer_id}')">{offer_id}</span>
                                     <span class="token-chip" onclick="insertToken('{sub1}')">{sub1}</span>
                                     <span class="token-chip" onclick="insertToken('{sub2}')">{sub2}</span>
+                                    <span class="token-chip" onclick="insertToken('{sub3}')">{sub3}</span>
+                                    <span class="token-chip" onclick="insertToken('{sub4}')">{sub4}</span>
+                                    <span class="token-chip" onclick="insertToken('{sub5}')">{sub5}</span>
                                     <span class="token-chip" onclick="insertToken('{country}')">{country}</span>
+                                    <span class="token-chip" onclick="insertToken('{ip_address}')">{ip_address}</span>
                                 </div>
                             </div>
 
