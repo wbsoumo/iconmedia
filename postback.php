@@ -135,7 +135,7 @@ try {
         exit('INVALID_CLICK');
     }
 
-    if ($click['offer_status'] !== 'approved') {
+    if (!in_array(strtolower($click['offer_status']), ['approved', 'active', 'live'], true)) {
         logAdvertiserPostback($pdo, $rawRequest, $ipAddress, $clickId, 'offer_inactive');
         $pdo->rollBack();
         exit('OFFER_NOT_ACTIVE');
