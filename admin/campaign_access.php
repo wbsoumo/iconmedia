@@ -33,7 +33,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         } else {
             try {
                 // Fetch target offer details for link generation
-                $ofStmt = $pdo->prepare("SELECT offer_id, offer_name, tracking_url, target_url FROM offers WHERE offer_id = ?");
+                $ofStmt = $pdo->prepare("SELECT offer_id, offer_name, offer_url FROM offers WHERE offer_id = ?");
                 $ofStmt->execute([$offerId]);
                 $targetOffer = $ofStmt->fetch(PDO::FETCH_ASSOC);
 
