@@ -8,49 +8,91 @@ require_once __DIR__ . '/../app/config/database.php';
 
 require_role('admin');
 
-$adminId = $_SESSION['user_name'] ?? 'Admin';
+$adminId   = $_SESSION['user_name'] ?? 'Admin';
 $adminName = $_SESSION['user_name'] ?? 'Admin';
-$success = $error = null;
+$success   = $error = null;
+$grantedLinks = [];
 
 /* ===============================
-   ASSIGN OFFER TO AFFILIATE
+   GRANT OFFER ACCESS TO PUBLISHER(S)
 ================================ */
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if (isset($_POST['assign_offer'])) {
-        $affiliateId = (int)($_POST['affiliate_id'] ?? 0);
-        $offerId = (int)($_POST['offer_id'] ?? 0);
-        $payoutType = $_POST['payout_type'] ?? 'default';
-        $customPayout = isset($_POST['custom_payout']) && $_POST['custom_payout'] !== '' ? (float)$_POST['custom_payout'] : null;
-        $notes = trim($_POST['notes'] ?? '');
+        $publisherIds = $_POST['affiliate_ids'] ?? [];
+        // Support single or multiple selected publishers
+        if (!is_array($publisherIds) && !empty($_POST['affiliate_id'])) {
+            $publisherIds = [(int)$_POST['affiliate_id']];
+        }
+        $offerId       = (int)($_POST['offer_id'] ?? 0);
+        $payoutType    = $_POST['payout_type'] ?? 'default';
+        $customPayout  = isset($_POST['custom_payout']) && $_POST['custom_payout'] !== '' ? (float)$_POST['custom_payout'] : null;
+        $notes         = trim($_POST['notes'] ?? '');
 
-        if (!$affiliateId || !$offerId) {
-            $error = 'Publisher and Offer are required';
+        if (empty($publisherIds) || !$offerId) {
+            $error = 'Please select at least one Publisher and a Campaign Offer.';
         } else {
             try {
-                $checkStmt = $pdo->prepare("SELECT id FROM affiliate_offer_approval WHERE affiliate_id = ? AND offer_id = ?");
-                $checkStmt->execute([$affiliateId, $offerId]);
-                
-                if ($checkStmt->fetch()) {
-                    $error = 'This offer is already assigned to this publisher';
-                } else {
-                    $stmt = $pdo->prepare("
-                        INSERT INTO affiliate_offer_approval
-                            (affiliate_id, offer_id, status, payout_type, custom_payout, notes, created_by, approved_at)
-                        VALUES
-                            (:affiliate_id, :offer_id, 'approved', :payout_type, :custom_payout, :notes, :created_by, NOW())
-                    ");
+                // Fetch target offer details for link generation
+                $ofStmt = $pdo->prepare("SELECT offer_id, offer_name, tracking_url, target_url FROM offers WHERE offer_id = ?");
+                $ofStmt->execute([$offerId]);
+                $targetOffer = $ofStmt->fetch(PDO::FETCH_ASSOC);
 
-                    $stmt->execute([
-                        'affiliate_id' => $affiliateId,
-                        'offer_id' => $offerId,
-                        'payout_type' => $payoutType,
-                        'custom_payout' => $customPayout,
-                        'notes' => $notes,
-                        'created_by' => $adminId
-                    ]);
+                $grantedCount = 0;
 
-                    $success = 'Campaign access granted successfully!';
+                foreach ($publisherIds as $pid) {
+                    $pid = (int)$pid;
+                    if (!$pid) continue;
+
+                    // Check if permission exists
+                    $checkStmt = $pdo->prepare("SELECT id FROM affiliate_offer_approval WHERE affiliate_id = ? AND offer_id = ?");
+                    $checkStmt->execute([$pid, $offerId]);
+                    $existing = $checkStmt->fetch(PDO::FETCH_ASSOC);
+
+                    if ($existing) {
+                        // Update status to approved if already existed
+                        $upd = $pdo->prepare("UPDATE affiliate_offer_approval SET status = 'approved', approved_at = NOW() WHERE id = ?");
+                        $upd->execute([$existing['id']]);
+                    } else {
+                        // Insert new access approval
+                        $ins = $pdo->prepare("
+                            INSERT INTO affiliate_offer_approval
+                                (affiliate_id, offer_id, status, payout_type, custom_payout, notes, created_by, approved_at)
+                            VALUES
+                                (:affiliate_id, :offer_id, 'approved', :payout_type, :custom_payout, :notes, :created_by, NOW())
+                        ");
+
+                        $ins->execute([
+                            'affiliate_id'  => $pid,
+                            'offer_id'      => $offerId,
+                            'payout_type'   => $payoutType,
+                            'custom_payout' => $customPayout,
+                            'notes'         => $notes,
+                            'created_by'    => $adminId
+                        ]);
+                    }
+
+                    // Fetch publisher details for link display
+                    $uStmt = $pdo->prepare("SELECT name, email FROM users WHERE user_id = ?");
+                    $uStmt->execute([$pid]);
+                    $uData = $uStmt->fetch(PDO::FETCH_ASSOC);
+
+                    // Generate unique tracking URL for this publisher
+                    $trackingLink = "https://iconmedianetwork.in/click.php?aff_id={$pid}&offer_id={$offerId}";
+
+                    $grantedLinks[] = [
+                        'publisher_id'   => $pid,
+                        'publisher_name' => $uData['name'] ?? "Publisher #{$pid}",
+                        'publisher_email'=> $uData['email'] ?? '',
+                        'offer_id'       => $offerId,
+                        'offer_name'     => $targetOffer['offer_name'] ?? "Offer #{$offerId}",
+                        'tracking_link'  => $trackingLink
+                    ];
+
+                    $grantedCount++;
                 }
+
+                $success = "Access granted to $grantedCount publisher(s) successfully!";
+
             } catch (PDOException $e) {
                 $error = 'Database error: ' . $e->getMessage();
             }
@@ -85,7 +127,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 /* ===============================
    FETCH AFFILIATES & OFFERS
 ================================ */
-$affiliates = $pdo->query("SELECT user_id, name, email FROM users WHERE role_id = 3 AND status = 'active' ORDER BY name ASC")->fetchAll(PDO::FETCH_ASSOC);
+$affiliates = $pdo->query("SELECT user_id, name, email, company FROM users WHERE role_id = 3 AND status = 'active' ORDER BY name ASC")->fetchAll(PDO::FETCH_ASSOC);
 $offers = $pdo->query("SELECT offer_id, offer_name, payout, status FROM offers ORDER BY offer_name ASC")->fetchAll(PDO::FETCH_ASSOC);
 
 /* ===============================
@@ -142,7 +184,8 @@ foreach ($assignments as $as) {
     <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/dataTables.bootstrap4.min.css">
     <!-- Select2 -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css">
-    
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@ttskch/select2-bootstrap4-theme@1.5.2/dist/select2-bootstrap4.min.css">
+
     <style>
         .card-custom {
             border-radius: 12px;
@@ -174,6 +217,37 @@ foreach ($assignments as $as) {
             text-transform: uppercase;
         }
 
+        /* Fix Select2 visibility & styling */
+        .select2-container--bootstrap4 .select2-selection {
+            min-height: 44px !important;
+            border-radius: 8px !important;
+            border: 1px solid #cbd5e1 !important;
+            padding: 6px 12px !important;
+        }
+
+        .select2-container--bootstrap4 .select2-selection--multiple .select2-selection__choice {
+            background-color: #4f46e5 !important;
+            border: none !important;
+            color: #ffffff !important;
+            border-radius: 6px !important;
+            padding: 4px 10px !important;
+            font-weight: 600 !important;
+        }
+
+        .select2-container--bootstrap4 .select2-selection--multiple .select2-selection__choice__remove {
+            color: #ffffff !important;
+            margin-right: 6px !important;
+        }
+
+        .generated-link-box {
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            border-left: 4px solid #10b981;
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 15px;
+        }
+
         @media (max-width: 767.98px) {
             .stat-boxes-row > [class*="col-"] {
                 flex: 0 0 50% !important;
@@ -195,12 +269,11 @@ foreach ($assignments as $as) {
             </li>
             <li class="nav-item d-none d-sm-inline-block"><a href="dashboard.php" class="nav-link">Dashboard</a></li>
             <li class="nav-item d-none d-sm-inline-block"><a href="campaigns.php" class="nav-link">Campaigns</a></li>
-            <li class="nav-item d-none d-sm-inline-block"><a href="campaign_access.php" class="nav-link active">Campaign Access</a></li>
+            <li class="nav-item d-none d-sm-inline-block"><a href="campaign_access.php" class="nav-link active">Offer Approval Rules</a></li>
         </ul>
     </nav>
 
     <!-- Sidebar -->
-        <!-- Sidebar -->
     <aside class="main-sidebar sidebar-dark-primary elevation-4">
         <a href="dashboard.php" class="brand-link text-center">
             <span class="brand-text font-weight-light" style="font-size: 1.4rem;">
@@ -332,7 +405,7 @@ foreach ($assignments as $as) {
             <div class="container-fluid">
                 <div class="row mb-2">
                     <div class="col-sm-6">
-                        <h1 class="m-0 font-weight-bold">Campaign Access Permissions & Approvals</h1>
+                        <h1 class="m-0 font-weight-bold">Campaign Access Permissions & Tracking Links</h1>
                     </div>
                     <div class="col-sm-6">
                         <ol class="breadcrumb float-sm-right">
@@ -363,7 +436,7 @@ foreach ($assignments as $as) {
                 </div>
                 <?php endif; ?>
 
-                <!-- Summary Stat Cards (2x2 Mobile Responsive Grid) -->
+                <!-- Summary Stat Cards -->
                 <div class="row mb-4 stat-boxes-row">
                     <div class="col-6 col-md-3">
                         <div class="stat-card-custom">
@@ -391,20 +464,49 @@ foreach ($assignments as $as) {
                     </div>
                 </div>
 
+                <!-- Granted Links Output Box -->
+                <?php if (!empty($grantedLinks)): ?>
+                <div class="card card-custom p-4 border-success">
+                    <h4 class="font-weight-bold text-success mb-3"><i class="fas fa-link mr-2"></i>Generated Campaign Tracking Links</h4>
+                    <?php foreach ($grantedLinks as $gIndex => $gLink): ?>
+                        <div class="generated-link-box">
+                            <div class="d-flex justify-content-between align-items-center flex-wrap mb-2">
+                                <div>
+                                    <strong class="text-dark"><i class="fas fa-user mr-1 text-primary"></i><?php echo htmlspecialchars($gLink['publisher_name']); ?></strong> 
+                                    <small class="text-muted">(<?php echo htmlspecialchars($gLink['publisher_email']); ?>)</small>
+                                </div>
+                                <span class="badge badge-info p-2"><i class="fas fa-bullhorn mr-1"></i><?php echo htmlspecialchars($gLink['offer_name']); ?></span>
+                            </div>
+                            
+                            <div class="input-group">
+                                <input type="text" id="trackUrl_<?php echo $gIndex; ?>" class="form-control font-weight-bold bg-white" value="<?php echo htmlspecialchars($gLink['tracking_link']); ?>" readonly>
+                                <div class="input-group-append">
+                                    <button type="button" class="btn btn-primary font-weight-bold" onclick="copyLink('trackUrl_<?php echo $gIndex; ?>')">
+                                        <i class="fas fa-copy mr-1"></i> Copy Link
+                                    </button>
+                                    <a href="https://api.whatsapp.com/send?text=<?php echo urlencode("Here is your tracking link for " . $gLink['offer_name'] . ": " . $gLink['tracking_link']); ?>" target="_blank" class="btn btn-success font-weight-bold">
+                                        <i class="fab fa-whatsapp mr-1"></i> Share
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    <?php endforeach; ?>
+                </div>
+                <?php endif; ?>
+
                 <!-- Grant New Access Card -->
                 <div class="card card-custom p-4">
-                    <h4 class="font-weight-bold text-primary mb-3"><i class="fas fa-key mr-2"></i>Grant Private Offer Access</h4>
+                    <h4 class="font-weight-bold text-primary mb-3"><i class="fas fa-key mr-2"></i>Grant Private Offer Access & Generate Tracking Links</h4>
                     <form method="post">
                         <input type="hidden" name="assign_offer" value="1">
                         <div class="row">
                             <div class="col-md-5">
                                 <div class="form-group mb-3">
-                                    <label class="font-weight-bold">Select Publisher <span class="text-danger">*</span></label>
-                                    <select name="affiliate_id" class="form-control select2" required>
-                                        <option value="">Choose Publisher...</option>
+                                    <label class="font-weight-bold">Select Publisher(s) <span class="text-danger">*</span> <small class="text-muted">(Multiple Selection Enabled)</small></label>
+                                    <select name="affiliate_ids[]" class="form-control select2" multiple="multiple" data-placeholder="Choose Publisher(s)..." required>
                                         <?php foreach ($affiliates as $aff): ?>
                                         <option value="<?php echo $aff['user_id']; ?>">
-                                            <?php echo htmlspecialchars($aff['name']); ?> (<?php echo htmlspecialchars($aff['email']); ?>)
+                                            <?php echo htmlspecialchars($aff['name']); ?> (<?php echo htmlspecialchars($aff['email']); ?><?php if ($aff['company']) echo ' • ' . htmlspecialchars($aff['company']); ?>)
                                         </option>
                                         <?php endforeach; ?>
                                     </select>
@@ -413,8 +515,8 @@ foreach ($assignments as $as) {
                             <div class="col-md-5">
                                 <div class="form-group mb-3">
                                     <label class="font-weight-bold">Select Campaign Offer <span class="text-danger">*</span></label>
-                                    <select name="offer_id" class="form-control select2" required>
-                                        <option value="">Choose Campaign...</option>
+                                    <select name="offer_id" class="form-control select2" data-placeholder="Choose Campaign Offer..." required>
+                                        <option value=""></option>
                                         <?php foreach ($offers as $of): ?>
                                         <option value="<?php echo $of['offer_id']; ?>">
                                             #<?php echo $of['offer_id']; ?> - <?php echo htmlspecialchars($of['offer_name']); ?> ($<?php echo number_format($of['payout'], 2); ?>)
@@ -424,8 +526,8 @@ foreach ($assignments as $as) {
                                 </div>
                             </div>
                             <div class="col-md-2 d-flex align-items-end mb-3">
-                                <button type="submit" class="btn btn-success btn-block font-weight-bold shadow-sm">
-                                    <i class="fas fa-check mr-1"></i> Grant Access
+                                <button type="submit" class="btn btn-success btn-block font-weight-bold shadow-sm" style="height: 44px;">
+                                    <i class="fas fa-check mr-1"></i> Grant & Generate
                                 </button>
                             </div>
                         </div>
@@ -434,7 +536,7 @@ foreach ($assignments as $as) {
 
                 <!-- Access Approvals Directory -->
                 <div class="card card-custom p-4">
-                    <h4 class="font-weight-bold text-primary mb-3"><i class="fas fa-list-check mr-2"></i>Publisher Campaign Access Registry</h4>
+                    <h4 class="font-weight-bold text-primary mb-3"><i class="fas fa-list-check mr-2"></i>Publisher Campaign Access & Links Registry</h4>
 
                     <div class="table-responsive">
                         <table class="table table-hover align-middle" id="accessDataTable">
@@ -444,13 +546,14 @@ foreach ($assignments as $as) {
                                     <th>Publisher</th>
                                     <th>Campaign Offer</th>
                                     <th>Payout Rate</th>
+                                    <th>Tracking Link</th>
                                     <th>Status</th>
-                                    <th>Date Granted</th>
                                     <th>Actions</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                <?php foreach ($assignments as $as): ?>
+                                <?php foreach ($assignments as $idx => $as): ?>
+                                <?php $tblLink = "https://iconmedianetwork.in/click.php?aff_id={$as['affiliate_id']}&offer_id={$as['offer_id']}"; ?>
                                 <tr>
                                     <td><strong>#<?php echo $as['id']; ?></strong></td>
                                     <td>
@@ -464,6 +567,15 @@ foreach ($assignments as $as) {
                                         <strong class="text-success">$<?php echo number_format($as['custom_payout'] ?? $as['original_payout'], 2); ?></strong>
                                     </td>
                                     <td>
+                                        <div class="input-group input-group-sm" style="min-width: 240px;">
+                                            <input type="text" id="tblUrl_<?php echo $idx; ?>" class="form-control text-xs" value="<?php echo $tblLink; ?>" readonly>
+                                            <div class="input-group-append">
+                                                <button type="button" class="btn btn-outline-primary btn-sm" onclick="copyLink('tblUrl_<?php echo $idx; ?>')" title="Copy Link"><i class="fas fa-copy"></i></button>
+                                                <a href="https://api.whatsapp.com/send?text=<?php echo urlencode("Tracking link for " . $as['offer_name'] . ": " . $tblLink); ?>" target="_blank" class="btn btn-outline-success btn-sm" title="Share Link"><i class="fab fa-whatsapp"></i></a>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td>
                                         <?php 
                                         $stClass = 'secondary';
                                         if ($as['status'] === 'approved') $stClass = 'success';
@@ -472,7 +584,6 @@ foreach ($assignments as $as) {
                                         ?>
                                         <span class="badge badge-<?php echo $stClass; ?> p-2"><?php echo ucfirst($as['status']); ?></span>
                                     </td>
-                                    <td><small class="text-muted"><?php echo date('Y-m-d H:i', strtotime($as['created_at'])); ?></small></td>
                                     <td>
                                         <form method="post" class="d-inline">
                                             <input type="hidden" name="approval_id" value="<?php echo $as['id']; ?>">
@@ -511,8 +622,21 @@ foreach ($assignments as $as) {
 <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
 
 <script>
+function copyLink(elementId) {
+    var copyText = document.getElementById(elementId);
+    copyText.select();
+    copyText.setSelectionRange(0, 99999);
+    navigator.clipboard.writeText(copyText.value);
+    alert("Tracking link copied to clipboard:\n" + copyText.value);
+}
+
 $(document).ready(function() {
-    $('.select2').select2({ theme: 'bootstrap4', width: '100%' });
+    $('.select2').select2({
+        theme: 'bootstrap4',
+        width: '100%',
+        allowClear: true
+    });
+
     $('#accessDataTable').DataTable({
         pageLength: 10,
         responsive: true,
