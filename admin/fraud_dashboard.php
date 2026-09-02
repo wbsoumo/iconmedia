@@ -335,18 +335,14 @@ $totalPostbackAbuse   = array_sum(array_column($pb, 'cnt'));
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        <?php if (empty($fast)): ?>
-                                            <tr><td colspan="4" class="text-center text-muted py-3">No fast conversions flagged.</td></tr>
-                                        <?php else: ?>
-                                            <?php foreach ($fast as $r): ?>
-                                                <tr>
-                                                    <td><code class="small text-muted"><?php echo htmlspecialchars(substr($r['click_id'], 0, 10)); ?>...</code></td>
-                                                    <td><strong class="text-dark"><?php echo htmlspecialchars($r['affiliate']); ?></strong></td>
-                                                    <td><small><?php echo htmlspecialchars($r['offer_name']); ?></small></td>
-                                                    <td><span class="badge badge-danger p-2"><i class="fas fa-stopwatch mr-1"></i><?php echo (int)$r['seconds_diff']; ?>s</span></td>
-                                                </tr>
-                                            <?php endforeach; ?>
-                                        <?php endif; ?>
+                                        <?php foreach ($fast as $r): ?>
+                                            <tr>
+                                                <td><code class="small text-muted"><?php echo htmlspecialchars(substr($r['click_id'], 0, 10)); ?>...</code></td>
+                                                <td><strong class="text-dark"><?php echo htmlspecialchars($r['affiliate']); ?></strong></td>
+                                                <td><small><?php echo htmlspecialchars($r['offer_name']); ?></small></td>
+                                                <td><span class="badge badge-danger p-2"><i class="fas fa-stopwatch mr-1"></i><?php echo (int)$r['seconds_diff']; ?>s</span></td>
+                                            </tr>
+                                        <?php endforeach; ?>
                                     </tbody>
                                 </table>
                             </div>
@@ -368,23 +364,19 @@ $totalPostbackAbuse   = array_sum(array_column($pb, 'cnt'));
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        <?php if (empty($ips)): ?>
-                                            <tr><td colspan="3" class="text-center text-muted py-3">No duplicate IP clusters found.</td></tr>
-                                        <?php else: ?>
-                                            <?php foreach ($ips as $r): ?>
-                                                <tr>
-                                                    <td><strong class="text-dark"><i class="fas fa-desktop text-muted mr-1"></i><?php echo htmlspecialchars($r['ip'] ?: 'Hidden / Proxied'); ?></strong></td>
-                                                    <td><span class="badge badge-warning p-2"><?php echo number_format((int)$r['cnt']); ?> Conversions</span></td>
-                                                    <td>
-                                                        <?php if ($r['cnt'] >= 10): ?>
-                                                            <span class="badge badge-danger p-2">Critical</span>
-                                                        <?php else: ?>
-                                                            <span class="badge badge-warning p-2">Moderate</span>
-                                                        <?php endif; ?>
-                                                    </td>
-                                                </tr>
-                                            <?php endforeach; ?>
-                                        <?php endif; ?>
+                                        <?php foreach ($ips as $r): ?>
+                                            <tr>
+                                                <td><strong class="text-dark"><i class="fas fa-desktop text-muted mr-1"></i><?php echo htmlspecialchars($r['ip'] ?: 'Hidden / Proxied'); ?></strong></td>
+                                                <td><span class="badge badge-warning p-2"><?php echo number_format((int)$r['cnt']); ?> Conversions</span></td>
+                                                <td>
+                                                    <?php if ($r['cnt'] >= 10): ?>
+                                                        <span class="badge badge-danger p-2">Critical</span>
+                                                    <?php else: ?>
+                                                        <span class="badge badge-warning p-2">Moderate</span>
+                                                    <?php endif; ?>
+                                                </td>
+                                            </tr>
+                                        <?php endforeach; ?>
                                     </tbody>
                                 </table>
                             </div>
@@ -408,17 +400,13 @@ $totalPostbackAbuse   = array_sum(array_column($pb, 'cnt'));
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        <?php if (empty($badAff)): ?>
-                                            <tr><td colspan="3" class="text-center text-muted py-3">No non-converting high-click traffic detected.</td></tr>
-                                        <?php else: ?>
-                                            <?php foreach ($badAff as $r): ?>
-                                                <tr>
-                                                    <td><strong class="text-dark"><?php echo htmlspecialchars($r['name']); ?></strong></td>
-                                                    <td><span class="badge badge-info p-2"><?php echo number_format((int)$r['clicks']); ?> Clicks</span></td>
-                                                    <td><span class="badge badge-secondary p-2">0% CR (Review)</span></td>
-                                                </tr>
-                                            <?php endforeach; ?>
-                                        <?php endif; ?>
+                                        <?php foreach ($badAff as $r): ?>
+                                            <tr>
+                                                <td><strong class="text-dark"><?php echo htmlspecialchars($r['name']); ?></strong></td>
+                                                <td><span class="badge badge-info p-2"><?php echo number_format((int)$r['clicks']); ?> Clicks</span></td>
+                                                <td><span class="badge badge-secondary p-2">0% CR (Review)</span></td>
+                                            </tr>
+                                        <?php endforeach; ?>
                                     </tbody>
                                 </table>
                             </div>
@@ -440,17 +428,13 @@ $totalPostbackAbuse   = array_sum(array_column($pb, 'cnt'));
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        <?php if (empty($pb)): ?>
-                                            <tr><td colspan="3" class="text-center text-muted py-3">No postback abuse logs recorded.</td></tr>
-                                        <?php else: ?>
-                                            <?php foreach ($pb as $r): ?>
-                                                <tr>
-                                                    <td><strong class="text-dark"><code class="text-danger"><?php echo strtoupper($r['status']); ?></code></strong></td>
-                                                    <td><span class="badge badge-dark p-2"><?php echo number_format((int)$r['cnt']); ?> Events</span></td>
-                                                    <td><a href="publisher_postbacks.php" class="btn btn-xs btn-outline-primary font-weight-bold"><i class="fas fa-search mr-1"></i> View Logs</a></td>
-                                                </tr>
-                                            <?php endforeach; ?>
-                                        <?php endif; ?>
+                                        <?php foreach ($pb as $r): ?>
+                                            <tr>
+                                                <td><strong class="text-dark"><code class="text-danger"><?php echo strtoupper($r['status']); ?></code></strong></td>
+                                                <td><span class="badge badge-dark p-2"><?php echo number_format((int)$r['cnt']); ?> Events</span></td>
+                                                <td><a href="publisher_postbacks.php" class="btn btn-xs btn-outline-primary font-weight-bold"><i class="fas fa-search mr-1"></i> View Logs</a></td>
+                                            </tr>
+                                        <?php endforeach; ?>
                                     </tbody>
                                 </table>
                             </div>

@@ -327,23 +327,17 @@ $avgCr = $totalClicks > 0 ? ($totalConversions / $totalClicks) * 100 : 0;
                                 </tr>
                             </thead>
                             <tbody>
-                                <?php if (empty($rows)): ?>
+                                <?php foreach ($rows as $r): 
+                                    $cr = $r['clicks'] > 0 ? ($r['conversions'] / $r['clicks']) * 100 : 0;
+                                ?>
                                     <tr>
-                                        <td colspan="5" class="text-center text-muted py-4">No SubID tracking data found for the selected date range.</td>
+                                        <td><strong class="text-dark"><i class="fas fa-tag text-muted mr-1"></i><?php echo htmlspecialchars($r['sub1']); ?></strong></td>
+                                        <td><span class="badge badge-info p-2"><?php echo number_format((int)$r['clicks']); ?> Clicks</span></td>
+                                        <td><strong class="text-dark"><?php echo number_format((int)$r['conversions']); ?></strong></td>
+                                        <td><strong class="text-success">$<?php echo number_format((float)$r['payout'], 2); ?></strong></td>
+                                        <td><span class="badge badge-primary p-2"><?php echo number_format($cr, 2); ?>%</span></td>
                                     </tr>
-                                <?php else: ?>
-                                    <?php foreach ($rows as $r): 
-                                        $cr = $r['clicks'] > 0 ? ($r['conversions'] / $r['clicks']) * 100 : 0;
-                                    ?>
-                                        <tr>
-                                            <td><strong class="text-dark"><i class="fas fa-tag text-muted mr-1"></i><?php echo htmlspecialchars($r['sub1']); ?></strong></td>
-                                            <td><span class="badge badge-info p-2"><?php echo number_format((int)$r['clicks']); ?> Clicks</span></td>
-                                            <td><strong class="text-dark"><?php echo number_format((int)$r['conversions']); ?></strong></td>
-                                            <td><strong class="text-success">$<?php echo number_format((float)$r['payout'], 2); ?></strong></td>
-                                            <td><span class="badge badge-primary p-2"><?php echo number_format($cr, 2); ?>%</span></td>
-                                        </tr>
-                                    <?php endforeach; ?>
-                                <?php endif; ?>
+                                <?php endforeach; ?>
                             </tbody>
                         </table>
                     </div>
