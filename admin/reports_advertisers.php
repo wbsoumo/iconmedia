@@ -466,7 +466,39 @@ if (isset($_GET['export'])) {
             border: none;
             box-shadow: 0 5px 20px rgba(0,0,0,0.08);
             margin-bottom: 25px;
-            overflow: hidden;
+            background: #ffffff;
+        }
+
+        .welcome-banner {
+            background: linear-gradient(135deg, #4f46e5 0%, #3730a3 100%);
+            color: white;
+            padding: 30px;
+            border-radius: 15px;
+            margin-bottom: 25px;
+            box-shadow: 0 4px 20px rgba(79, 70, 229, 0.25);
+        }
+
+        .stat-card-custom {
+            border-radius: 12px;
+            background: #ffffff;
+            padding: 20px;
+            border: 1px solid #e2e8f0;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.03);
+            text-align: center;
+            margin-bottom: 15px;
+        }
+
+        .stat-card-custom .stat-number {
+            font-size: 24px;
+            font-weight: 800;
+            color: #1e293b;
+        }
+
+        .stat-card-custom .stat-label {
+            font-size: 11px;
+            font-weight: 600;
+            color: #64748b;
+            text-transform: uppercase;
         }
         
         .card-dashboard .card-header {
@@ -1194,19 +1226,19 @@ if (isset($_GET['export'])) {
         <!-- Main Content -->
         <div class="content">
             <div class="container-fluid">
-                <!-- Dashboard Header -->
-                <div class="dashboard-header">
-                    <h2 class="mb-0">Advertiser Performance Analytics</h2>
-                    <div class="action-buttons-group">
-                        <span class="date-range-badge">
-                            <i class="fas fa-calendar-alt"></i>
-                            <?php echo date('M d, Y', strtotime($dateFrom)); ?> - <?php echo date('M d, Y', strtotime($dateTo)); ?>
-                        </span>
-                        <a href="?<?php echo http_build_query(array_merge($_GET, ['export' => 'csv'])); ?>" class="btn btn-outline-primary">
-                            <i class="fas fa-download mr-2"></i> Export CSV
+
+                <!-- Hero Welcome Banner -->
+                <div class="welcome-banner d-flex justify-content-between align-items-center flex-wrap">
+                    <div>
+                        <h3 class="font-weight-bold mb-1"><i class="fas fa-briefcase mr-2"></i>Advertiser Performance Analytics</h3>
+                        <p class="mb-0 text-white-50">Detailed revenue, click volume, net profit, and ROI performance breakdown per advertiser account.</p>
+                    </div>
+                    <div class="mt-3 mt-md-0 d-flex gap-2">
+                        <a href="?<?php echo http_build_query(array_merge($_GET, ['export' => 'csv'])); ?>" class="btn btn-light font-weight-bold px-4 shadow-sm mr-2">
+                            <i class="fas fa-download text-primary mr-1"></i> Export CSV
                         </a>
-                        <button type="button" class="btn btn-gradient" onclick="printReport()">
-                            <i class="fas fa-print mr-2"></i> Print Report
+                        <button type="button" class="btn btn-outline-light font-weight-bold px-4" onclick="printReport()">
+                            <i class="fas fa-print mr-1"></i> Print Report
                         </button>
                     </div>
                 </div>
