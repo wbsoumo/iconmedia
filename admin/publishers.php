@@ -12,6 +12,26 @@ $adminName = $_SESSION['user_name'] ?? 'Admin';
 $success = $error = null;
 
 /* ===============================
+   IMPERSONATE LOGIN AS PUBLISHER
+================================ */
+if (isset($_GET['impersonate'])) {
+    $targetId = (int)$_GET['impersonate'];
+    
+    // Generate secure single-use token
+    $token = bin2hex(random_bytes(16));
+    if (!isset($_SESSION['impersonate_tokens'])) {
+        $_SESSION['impersonate_tokens'] = [];
+    }
+    $_SESSION['impersonate_tokens'][$token] = [
+        'user_id'    => $targetId,
+        'created_at' => time()
+    ];
+
+    header("Location: impersonate.php?token=" . $token);
+    exit;
+}
+
+/* ===============================
    INPUTS
 ================================ */
 $search  = trim($_GET['search'] ?? '');
@@ -580,6 +600,19 @@ if (isset($_GET['export'])) {
         .btn-view:hover {
             background: rgba(78, 115, 223, 0.2);
             color: #4e73df;
+        }
+
+        .btn-login {
+            background: rgba(79, 70, 229, 0.12);
+            color: #4f46e5;
+            border: 1px solid rgba(79, 70, 229, 0.3);
+            font-weight: 600;
+        }
+
+        .btn-login:hover {
+            background: #4f46e5;
+            color: #ffffff;
+            border-color: #4f46e5;
         }
         
         .bulk-actions {
@@ -1231,6 +1264,14 @@ if (isset($_GET['export'])) {
                                                 </td>
                                                 <td>
                                                     <div class="action-buttons">
+                                                        <!-- Login as Publisher (New Tab) -->
+                                                        <a href="publishers.php?impersonate=<?php echo $pub['user_id']; ?>" 
+                                                           target="_blank" 
+                                                           class="btn-action btn-login"
+                                                           title="Login as Publisher (New Tab)">
+                                                            <i class="fas fa-sign-in-alt"></i> Login
+                                                        </a>
+
                                                         <!-- Toggle Status -->
                                                         <a href="?toggle_status=<?php echo $pub['user_id']; ?>" 
                                                            class="btn-action btn-toggle"
