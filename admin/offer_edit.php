@@ -1138,16 +1138,19 @@ $conversions = $recentConversions->fetchAll(PDO::FETCH_ASSOC);
                                                value="<?php echo htmlspecialchars($offer['campaign_url']); ?>">
                                     </div>
                                     <div class="mt-2">
-                                        <span class="form-help">Available tracking tokens:</span>
+                                        <span class="form-help">Available tracking tokens (Offer18 Standard Tokens):</span>
                                         <div>
                                             <span class="token-badge" onclick="insertToken('{click_id}')">{click_id}</span>
+                                            <span class="token-badge" onclick="insertToken('{affiliate_id}')">{affiliate_id}</span>
+                                            <span class="token-badge" onclick="insertToken('{sub_aff_id}')">{sub_aff_id}</span>
+                                            <span class="token-badge" onclick="insertToken('{offer_id}')">{offer_id}</span>
                                             <span class="token-badge" onclick="insertToken('{sub1}')">{sub1}</span>
                                             <span class="token-badge" onclick="insertToken('{sub2}')">{sub2}</span>
                                             <span class="token-badge" onclick="insertToken('{sub3}')">{sub3}</span>
                                             <span class="token-badge" onclick="insertToken('{sub4}')">{sub4}</span>
                                             <span class="token-badge" onclick="insertToken('{sub5}')">{sub5}</span>
-                                            <span class="token-badge" onclick="insertToken('{affiliate_id}')">{affiliate_id}</span>
                                             <span class="token-badge" onclick="insertToken('{country}')">{country}</span>
+                                            <span class="token-badge" onclick="insertToken('{ip_address}')">{ip_address}</span>
                                         </div>
                                     </div>
                                 </div>
