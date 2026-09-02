@@ -1212,40 +1212,30 @@ if (isset($_GET['export'])) {
                 </div>
 
                 <!-- Summary Stats -->
-                <div class="summary-stats">
-                    <div class="metric-card">
-                        <div class="metric-value total-value"><?php echo number_format($summary['total_advertisers'] ?? 0); ?></div>
-                        <div class="metric-label">Total Advertisers</div>
-                    </div>
-                    <div class="metric-card">
-                        <div class="metric-value offers-value"><?php echo number_format($summary['total_offers'] ?? 0); ?></div>
-                        <div class="metric-label">Total Offers</div>
-                    </div>
-                    <div class="metric-card">
-                        <div class="metric-value clicks-value"><?php echo number_format($summary['total_clicks'] ?? 0); ?></div>
-                        <div class="metric-label">Total Clicks</div>
-                    </div>
-                    <div class="metric-card">
-                        <div class="metric-value conversions-value"><?php echo number_format($summary['total_conversions'] ?? 0); ?></div>
-                        <div class="metric-label">Total Conversions</div>
-                    </div>
-                    <div class="metric-card">
-                        <div class="metric-value revenue-value">$<?php echo number_format($summary['total_revenue'] ?? 0, 2); ?></div>
-                        <div class="metric-label">Total Revenue</div>
-                    </div>
-                    <div class="metric-card">
-                        <div class="metric-value payout-value">$<?php echo number_format($summary['total_payout'] ?? 0, 2); ?></div>
-                        <div class="metric-label">Total Payout</div>
-                    </div>
-                    <div class="metric-card">
-                        <div class="metric-value profit-value <?php echo ($summary['total_profit'] ?? 0) >= 0 ? 'text-success' : 'text-danger'; ?>">
-                            $<?php echo number_format($summary['total_profit'] ?? 0, 2); ?>
+                <div class="row stat-boxes-row mb-4">
+                    <div class="col-md-3 col-6">
+                        <div class="stat-card-custom">
+                            <div class="stat-number text-primary"><?php echo number_format($summary['total_advertisers'] ?? 0); ?></div>
+                            <div class="stat-label">Total Advertisers</div>
                         </div>
-                        <div class="metric-label">Total Profit/Loss</div>
                     </div>
-                    <div class="metric-card">
-                        <div class="metric-value roi-value"><?php echo number_format($summary['avg_roi'] ?? 0, 2); ?>%</div>
-                        <div class="metric-label">Average ROI</div>
+                    <div class="col-md-3 col-6">
+                        <div class="stat-card-custom">
+                            <div class="stat-number text-info"><?php echo number_format($summary['total_clicks'] ?? 0); ?></div>
+                            <div class="stat-label">Total Clicks</div>
+                        </div>
+                    </div>
+                    <div class="col-md-3 col-6">
+                        <div class="stat-card-custom">
+                            <div class="stat-number text-success">$<?php echo number_format($summary['total_revenue'] ?? 0, 2); ?></div>
+                            <div class="stat-label">Total Revenue</div>
+                        </div>
+                    </div>
+                    <div class="col-md-3 col-6">
+                        <div class="stat-card-custom">
+                            <div class="stat-number text-warning">$<?php echo number_format($summary['total_profit'] ?? 0, 2); ?></div>
+                            <div class="stat-label">Total Net Profit</div>
+                        </div>
                     </div>
                 </div>
 

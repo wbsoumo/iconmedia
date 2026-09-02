@@ -1070,30 +1070,42 @@ if (isset($_GET['export'])) {
                 </div>
 
                 <!-- Summary Stats -->
-                <div class="summary-stats">
-                    <div class="metric-card">
-                        <div class="metric-value total-value"><?php echo number_format($summary['total_affiliates'] ?? 0); ?></div>
-                        <div class="metric-label">Total Publishers</div>
+                <div class="row stat-boxes-row mb-4">
+                    <div class="col-md-2 col-6">
+                        <div class="stat-card-custom">
+                            <div class="stat-number text-primary"><?php echo number_format($summary['total_affiliates'] ?? 0); ?></div>
+                            <div class="stat-label">Total Publishers</div>
+                        </div>
                     </div>
-                    <div class="metric-card">
-                        <div class="metric-value clicks-value"><?php echo number_format($summary['total_clicks'] ?? 0); ?></div>
-                        <div class="metric-label">Total Clicks</div>
+                    <div class="col-md-2 col-6">
+                        <div class="stat-card-custom">
+                            <div class="stat-number text-info"><?php echo number_format($summary['total_clicks'] ?? 0); ?></div>
+                            <div class="stat-label">Total Clicks</div>
+                        </div>
                     </div>
-                    <div class="metric-card">
-                        <div class="metric-value conversions-value"><?php echo number_format($summary['total_conversions'] ?? 0); ?></div>
-                        <div class="metric-label">Total Conversions</div>
+                    <div class="col-md-2 col-6">
+                        <div class="stat-card-custom">
+                            <div class="stat-number text-success"><?php echo number_format($summary['total_conversions'] ?? 0); ?></div>
+                            <div class="stat-label">Conversions</div>
+                        </div>
                     </div>
-                    <div class="metric-card">
-                        <div class="metric-value payout-value">$<?php echo number_format($summary['total_payout'] ?? 0, 2); ?></div>
-                        <div class="metric-label">Total Payout</div>
+                    <div class="col-md-2 col-6">
+                        <div class="stat-card-custom">
+                            <div class="stat-number text-warning">$<?php echo number_format($summary['total_payout'] ?? 0, 2); ?></div>
+                            <div class="stat-label">Total Payout</div>
+                        </div>
                     </div>
-                    <div class="metric-card">
-                        <div class="metric-value cr-value"><?php echo number_format($summary['avg_conversion_rate'] ?? 0, 2); ?>%</div>
-                        <div class="metric-label">Avg Conversion Rate</div>
+                    <div class="col-md-2 col-6">
+                        <div class="stat-card-custom">
+                            <div class="stat-number text-indigo" style="color: #4f46e5;"><?php echo number_format($summary['avg_conversion_rate'] ?? 0, 2); ?>%</div>
+                            <div class="stat-label">Avg CR (%)</div>
+                        </div>
                     </div>
-                    <div class="metric-card">
-                        <div class="metric-value epc-value">$<?php echo number_format($summary['avg_epc'] ?? 0, 4); ?></div>
-                        <div class="metric-label">Average EPC</div>
+                    <div class="col-md-2 col-6">
+                        <div class="stat-card-custom">
+                            <div class="stat-number text-purple" style="color: #9333ea;">$<?php echo number_format($summary['avg_epc'] ?? 0, 4); ?></div>
+                            <div class="stat-label">Average EPC</div>
+                        </div>
                     </div>
                 </div>
 
