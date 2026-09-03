@@ -222,6 +222,14 @@ $avgCr = $totalClicks > 0 ? ($totalConversions / $totalClicks) * 100 : 0;
                         </a>
                     </li>
 
+                                        <li class="nav-header">TOOLS & TESTING</li>
+                    <li class="nav-item">
+                        <a href="link_tester.php" class="nav-link">
+                            <i class="nav-icon fas fa-vial"></i>
+                            <p>Link Tester</p>
+                        </a>
+                    </li>
+
                     <li class="nav-header">SYSTEM & POSTBACKS</li>
                     <li class="nav-item">
                         <a href="publisher_postbacks.php" class="nav-link">
