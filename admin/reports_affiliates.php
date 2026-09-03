@@ -120,6 +120,9 @@ switch ($sortBy) {
 
 $sql = "
     SELECT
+        o.offer_id,
+        o.offer_name,
+        o.currency,
         u.user_id AS affiliate_id,
         u.name AS affiliate_name,
         u.email,
@@ -131,6 +134,7 @@ $sql = "
         COUNT(DISTINCT cl.click_id) AS clicks,
         COUNT(DISTINCT c.conversion_id) AS conversions,
         SUM(CASE WHEN c.status = 'approved' THEN 1 ELSE 0 END) AS approved_conversions,
+        SUM(CASE WHEN c.status = 'approved' THEN c.revenue ELSE 0 END) AS revenue,
         SUM(CASE WHEN c.status = 'approved' THEN c.payout ELSE 0 END) AS payout,
         SUM(CASE WHEN c.status = 'pending' THEN 1 ELSE 0 END) AS pending_conversions,
         SUM(CASE WHEN c.status = 'pending' THEN c.payout ELSE 0 END) AS pending_payout,
@@ -170,10 +174,10 @@ $sql = "
         
     FROM users u
     LEFT JOIN clicks cl ON cl.affiliate_id = u.user_id
+    LEFT JOIN offers o ON o.offer_id = cl.offer_id
     LEFT JOIN conversions c ON c.click_id = cl.click_id
-    $joinSql
     $whereSql
-    GROUP BY u.user_id
+    GROUP BY u.user_id, o.offer_id
     ORDER BY $orderBy
     LIMIT :offset, :per_page
 ";
@@ -1237,57 +1241,14 @@ if (isset($_GET['export'])) {
                                 <table class="table table-dashboard" id="performanceTable">
                                     <thead>
                                         <tr>
-                                            <th>
-                                                <a href="?<?php echo http_build_query(array_merge($_GET, ['sort' => 'name', 'order' => $sortBy === 'name' && $sortOrder === 'asc' ? 'desc' : 'asc'])); ?>">
-                                                    Publisher
-                                                    <?php if ($sortBy === 'name'): ?>
-                                                    <span class="sort-indicator sort-<?php echo $sortOrder; ?>"></span>
-                                                    <?php endif; ?>
-                                                </a>
-                                            </th>
-                                            <th>
-                                                <a href="?<?php echo http_build_query(array_merge($_GET, ['sort' => 'clicks', 'order' => $sortBy === 'clicks' && $sortOrder === 'asc' ? 'desc' : 'asc'])); ?>">
-                                                    Clicks
-                                                    <?php if ($sortBy === 'clicks'): ?>
-                                                    <span class="sort-indicator sort-<?php echo $sortOrder; ?>"></span>
-                                                    <?php endif; ?>
-                                                </a>
-                                            </th>
-                                            <th>Conversions</th>
-                                            <th>
-                                                <a href="?<?php echo http_build_query(array_merge($_GET, ['sort' => 'payout', 'order' => $sortBy === 'payout' && $sortOrder === 'asc' ? 'desc' : 'asc'])); ?>">
-                                                    Payout
-                                                    <?php if ($sortBy === 'payout'): ?>
-                                                    <span class="sort-indicator sort-<?php echo $sortOrder; ?>"></span>
-                                                    <?php endif; ?>
-                                                </a>
-                                            </th>
-                                            <th>
-                                                <a href="?<?php echo http_build_query(array_merge($_GET, ['sort' => 'cr', 'order' => $sortBy === 'cr' && $sortOrder === 'asc' ? 'desc' : 'asc'])); ?>">
-                                                    CR %
-                                                    <?php if ($sortBy === 'cr'): ?>
-                                                    <span class="sort-indicator sort-<?php echo $sortOrder; ?>"></span>
-                                                    <?php endif; ?>
-                                                </a>
-                                            </th>
-                                            <th>
-                                                <a href="?<?php echo http_build_query(array_merge($_GET, ['sort' => 'epc', 'order' => $sortBy === 'epc' && $sortOrder === 'asc' ? 'desc' : 'asc'])); ?>">
-                                                    EPC
-                                                    <?php if ($sortBy === 'epc'): ?>
-                                                    <span class="sort-indicator sort-<?php echo $sortOrder; ?>"></span>
-                                                    <?php endif; ?>
-                                                </a>
-                                            </th>
-                                            <th>
-                                                <a href="?<?php echo http_build_query(array_merge($_GET, ['sort' => 'quality', 'order' => $sortBy === 'quality' && $sortOrder === 'asc' ? 'desc' : 'asc'])); ?>">
-                                                    Quality
-                                                    <?php if ($sortBy === 'quality'): ?>
-                                                    <span class="sort-indicator sort-<?php echo $sortOrder; ?>"></span>
-                                                    <?php endif; ?>
-                                                </a>
-                                            </th>
-                                            <th>Activity</th>
-                                            <th>Actions</th>
+                                            <th>OfferID</th>
+                                            <th>Affiliate</th>
+                                            <th class="text-center">GrossClicks<br><small class="text-muted">Total</small></th>
+                                            <th class="text-center">Conversions<br><small class="text-muted">Total</small></th>
+                                            <th class="text-center">AdvertiserPrice<br><small class="text-muted">Total</small></th>
+                                            <th class="text-center">AffiliatePayout<br><small class="text-muted">Total</small></th>
+                                            <th>Currency</th>
+                                            <th>Status</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -1295,180 +1256,29 @@ if (isset($_GET['export'])) {
                                             $clicks = (int)$row['clicks'];
                                             $conversions = (int)$row['conversions'];
                                             $approved = (int)$row['approved_conversions'];
+                                            $revenue = (float)($row['revenue'] ?? 0);
                                             $payout = (float)$row['payout'];
-                                            $pendingPayout = (float)$row['pending_payout'];
-                                            $cr = (float)$row['conversion_rate'];
-                                            $epc = (float)$row['epc'];
-                                            $qualityScore = (int)$row['quality_score'];
-                                            
-                                            // Determine quality label and color
-                                            if ($qualityScore >= 80) {
-                                                $qualityLabel = 'Excellent';
-                                                $qualityClass = 'quality-excellent';
-                                                $performanceClass = 'performance-excellent';
-                                            } elseif ($qualityScore >= 60) {
-                                                $qualityLabel = 'Good';
-                                                $qualityClass = 'quality-good';
-                                                $performanceClass = 'performance-good';
-                                            } elseif ($qualityScore >= 40) {
-                                                $qualityLabel = 'Watch';
-                                                $qualityClass = 'quality-watch';
-                                                $performanceClass = 'performance-watch';
-                                            } else {
-                                                $qualityLabel = 'Poor';
-                                                $qualityClass = 'quality-poor';
-                                                $performanceClass = 'performance-poor';
-                                            }
-                                            
-                                            // Status badge
-                                            $statusClass = 'status-' . ($row['affiliate_status'] ?? 'pending');
-                                            $statusLabel = ucfirst($row['affiliate_status'] ?? 'pending');
-                                            
-                                            // Last activity
-                                            $lastClick = $row['last_click'] ? date('M d', strtotime($row['last_click'])) : 'Never';
-                                            $lastConversion = $row['last_conversion'] ? date('M d', strtotime($row['last_conversion'])) : 'Never';
+                                            $currency = !empty($row['currency']) ? strtoupper($row['currency']) : 'USD';
+                                            $statusLabel = ucfirst($row['affiliate_status'] ?? 'Approved');
                                         ?>
                                         <tr>
                                             <td>
-                                                <div class="d-flex align-items-center">
-                                                    <div class="mr-3">
-                                                        <div style="width: 40px; height: 40px; background: #667eea; color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 600;">
-                                                            <?php echo strtoupper(substr($row['affiliate_name'], 0, 1)); ?>
-                                                        </div>
-                                                    </div>
-                                                    <div>
-                                                        <strong><?php echo htmlspecialchars($row['affiliate_name']); ?></strong>
-                                                        <div class="text-muted small">
-                                                            <?php echo htmlspecialchars($row['email']); ?>
-                                                            <?php if ($row['company']): ?>
-                                                                &nbsp;•&nbsp; <?php echo htmlspecialchars($row['company']); ?>
-                                                            <?php endif; ?>
-                                                        </div>
-                                                        <div class="d-flex align-items-center gap-2 mt-1">
-                                                            <span class="status-badge <?php echo $statusClass; ?>">
-                                                                <?php echo $statusLabel; ?>
-                                                            </span>
-                                                            <span class="text-muted small">
-                                                                Balance: $<?php echo number_format($row['balance'] ?? 0, 2); ?>
-                                                            </span>
-                                                        </div>
-                                                    </div>
-                                                </div>
+                                                <a href="offer_edit.php?id=<?php echo (int)($row['offer_id'] ?? 0); ?>" class="text-primary font-weight-bold">
+                                                    <?php echo (int)($row['offer_id'] ?? 0); ?> ~ <?php echo htmlspecialchars($row['offer_name'] ?? 'General Campaign'); ?>
+                                                </a>
                                             </td>
                                             <td>
-                                                <div class="font-weight-bold"><?php echo number_format($clicks); ?></div>
-                                                <div class="performance-bar">
-                                                    <?php if ($clicks > 0): ?>
-                                                    <div class="performance-fill <?php echo $performanceClass; ?>" 
-                                                         style="width: <?php echo min(100, ($clicks / max(1, $summary['total_clicks'] ?? 1)) * 100); ?>%">
-                                                    </div>
-                                                    <?php endif; ?>
-                                                </div>
-                                            </td>
-                                            <td>
-                                                <div class="stats-grid">
-                                                    <div class="stat-item">
-                                                        <div class="stat-label">Total</div>
-                                                        <div class="stat-value"><?php echo number_format($conversions); ?></div>
-                                                    </div>
-                                                    <div class="stat-item">
-                                                        <div class="stat-label">Approved</div>
-                                                        <div class="stat-value text-success"><?php echo number_format($approved); ?></div>
-                                                    </div>
-                                                    <div class="stat-item">
-                                                        <div class="stat-label">Pending</div>
-                                                        <div class="stat-value text-warning"><?php echo number_format($row['pending_conversions']); ?></div>
-                                                    </div>
-                                                    <div class="stat-item">
-                                                        <div class="stat-label">Rejected</div>
-                                                        <div class="stat-value text-danger"><?php echo number_format($row['rejected_conversions']); ?></div>
-                                                    </div>
-                                                </div>
-                                            </td>
-                                            <td>
-                                                <div class="font-weight-bold text-success">
-                                                    $<?php echo number_format($payout, 2); ?>
-                                                </div>
-                                                <?php if ($pendingPayout > 0): ?>
-                                                <div class="small text-warning">
-                                                    Pending: $<?php echo number_format($pendingPayout, 2); ?>
-                                                </div>
+                                                <strong class="text-dark"><?php echo (int)$row['affiliate_id']; ?> ~ <?php echo htmlspecialchars($row['affiliate_name']); ?></strong>
+                                                <?php if (!empty($row['company'])): ?>
+                                                    <span class="text-muted small">(<?php echo htmlspecialchars($row['company']); ?>)</span>
                                                 <?php endif; ?>
-                                                <div class="performance-bar">
-                                                    <?php if ($payout > 0): ?>
-                                                    <div class="performance-fill <?php echo $performanceClass; ?>" 
-                                                         style="width: <?php echo min(100, ($payout / max(1, $summary['total_payout'] ?? 1)) * 100); ?>%">
-                                                    </div>
-                                                    <?php endif; ?>
-                                                </div>
                                             </td>
-                                            <td>
-                                                <div class="font-weight-bold <?php echo $cr >= 1 ? 'text-success' : ($cr >= 0.5 ? 'text-warning' : 'text-danger'); ?>">
-                                                    <?php echo number_format($cr, 2); ?>%
-                                                </div>
-                                                <div class="small text-muted">
-                                                    <?php echo $clicks > 0 ? number_format(($approved / $clicks) * 100, 2) : '0'; ?>% approved
-                                                </div>
-                                            </td>
-                                            <td>
-                                                <div class="font-weight-bold <?php echo $epc >= 0.5 ? 'text-success' : ($epc >= 0.1 ? 'text-warning' : 'text-danger'); ?>">
-                                                    $<?php echo number_format($epc, 4); ?>
-                                                </div>
-                                                <div class="small text-muted">
-                                                    Per click
-                                                </div>
-                                            </td>
-                                            <td>
-                                                <div class="d-flex align-items-center">
-                                                    <span class="quality-badge <?php echo $qualityClass; ?>">
-                                                        <?php echo $qualityLabel; ?>
-                                                    </span>
-                                                    <div class="ml-2 small text-muted">
-                                                        <?php echo $qualityScore; ?> pts
-                                                    </div>
-                                                </div>
-                                                <div class="performance-bar mt-2">
-                                                    <div class="performance-fill <?php echo $performanceClass; ?>" 
-                                                         style="width: <?php echo $qualityScore; ?>%">
-                                                    </div>
-                                                </div>
-                                            </td>
-                                            <td>
-                                                <div class="small">
-                                                    <div class="mb-1">
-                                                        <i class="fas fa-mouse-pointer mr-1 text-muted"></i>
-                                                        Last click: <?php echo $lastClick; ?>
-                                                    </div>
-                                                    <div class="mb-1">
-                                                        <i class="fas fa-exchange-alt mr-1 text-muted"></i>
-                                                        Last conv: <?php echo $lastConversion; ?>
-                                                    </div>
-                                                    <div>
-                                                        <i class="fas fa-bullhorn mr-1 text-muted"></i>
-                                                        <?php echo $row['unique_offers']; ?> campaigns
-                                                    </div>
-                                                </div>
-                                            </td>
-                                            <td>
-                                                <div class="action-buttons">
-                                                    <a href="affiliate_details.php?id=<?php echo $row['affiliate_id']; ?>" 
-                                                       class="btn-action btn-view"
-                                                       title="View Details">
-                                                        <i class="fas fa-eye"></i>
-                                                    </a>
-                                                    <a href="reports_affiliates.php?id=<?php echo $row['affiliate_id']; ?>&from=<?php echo $dateFrom; ?>&to=<?php echo $dateTo; ?>" 
-                                                       class="btn-action btn-chart"
-                                                       title="View Detailed Report">
-                                                        <i class="fas fa-chart-line"></i>
-                                                    </a>
-                                                    <a href="reports_affiliates.php?id=<?php echo $row['affiliate_id']; ?>" 
-                                                       class="btn-action"
-                                                       title="Performance Analytics"
-                                                       style="background: rgba(102, 16, 242, 0.1); color: #6610f2; border: 1px solid rgba(102, 16, 242, 0.2);">
-                                                        <i class="fas fa-chart-pie"></i>
-                                                    </a>
-                                                </div>
-                                            </td>
+                                            <td class="text-center font-weight-bold text-dark"><?php echo number_format($clicks); ?></td>
+                                            <td class="text-center font-weight-bold text-dark"><?php echo number_format($conversions); ?></td>
+                                            <td class="text-center font-weight-bold text-success">$<?php echo number_format($revenue, 2); ?></td>
+                                            <td class="text-center font-weight-bold text-primary">$<?php echo number_format($payout, 2); ?></td>
+                                            <td><span class="badge badge-light border font-weight-bold"><?php echo htmlspecialchars($currency); ?></span></td>
+                                            <td><span class="badge badge-success p-2"><?php echo htmlspecialchars($statusLabel); ?></span></td>
                                         </tr>
                                         <?php endforeach; ?>
                                     </tbody>
