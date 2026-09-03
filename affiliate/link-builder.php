@@ -216,6 +216,7 @@ if ($selectedOfferId) {
                                         </option>
                                         <?php endforeach; ?>
                                     </select>
+                                </div>
                                 <div class="form-group mb-3">
                                     <label class="font-weight-bold small">Sub-Affiliate / Sub-Publisher ID (<code class="text-primary">sub_aff_id</code>)</label>
                                     <input type="text" name="sub_aff_id" class="form-control" placeholder="e.g. sub_pub_01, partner_id" value="<?php echo htmlspecialchars($sub_aff_id); ?>">
