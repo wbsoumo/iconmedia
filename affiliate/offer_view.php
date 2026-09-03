@@ -317,7 +317,10 @@ $trackingUrl = "https://iconmedianetwork.in/click.php?offer_id={$offerId}&aff_id
                                 </div>
 
                                 <hr>
-                                <h5 class="font-weight-bold text-dark mb-2"><i class="fas fa-sliders-h text-info mr-1"></i> Add Custom SubIDs</h5>
+                                <h5 class="font-weight-bold text-dark mb-2"><i class="fas fa-sliders-h text-info mr-1"></i> Add Custom SubIDs & Sub-Affiliate ID</h5>
+                                <div class="form-group mb-2">
+                                    <input type="text" id="subAffIdInput" class="form-control" placeholder="Enter sub_aff_id / sub_aff (e.g. sub_publisher_01)" oninput="updateTrackingUrl()">
+                                </div>
                                 <div class="form-group mb-2">
                                     <input type="text" id="sub1Input" class="form-control" placeholder="Enter sub1 (e.g. facebook)" oninput="updateTrackingUrl()">
                                 </div>
@@ -379,9 +382,11 @@ $trackingUrl = "https://iconmedianetwork.in/click.php?offer_id={$offerId}&aff_id
 var baseUrl = "<?php echo $trackingUrl; ?>";
 
 function updateTrackingUrl() {
+    var sa = document.getElementById('subAffIdInput').value.trim();
     var s1 = document.getElementById('sub1Input').value.trim();
     var s2 = document.getElementById('sub2Input').value.trim();
     var finalUrl = baseUrl;
+    if (sa !== '') finalUrl += '&sub_aff_id=' + encodeURIComponent(sa);
     if (s1 !== '') finalUrl += '&sub1=' + encodeURIComponent(s1);
     if (s2 !== '') finalUrl += '&sub2=' + encodeURIComponent(s2);
     document.getElementById('trackingUrlText').innerText = finalUrl;

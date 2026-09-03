@@ -33,6 +33,7 @@ $offers = $offersStmt->fetchAll(PDO::FETCH_ASSOC);
 -------------------------------------------------- */
 $generatedUrl = null;
 $selectedOfferId = $_GET['offer_id'] ?? ($offers[0]['offer_id'] ?? '');
+$sub_aff_id = $_GET['sub_aff_id'] ?? '';
 $sub1 = $_GET['sub1'] ?? '';
 $sub2 = $_GET['sub2'] ?? '';
 $sub3 = $_GET['sub3'] ?? '';
@@ -45,6 +46,7 @@ if ($selectedOfferId) {
         'offer_id' => $selectedOfferId,
         'aff_id'   => $affiliateId
     ];
+    if ($sub_aff_id !== '') $params['sub_aff_id'] = $sub_aff_id;
     if ($sub1 !== '') $params['sub1'] = $sub1;
     if ($sub2 !== '') $params['sub2'] = $sub2;
     if ($sub3 !== '') $params['sub3'] = $sub3;
@@ -214,6 +216,9 @@ if ($selectedOfferId) {
                                         </option>
                                         <?php endforeach; ?>
                                     </select>
+                                <div class="form-group mb-3">
+                                    <label class="font-weight-bold small">Sub-Affiliate / Sub-Publisher ID (<code class="text-primary">sub_aff_id</code>)</label>
+                                    <input type="text" name="sub_aff_id" class="form-control" placeholder="e.g. sub_pub_01, partner_id" value="<?php echo htmlspecialchars($sub_aff_id); ?>">
                                 </div>
 
                                 <div class="row">
