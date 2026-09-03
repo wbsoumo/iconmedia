@@ -14,7 +14,11 @@ $stmt = $pdo->prepare("
     SELECT 
         o.offer_id,
         o.offer_name,
-        u.name AS publisher_name,
+        o.currency,
+        u.user_id AS affiliate_id,
+        u.name AS affiliate_name,
+        u.company AS affiliate_company,
+        u.status AS affiliate_status,
         COUNT(DISTINCT c.click_id) AS clicks,
         SUM(CASE WHEN cv.status = 'approved' THEN 1 ELSE 0 END) AS approved_conversions,
         IFNULL(SUM(CASE WHEN cv.status = 'approved' THEN cv.payout ELSE 0 END), 0) AS total_payout,
@@ -104,26 +108,39 @@ $reports = $stmt->fetchAll(PDO::FETCH_ASSOC);
                         <table class="table table-hover align-middle" id="reportsTable">
                             <thead class="thead-light">
                                 <tr>
-                                    <th>Publisher</th>
-                                    <th>Campaign Offer</th>
-                                    <th>Clicks</th>
-                                    <th>Conversions</th>
-                                    <th>CR %</th>
-                                    <th>Gross Revenue</th>
-                                    <th>Publisher Payout</th>
+                                    <th>OfferID</th>
+                                    <th>Affiliate</th>
+                                    <th class="text-center">GrossClicks<br><small class="text-muted">Total</small></th>
+                                    <th class="text-center">Conversions<br><small class="text-muted">Total</small></th>
+                                    <th class="text-center">AdvertiserPrice<br><small class="text-muted">Total</small></th>
+                                    <th class="text-center">AffiliatePayout<br><small class="text-muted">Total</small></th>
+                                    <th>Currency</th>
+                                    <th>Status</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                <?php foreach ($reports as $r): ?>
-                                <?php $cr = $r['clicks'] > 0 ? number_format(($r['approved_conversions'] / $r['clicks']) * 100, 2) : '0.00'; ?>
+                                <?php foreach ($reports as $r): 
+                                    $currency = !empty($r['currency']) ? strtoupper($r['currency']) : 'USD';
+                                    $statusLabel = ucfirst($r['affiliate_status'] ?? 'Approved');
+                                ?>
                                 <tr>
-                                    <td><strong class="text-dark"><?php echo htmlspecialchars($r['publisher_name']); ?></strong></td>
-                                    <td><strong class="text-primary">#<?php echo $r['offer_id']; ?> - <?php echo htmlspecialchars($r['offer_name']); ?></strong></td>
-                                    <td><strong><?php echo number_format($r['clicks']); ?></strong></td>
-                                    <td><strong class="text-success"><?php echo number_format($r['approved_conversions']); ?></strong></td>
-                                    <td><strong class="text-info"><?php echo $cr; ?>%</strong></td>
-                                    <td><strong class="text-success">$<?php echo number_format($r['total_revenue'], 2); ?></strong></td>
-                                    <td><strong class="text-warning">$<?php echo number_format($r['total_payout'], 2); ?></strong></td>
+                                    <td>
+                                        <a href="campaigns.php" class="text-primary font-weight-bold">
+                                            <?php echo (int)$r['offer_id']; ?> ~ <?php echo htmlspecialchars($r['offer_name']); ?>
+                                        </a>
+                                    </td>
+                                    <td>
+                                        <strong class="text-dark"><?php echo (int)$r['affiliate_id']; ?> ~ <?php echo htmlspecialchars($r['affiliate_name']); ?></strong>
+                                        <?php if (!empty($r['affiliate_company'])): ?>
+                                            <span class="text-muted small">(<?php echo htmlspecialchars($r['affiliate_company']); ?>)</span>
+                                        <?php endif; ?>
+                                    </td>
+                                    <td class="text-center font-weight-bold text-dark"><?php echo number_format((int)$r['clicks']); ?></td>
+                                    <td class="text-center font-weight-bold text-dark"><?php echo number_format((int)$r['approved_conversions']); ?></td>
+                                    <td class="text-center font-weight-bold text-success">$<?php echo number_format((float)$r['total_revenue'], 2); ?></td>
+                                    <td class="text-center font-weight-bold text-primary">$<?php echo number_format((float)$r['total_payout'], 2); ?></td>
+                                    <td><span class="badge badge-light border font-weight-bold"><?php echo htmlspecialchars($currency); ?></span></td>
+                                    <td><span class="badge badge-success p-2"><?php echo htmlspecialchars($statusLabel); ?></span></td>
                                 </tr>
                                 <?php endforeach; ?>
                             </tbody>

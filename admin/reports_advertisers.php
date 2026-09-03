@@ -139,74 +139,29 @@ switch ($sortBy) {
 
 $sql = "
     SELECT
+        o.offer_id,
+        o.offer_name,
+        o.currency,
+        u_aff.user_id AS affiliate_id,
+        u_aff.name AS affiliate_name,
+        u_aff.company AS affiliate_company,
         u.user_id AS advertiser_id,
         u.name AS advertiser_name,
-        u.email,
-        u.company,
         u.status as advertiser_status,
-        u.created_at as advertiser_joined,
-        u.balance,
         
-        COUNT(DISTINCT o.offer_id) AS total_offers,
-        COUNT(DISTINCT o_active.offer_id) AS active_offers,
         COUNT(DISTINCT cl.click_id) AS clicks,
         COUNT(DISTINCT c.conversion_id) AS conversions,
-        
         SUM(CASE WHEN c.status = 'approved' THEN 1 ELSE 0 END) AS approved_conversions,
-        SUM(CASE WHEN c.status = 'pending' THEN 1 ELSE 0 END) AS pending_conversions,
-        SUM(CASE WHEN c.status = 'rejected' THEN 1 ELSE 0 END) AS rejected_conversions,
-        
         SUM(CASE WHEN c.status = 'approved' THEN c.revenue ELSE 0 END) AS revenue,
-        SUM(CASE WHEN c.status = 'approved' THEN c.payout ELSE 0 END) AS payout,
-        SUM(CASE WHEN c.status = 'pending' THEN c.revenue ELSE 0 END) AS pending_revenue,
-        SUM(CASE WHEN c.status = 'pending' THEN c.payout ELSE 0 END) AS pending_payout,
-        
-        -- Performance metrics
-        CASE 
-            WHEN COUNT(DISTINCT cl.click_id) > 0 
-            THEN (SUM(CASE WHEN c.status = 'approved' THEN 1 ELSE 0 END) / COUNT(DISTINCT cl.click_id)) * 100
-            ELSE 0
-        END as conversion_rate,
-        
-        CASE 
-            WHEN COUNT(DISTINCT cl.click_id) > 0 
-            THEN SUM(CASE WHEN c.status = 'approved' THEN c.revenue ELSE 0 END) / COUNT(DISTINCT cl.click_id)
-            ELSE 0
-        END as epc,
-        
-        -- Profit and ROI
-        (SUM(CASE WHEN c.status = 'approved' THEN c.revenue ELSE 0 END) - 
-         SUM(CASE WHEN c.status = 'approved' THEN c.payout ELSE 0 END)) as profit,
-        
-        CASE 
-            WHEN SUM(CASE WHEN c.status = 'approved' THEN c.payout ELSE 0 END) > 0 
-            THEN ((SUM(CASE WHEN c.status = 'approved' THEN c.revenue ELSE 0 END) - 
-                   SUM(CASE WHEN c.status = 'approved' THEN c.payout ELSE 0 END)) / 
-                   SUM(CASE WHEN c.status = 'approved' THEN c.payout ELSE 0 END)) * 100
-            WHEN SUM(CASE WHEN c.status = 'approved' THEN c.revenue ELSE 0 END) > 0 
-            THEN 100
-            ELSE 0
-        END as roi_percentage,
-        
-        -- Activity metrics
-        MAX(cl.created_at) as last_click,
-        MAX(c.created_at) as last_conversion,
-        MIN(o.created_at) as first_offer,
-        
-        -- Offer status summary
-        SUM(CASE WHEN o.status = 'active' THEN 1 ELSE 0 END) as offers_active,
-        SUM(CASE WHEN o.status = 'paused' THEN 1 ELSE 0 END) as offers_paused,
-        SUM(CASE WHEN o.status = 'pending' THEN 1 ELSE 0 END) as offers_pending
+        SUM(CASE WHEN c.status = 'approved' THEN c.payout ELSE 0 END) AS payout
         
     FROM users u
     INNER JOIN offers o ON o.advertiser_id = u.user_id
-    LEFT JOIN offers o_active ON o_active.advertiser_id = u.user_id AND o_active.status = 'active'
     LEFT JOIN clicks cl ON cl.offer_id = o.offer_id
-    LEFT JOIN conversions c ON c.offer_id = o.offer_id
-    
+    LEFT JOIN users u_aff ON u_aff.user_id = cl.affiliate_id
+    LEFT JOIN conversions c ON c.click_id = cl.click_id
     $whereSql
-    GROUP BY u.user_id
-    $havingSql
+    GROUP BY o.offer_id, u_aff.user_id
     ORDER BY $orderBy
     LIMIT :offset, :per_page
 ";
@@ -1366,280 +1321,48 @@ if (isset($_GET['export'])) {
                                 <table class="table table-dashboard" id="performanceTable">
                                     <thead>
                                         <tr>
-                                            <th>
-                                                <a href="?<?php echo http_build_query(array_merge($_GET, ['sort' => 'name', 'order' => $sortBy === 'name' && $sortOrder === 'asc' ? 'desc' : 'asc'])); ?>">
-                                                    Advertiser
-                                                    <?php if ($sortBy === 'name'): ?>
-                                                    <span class="sort-indicator sort-<?php echo $sortOrder; ?>"></span>
-                                                    <?php endif; ?>
-                                                </a>
-                                            </th>
-                                            <th>Campaigns</th>
-                                            <th>
-                                                <a href="?<?php echo http_build_query(array_merge($_GET, ['sort' => 'clicks', 'order' => $sortBy === 'clicks' && $sortOrder === 'asc' ? 'desc' : 'asc'])); ?>">
-                                                    Clicks
-                                                    <?php if ($sortBy === 'clicks'): ?>
-                                                    <span class="sort-indicator sort-<?php echo $sortOrder; ?>"></span>
-                                                    <?php endif; ?>
-                                                </a>
-                                            </th>
-                                            <th>Conversions</th>
-                                            <th>
-                                                <a href="?<?php echo http_build_query(array_merge($_GET, ['sort' => 'revenue', 'order' => $sortBy === 'revenue' && $sortOrder === 'asc' ? 'desc' : 'asc'])); ?>">
-                                                    Revenue
-                                                    <?php if ($sortBy === 'revenue'): ?>
-                                                    <span class="sort-indicator sort-<?php echo $sortOrder; ?>"></span>
-                                                    <?php endif; ?>
-                                                </a>
-                                            </th>
-                                            <th>
-                                                <a href="?<?php echo http_build_query(array_merge($_GET, ['sort' => 'payout', 'order' => $sortBy === 'payout' && $sortOrder === 'asc' ? 'desc' : 'asc'])); ?>">
-                                                    Payout
-                                                    <?php if ($sortBy === 'payout'): ?>
-                                                    <span class="sort-indicator sort-<?php echo $sortOrder; ?>"></span>
-                                                    <?php endif; ?>
-                                                </a>
-                                            </th>
-                                            <th>
-                                                <a href="?<?php echo http_build_query(array_merge($_GET, ['sort' => 'profit', 'order' => $sortBy === 'profit' && $sortOrder === 'asc' ? 'desc' : 'asc'])); ?>">
-                                                    Profit
-                                                    <?php if ($sortBy === 'profit'): ?>
-                                                    <span class="sort-indicator sort-<?php echo $sortOrder; ?>"></span>
-                                                    <?php endif; ?>
-                                                </a>
-                                            </th>
-                                            <th>
-                                                <a href="?<?php echo http_build_query(array_merge($_GET, ['sort' => 'roi', 'order' => $sortBy === 'roi' && $sortOrder === 'asc' ? 'desc' : 'asc'])); ?>">
-                                                    ROI
-                                                    <?php if ($sortBy === 'roi'): ?>
-                                                    <span class="sort-indicator sort-<?php echo $sortOrder; ?>"></span>
-                                                    <?php endif; ?>
-                                                </a>
-                                            </th>
-                                            <th>Performance</th>
-                                            <th>Actions</th>
+                                            <th>OfferID</th>
+                                            <th>Affiliate</th>
+                                            <th class="text-center">GrossClicks<br><small class="text-muted">Total</small></th>
+                                            <th class="text-center">Conversions<br><small class="text-muted">Total</small></th>
+                                            <th class="text-center">AdvertiserPrice<br><small class="text-muted">Total</small></th>
+                                            <th class="text-center">AffiliatePayout<br><small class="text-muted">Total</small></th>
+                                            <th>Currency</th>
+                                            <th>Status</th>
                                         </tr>
                                     </thead>
                                     <tbody>
                                         <?php foreach ($advertisers as $row): 
-                                            $totalOffers = (int)$row['total_offers'];
-                                            $activeOffers = (int)$row['offers_active'];
-                                            $clicks = (int)$row['clicks'];
-                                            $conversions = (int)$row['conversions'];
-                                            $approved = (int)$row['approved_conversions'];
-                                            $revenue = (float)$row['revenue'];
-                                            $payout = (float)$row['payout'];
-                                            $profit = (float)$row['profit'];
-                                            $roi = (float)$row['roi_percentage'];
-                                            $cr = (float)$row['conversion_rate'];
-                                            $epc = (float)$row['epc'];
-                                            
-                                            // Determine ROI badge class
-                                            if ($roi >= 50) {
-                                                $roiClass = 'roi-excellent';
-                                                $roiLabel = 'Excellent';
-                                                $performanceClass = 'performance-excellent';
-                                            } elseif ($roi >= 20) {
-                                                $roiClass = 'roi-good';
-                                                $roiLabel = 'Good';
-                                                $performanceClass = 'performance-good';
-                                            } elseif ($roi >= 0) {
-                                                $roiClass = 'roi-fair';
-                                                $roiLabel = 'Fair';
-                                                $performanceClass = 'performance-fair';
-                                            } else {
-                                                $roiClass = 'roi-poor';
-                                                $roiLabel = 'Poor';
-                                                $performanceClass = 'performance-poor';
-                                            }
-                                            
-                                            // Profit badge
-                                            if ($profit > 0) {
-                                                $profitClass = 'profit-positive';
-                                                $profitSymbol = '+';
-                                            } elseif ($profit < 0) {
-                                                $profitClass = 'profit-negative';
-                                                $profitSymbol = '-';
-                                            } else {
-                                                $profitClass = 'profit-neutral';
-                                                $profitSymbol = '';
-                                            }
-                                            
-                                            // Status badge
-                                            $statusClass = 'status-' . ($row['advertiser_status'] ?? 'pending');
-                                            $statusLabel = ucfirst($row['advertiser_status'] ?? 'pending');
-                                            
-                                            // Last activity
-                                            $lastClick = $row['last_click'] ? date('M d', strtotime($row['last_click'])) : 'Never';
-                                            $lastConversion = $row['last_conversion'] ? date('M d', strtotime($row['last_conversion'])) : 'Never';
+                                            $clicks = (int)($row['clicks'] ?? 0);
+                                            $conversions = (int)($row['conversions'] ?? 0);
+                                            $revenue = (float)($row['revenue'] ?? 0);
+                                            $payout = (float)($row['payout'] ?? 0);
+                                            $currency = !empty($row['currency']) ? strtoupper($row['currency']) : 'USD';
+                                            $affName = !empty($row['affiliate_name']) ? htmlspecialchars($row['affiliate_name']) : 'Direct / Organic';
+                                            $affId = (int)($row['affiliate_id'] ?? 0);
                                         ?>
                                         <tr>
                                             <td>
-                                                <div class="d-flex align-items-center">
-                                                    <div class="mr-3">
-                                                        <div style="width: 40px; height: 40px; background: #6f42c1; color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 600;">
-                                                            <?php echo strtoupper(substr($row['advertiser_name'], 0, 1)); ?>
-                                                        </div>
-                                                    </div>
-                                                    <div>
-                                                        <strong><?php echo htmlspecialchars($row['advertiser_name']); ?></strong>
-                                                        <div class="text-muted small">
-                                                            <?php echo htmlspecialchars($row['email']); ?>
-                                                            <?php if ($row['company']): ?>
-                                                                &nbsp;•&nbsp; <?php echo htmlspecialchars($row['company']); ?>
-                                                            <?php endif; ?>
-                                                        </div>
-                                                        <div class="d-flex align-items-center gap-2 mt-1">
-                                                            <span class="status-badge <?php echo $statusClass; ?>">
-                                                                <?php echo $statusLabel; ?>
-                                                            </span>
-                                                            <span class="text-muted small">
-                                                                Balance: $<?php echo number_format($row['balance'] ?? 0, 2); ?>
-                                                            </span>
-                                                        </div>
-                                                    </div>
-                                                </div>
+                                                <a href="offer_edit.php?id=<?php echo (int)($row['offer_id'] ?? 0); ?>" class="text-primary font-weight-bold">
+                                                    <?php echo (int)($row['offer_id'] ?? 0); ?> ~ <?php echo htmlspecialchars($row['offer_name'] ?? 'General Campaign'); ?>
+                                                </a>
                                             </td>
                                             <td>
-                                                <div class="font-weight-bold"><?php echo number_format($totalOffers); ?></div>
-                                                <div class="offer-status-grid">
-                                                    <div class="offer-status-item status-active" title="Active Offers">
-                                                        <?php echo $activeOffers; ?>
-                                                    </div>
-                                                    <div class="offer-status-item status-paused" title="Paused Offers">
-                                                        <?php echo $row['offers_paused']; ?>
-                                                    </div>
-                                                    <div class="offer-status-item status-pending" title="Pending Offers">
-                                                        <?php echo $row['offers_pending']; ?>
-                                                    </div>
-                                                </div>
-                                                <div class="performance-bar">
-                                                    <?php if ($totalOffers > 0): ?>
-                                                    <div class="performance-fill <?php echo $performanceClass; ?>" 
-                                                         style="width: <?php echo ($activeOffers / $totalOffers) * 100; ?>%">
-                                                    </div>
+                                                <?php if ($affId > 0): ?>
+                                                    <strong class="text-dark"><?php echo $affId; ?> ~ <?php echo $affName; ?></strong>
+                                                    <?php if (!empty($row['affiliate_company'])): ?>
+                                                        <span class="text-muted small">(<?php echo htmlspecialchars($row['affiliate_company']); ?>)</span>
                                                     <?php endif; ?>
-                                                </div>
+                                                <?php else: ?>
+                                                    <span class="text-muted">Direct / N/A</span>
+                                                <?php endif; ?>
                                             </td>
-                                            <td>
-                                                <div class="font-weight-bold"><?php echo number_format($clicks); ?></div>
-                                                <div class="small text-muted">
-                                                    EPC: $<?php echo number_format($epc, 4); ?>
-                                                </div>
-                                                <div class="performance-bar">
-                                                    <?php if ($clicks > 0 && $summary['total_clicks'] > 0): ?>
-                                                    <div class="performance-fill <?php echo $performanceClass; ?>" 
-                                                         style="width: <?php echo min(100, ($clicks / $summary['total_clicks']) * 100); ?>%">
-                                                    </div>
-                                                    <?php endif; ?>
-                                                </div>
-                                            </td>
-                                            <td>
-                                                <div class="stats-grid">
-                                                    <div class="stat-item">
-                                                        <div class="stat-label">Total</div>
-                                                        <div class="stat-value"><?php echo number_format($conversions); ?></div>
-                                                    </div>
-                                                    <div class="stat-item">
-                                                        <div class="stat-label">Approved</div>
-                                                        <div class="stat-value text-success"><?php echo number_format($approved); ?></div>
-                                                    </div>
-                                                    <div class="stat-item">
-                                                        <div class="stat-label">Pending</div>
-                                                        <div class="stat-value text-warning"><?php echo number_format($row['pending_conversions']); ?></div>
-                                                    </div>
-                                                    <div class="stat-item">
-                                                        <div class="stat-label">CR %</div>
-                                                        <div class="stat-value <?php echo $cr >= 1 ? 'text-success' : 'text-warning'; ?>">
-                                                            <?php echo number_format($cr, 2); ?>%
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </td>
-                                            <td>
-                                                <div class="financial-card financial-revenue">
-                                                    <div class="font-weight-bold text-success">
-                                                        $<?php echo number_format($revenue, 2); ?>
-                                                    </div>
-                                                    <?php if ($row['pending_revenue'] > 0): ?>
-                                                    <div class="small text-warning">
-                                                        Pending: $<?php echo number_format($row['pending_revenue'], 2); ?>
-                                                    </div>
-                                                    <?php endif; ?>
-                                                </div>
-                                            </td>
-                                            <td>
-                                                <div class="financial-card financial-payout">
-                                                    <div class="font-weight-bold text-primary">
-                                                        $<?php echo number_format($payout, 2); ?>
-                                                    </div>
-                                                    <?php if ($row['pending_payout'] > 0): ?>
-                                                    <div class="small text-warning">
-                                                        Pending: $<?php echo number_format($row['pending_payout'], 2); ?>
-                                                    </div>
-                                                    <?php endif; ?>
-                                                </div>
-                                            </td>
-                                            <td>
-                                                <div class="financial-card financial-profit">
-                                                    <span class="profit-badge <?php echo $profitClass; ?>">
-                                                        <?php echo $profitSymbol; ?>$<?php echo number_format(abs($profit), 2); ?>
-                                                    </span>
-                                                    <div class="small mt-1">
-                                                        Margin: <?php echo $revenue > 0 ? number_format(($profit / $revenue) * 100, 2) : '0'; ?>%
-                                                    </div>
-                                                </div>
-                                            </td>
-                                            <td>
-                                                <div class="d-flex align-items-center">
-                                                    <span class="roi-badge <?php echo $roiClass; ?>">
-                                                        <?php echo number_format($roi, 2); ?>%
-                                                    </span>
-                                                    <div class="ml-2 small text-muted">
-                                                        <?php echo $roiLabel; ?>
-                                                    </div>
-                                                </div>
-                                                <div class="performance-bar mt-2">
-                                                    <div class="performance-fill <?php echo $performanceClass; ?>" 
-                                                         style="width: <?php echo min(100, max(0, $roi)); ?>%">
-                                                    </div>
-                                                </div>
-                                            </td>
-                                            <td>
-                                                <div class="small">
-                                                    <div class="mb-1">
-                                                        <i class="fas fa-mouse-pointer mr-1 text-muted"></i>
-                                                        Last click: <?php echo $lastClick; ?>
-                                                    </div>
-                                                    <div class="mb-1">
-                                                        <i class="fas fa-exchange-alt mr-1 text-muted"></i>
-                                                        Last conv: <?php echo $lastConversion; ?>
-                                                    </div>
-                                                    <div>
-                                                        <i class="fas fa-calendar-alt mr-1 text-muted"></i>
-                                                        Joined: <?php echo date('M Y', strtotime($row['first_offer'])); ?>
-                                                    </div>
-                                                </div>
-                                            </td>
-                                            <td>
-                                                <div class="action-buttons">
-                                                    <a href="reports_advertisers.php?id=<?php echo $row['advertiser_id']; ?>" 
-                                                       class="btn-action btn-view"
-                                                       title="View Details">
-                                                        <i class="fas fa-eye"></i>
-                                                    </a>
-                                                    <a href="reports_advertisers.php?id=<?php echo $row['advertiser_id']; ?>&from=<?php echo $dateFrom; ?>&to=<?php echo $dateTo; ?>" 
-                                                       class="btn-action btn-chart"
-                                                       title="View Detailed Report">
-                                                        <i class="fas fa-chart-line"></i>
-                                                    </a>
-                                                    <a href="reports_advertisers.php?id=<?php echo $row['advertiser_id']; ?>" 
-                                                       class="btn-action btn-offers"
-                                                       title="View Campaigns">
-                                                        <i class="fas fa-bullhorn"></i>
-                                                    </a>
-                                                </div>
-                                            </td>
+                                            <td class="text-center font-weight-bold text-dark"><?php echo number_format($clicks); ?></td>
+                                            <td class="text-center font-weight-bold text-dark"><?php echo number_format($conversions); ?></td>
+                                            <td class="text-center font-weight-bold text-success">$<?php echo number_format($revenue, 2); ?></td>
+                                            <td class="text-center font-weight-bold text-primary">$<?php echo number_format($payout, 2); ?></td>
+                                            <td><span class="badge badge-light border font-weight-bold"><?php echo htmlspecialchars($currency); ?></span></td>
+                                            <td><span class="badge badge-success p-2">Approved</span></td>
                                         </tr>
                                         <?php endforeach; ?>
                                     </tbody>

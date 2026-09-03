@@ -60,21 +60,32 @@ $totalEarned = (float)($stats['total_earned'] ?? 0);
 -------------------------------------------------- */
 $conversionsSql = "
     SELECT 
-        cv.conversion_id,
-        cv.transaction_id,
         o.offer_id,
         o.offer_name,
-        cv.payout,
-        cv.status,
-        cv.created_at
-    FROM conversions cv
-    INNER JOIN offers o ON o.offer_id = cv.offer_id
-    $whereSql
-    ORDER BY cv.created_at DESC
+        o.currency,
+        u.user_id AS affiliate_id,
+        u.name AS affiliate_name,
+        u.company AS affiliate_company,
+        COUNT(DISTINCT cl.click_id) AS clicks,
+        COUNT(DISTINCT cv.conversion_id) AS conversions,
+        SUM(CASE WHEN cv.status = 'approved' THEN cv.revenue ELSE 0 END) AS revenue,
+        SUM(CASE WHEN cv.status = 'approved' THEN cv.payout ELSE 0 END) AS payout,
+        u.status AS affiliate_status
+    FROM offers o
+    INNER JOIN clicks cl ON cl.offer_id = o.offer_id AND cl.affiliate_id = :aff_id
+    LEFT JOIN users u ON u.user_id = cl.affiliate_id
+    LEFT JOIN conversions cv ON cv.click_id = cl.click_id
+    WHERE DATE(cl.created_at) BETWEEN :start_date AND :end_date
+    GROUP BY o.offer_id, cl.affiliate_id
+    ORDER BY payout DESC
     LIMIT 1000
 ";
 $conversionsStmt = $pdo->prepare($conversionsSql);
-$conversionsStmt->execute($params);
+$conversionsStmt->execute([
+    'aff_id'     => $affiliateId,
+    'start_date' => $startDate,
+    'end_date'   => $endDate
+]);
 $conversionLogs = $conversionsStmt->fetchAll(PDO::FETCH_ASSOC);
 
 /* -------------------------------------------------
@@ -309,40 +320,48 @@ $offerList = $offers->fetchAll(PDO::FETCH_ASSOC);
 
                 <!-- Conversions Log DataTables -->
                 <div class="card card-custom p-4">
-                    <h4 class="font-weight-bold text-primary mb-3"><i class="fas fa-chart-line mr-2"></i>Conversion Records Catalog</h4>
+                    <h4 class="font-weight-bold text-primary mb-3"><i class="fas fa-chart-line mr-2"></i>Performance & Conversions Breakdown</h4>
                     <div class="table-responsive">
                         <table class="table table-hover align-middle" id="conversionsTable">
                             <thead class="thead-light">
                                 <tr>
-                                    <th>ID</th>
-                                    <th>Transaction / SubID</th>
-                                    <th>Campaign Offer</th>
-                                    <th>Payout Earned</th>
+                                    <th>OfferID</th>
+                                    <th>Affiliate</th>
+                                    <th class="text-center">GrossClicks<br><small class="text-muted">Total</small></th>
+                                    <th class="text-center">Conversions<br><small class="text-muted">Total</small></th>
+                                    <th class="text-center">AdvertiserPrice<br><small class="text-muted">Total</small></th>
+                                    <th class="text-center">AffiliatePayout<br><small class="text-muted">Total</small></th>
+                                    <th>Currency</th>
                                     <th>Status</th>
-                                    <th>Timestamp</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                <?php foreach ($conversionLogs as $c): ?>
+                                <?php foreach ($conversionLogs as $c): 
+                                    $clicks = (int)($c['clicks'] ?? 0);
+                                    $conversions = (int)($c['conversions'] ?? 0);
+                                    $revenue = (float)($c['revenue'] ?? 0);
+                                    $payout = (float)($c['payout'] ?? 0);
+                                    $currency = !empty($c['currency']) ? strtoupper($c['currency']) : 'USD';
+                                    $statusLabel = ucfirst($c['affiliate_status'] ?? 'Approved');
+                                ?>
                                 <tr>
-                                    <td><code>#<?php echo $c['conversion_id']; ?></code></td>
-                                    <td><small class="text-dark font-weight-bold"><?php echo htmlspecialchars($c['transaction_id'] ?: 'N/A'); ?></small></td>
                                     <td>
-                                        <a href="offer_view.php?id=<?php echo $c['offer_id']; ?>" class="text-primary font-weight-bold">
-                                            #<?php echo $c['offer_id']; ?> - <?php echo htmlspecialchars($c['offer_name']); ?>
+                                        <a href="offer_view.php?id=<?php echo (int)$c['offer_id']; ?>" class="text-primary font-weight-bold">
+                                            <?php echo (int)$c['offer_id']; ?> ~ <?php echo htmlspecialchars($c['offer_name']); ?>
                                         </a>
                                     </td>
-                                    <td><strong class="text-success">$<?php echo number_format($c['payout'], 2); ?></strong></td>
                                     <td>
-                                        <?php if ($c['status'] === 'approved'): ?>
-                                            <span class="badge badge-success p-2">Approved</span>
-                                        <?php elseif ($c['status'] === 'pending'): ?>
-                                            <span class="badge badge-warning p-2">Pending</span>
-                                        <?php else: ?>
-                                            <span class="badge badge-danger p-2">Rejected</span>
+                                        <strong class="text-dark"><?php echo (int)$c['affiliate_id']; ?> ~ <?php echo htmlspecialchars($c['affiliate_name']); ?></strong>
+                                        <?php if (!empty($c['affiliate_company'])): ?>
+                                            <span class="text-muted small">(<?php echo htmlspecialchars($c['affiliate_company']); ?>)</span>
                                         <?php endif; ?>
                                     </td>
-                                    <td><small class="text-muted"><?php echo date('Y-m-d H:i:s', strtotime($c['created_at'])); ?></small></td>
+                                    <td class="text-center font-weight-bold text-dark"><?php echo number_format($clicks); ?></td>
+                                    <td class="text-center font-weight-bold text-dark"><?php echo number_format($conversions); ?></td>
+                                    <td class="text-center font-weight-bold text-success">$<?php echo number_format($revenue, 2); ?></td>
+                                    <td class="text-center font-weight-bold text-primary">$<?php echo number_format($payout, 2); ?></td>
+                                    <td><span class="badge badge-light border font-weight-bold"><?php echo htmlspecialchars($currency); ?></span></td>
+                                    <td><span class="badge badge-success p-2"><?php echo htmlspecialchars($statusLabel); ?></span></td>
                                 </tr>
                                 <?php endforeach; ?>
                             </tbody>
